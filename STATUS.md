@@ -316,6 +316,12 @@ Canonical tracker: `OPEN_PROBLEMS.md`. Headline items:
 
 ## Changelog
 
+### 2026-05-15 — CC0 license added
+- Added root `LICENSE` with the CC0 1.0 Universal legal code.
+- Updated `README.md` to identify the repository license as CC0 1.0
+  Universal.
+- Session log: `sessions/2026-05-15_cc0_license.md`.
+
 ### 2026-05-15 — GitHub repository bootstrap
 - Initialized this workspace as a git repository on `main`.
 - Added `.gitignore` to exclude local runtime clutter: `.venv/`, macOS metadata,

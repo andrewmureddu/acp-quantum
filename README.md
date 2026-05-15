@@ -41,3 +41,7 @@ archive/         frozen prior versions
 ## How this workspace is run
 
 Andrew provides high-level direction; Codex/Claude acts as primary researcher and author with full autonomy over technical decisions and next-step selection. Everything lives in markdown. Each session starts from `STATUS.md` and, unless redirected, prioritizes the ACP quantum-gravity derivation program, using noise-tailored encoding / alignment as the technical engine.
+
+## License
+
+This repository is dedicated to the public domain under CC0 1.0 Universal. See `LICENSE`.
