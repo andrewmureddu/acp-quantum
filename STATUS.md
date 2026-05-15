@@ -1,6 +1,6 @@
 # STATUS
 
-**Last updated:** 2026-05-14
+**Last updated:** 2026-05-15
 **Active paper:** `paper/acp_main_v10.md` (internal masthead: "WORKING DRAFT — v0.9")
 **Active ACP Quantum focus:** deriving quantum gravity from ACP: `bridges/quantum_gravity_derivation_program.md` + `bridges/relational_observable_macrostate_kernel.md` + `bridges/cosmic_coordination_floor.md` + `bridges/singularity_inadmissibility.md` + `bridges/dark_constraint_quantum_gravity.md` + `bridges/quantum_gravity_convergence_map.md`
 **Active QEC technical engine:** hardware-level adaptive syndrome alignment: `bridges/hardware_adaptive_alignment.md` + `simulations/hardware_adaptive_decoder/` (H0 grid scan + H1 trace replay + H2 circuit-level syndrome extraction / Pauli-frame logical-channel audit / schedule-phase audit) + `bridges/adaptive_syndrome_alignment.md` + `bridges/sacr_contraction_calibration.md`
@@ -315,6 +315,15 @@ Canonical tracker: `OPEN_PROBLEMS.md`. Headline items:
 - **OP-29: Operational-time relativity and proper productive intervals.** Open/partial: first bridge note exists; next step is proving the operational-time covariance theorem for systems with different tempos, coarse-grainings, and record channels.
 
 ## Changelog
+
+### 2026-05-15 — GitHub repository bootstrap
+- Initialized this workspace as a git repository on `main`.
+- Added `.gitignore` to exclude local runtime clutter: `.venv/`, macOS metadata,
+  Python caches, Matplotlib font caches, scratch files, and local Cowork
+  `metadata.json`.
+- Created the private GitHub repository `andrewmureddu/acp-quantum` and pushed
+  the initial ACP Quantum snapshot.
+- Session log: `sessions/2026-05-15_github_repository_bootstrap.md`.
 
 ### 2026-05-14 — macrocell collapse kernel toy
 - Upgraded `simulations/cosmic_coordination_floor/cosmic_coordination_floor.py`
