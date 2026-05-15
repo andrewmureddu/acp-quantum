@@ -1,0 +1,5 @@
+scenario,p_noise,syndrome_mi_bits,logical_record_probability,logical_leakage_bits_model,bit_fidelity,bit_advantage,plus_fidelity,code_population,logical_coherence,productive_score,logical_channel_fe_identity,logical_ptm_xx,logical_ptm_yy,logical_ptm_zz,verdict
+no_recovery,0.08,0.0,0.0,0.0,0.778688,0.5573760000000001,0.7791999999999996,0.7792,0.7791999999999998,0.2636908718527609,nan,nan,nan,nan,under_corrected_noise_accumulates
+ideal_syndrome_recovery,0.08,1.1115853115974998,0.0,0.0,0.981824,0.9636480000000001,0.9999999999999996,1.0,0.9999999999999998,0.9636479999999994,0.981824,1.0,0.9636480000000001,0.9636480000000001,falsifies_syndrome_equals_crystallization
+partial_logical_record,0.08,1.1115853115974998,0.4,0.4,0.981824,0.9636480000000001,0.7999999999999996,1.0,0.5999999999999999,0.4625510399999997,0.7854592,0.6,0.5781888000000001,0.9636480000000001,costly_or_centralizing_monitoring_degrades_coherence
+logical_branch_record,0.08,1.1115853115974998,1.0,1.0,0.981824,0.9636480000000001,0.4999999999999998,1.0,0.0,0.0,0.490912,0.0,0.0,0.9636480000000001,centralizing_measurement_preserves_bit_but_kills_superposition

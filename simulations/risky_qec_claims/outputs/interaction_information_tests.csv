@@ -1,0 +1,5 @@
+scenario,error_syndrome_mi_bits,logical_record_a_mi_bits,logical_record_b_mi_bits,logical_joint_record_mi_bits,logical_noise_env_synergy_bits,conditional_logical_leakage_given_error_bits,verdict
+split_logical_leak,0.0,0.0,0.0,1.0,1.0,1.0,falsifies_positive_logical_synergy_as_resource
+clean_error_syndrome,0.7219280948873623,0.0,0.0,0.0,0.0,0.0,useful_syndrome_with_zero_logical_synergy
+noisy_error_syndrome,0.3149590284899795,0.0,0.0,0.0,0.0,0.0,useful_but_imperfect_syndrome_with_zero_logical_synergy
+syndrome_plus_logical_leak,0.7219280948873623,0.0,0.3500000000000001,0.3500000000000001,0.0,0.3500000000000001,syndrome_information_does_not_excuse_logical_leakage

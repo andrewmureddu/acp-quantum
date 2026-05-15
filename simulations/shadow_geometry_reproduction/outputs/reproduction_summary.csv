@@ -1,0 +1,7 @@
+claim,target,measured,tolerance,passed,note
+projection protection beta(3),2/3,0.6653914828323961,0.004,1,Monte Carlo confirmation of beta(d)=1-1/d.
+dark-state full-loop Berry phase,pi mod 2pi,3.1415926535897913,1e-06,1,Pancharatnam product for (|0>+exp(i phi)|1>)/sqrt(2).
+standard T2 dephasing law,exp(-2) at t=1,0.1353352832366127,1e-12,1,Misaligned eigenvalue gap 2 gives 1/T2=2; aligned gap 0 gives no decay.
+exact DFS Lindblad cancellation,aligned dissipator norm 0,0.0,1e-12,1,L acts as a scalar on the aligned code and non-scalar on the misaligned code.
+approximate Knill-Laflamme defect bound,defect <= perturbative bound,0.7462206047032447,1.0,1,Includes centered lambda=0 case where degradation is second-order.
+99.1% Lyapunov calibration floor,eta*/(1-q*) = 0.009,0.009000000000000001,1e-15,1,"Recreates calibration target, not the missing original SACR cycle map."

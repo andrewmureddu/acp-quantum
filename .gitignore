@@ -1,0 +1,18 @@
+.DS_Store
+.AppleDouble
+.LSOverride
+
+.venv/
+__pycache__/
+*.py[cod]
+
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.ipynb_checkpoints/
+.mpl-cache/
+
+sessions/scratch/
+
+# Local Codex/Cowork app metadata.
+metadata.json

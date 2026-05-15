@@ -1,0 +1,5 @@
+policy,min_future_entropy_bits,min_admissible_mass,max_singular_mass,max_geometry_record_mi_bits,max_early_privacy_leakage_bits,final_mean_compactness,final_cumulative_late_decodable_bits,first_floor_violation_step,first_privacy_violation_step
+hard_exclusion,0.2054907878173002,1.0,0.0,2.1007088966119194,0.0,0.982907664137367,0.0,22,-1
+horizon_transfer,4.627514042580521,1.0,0.0,1.928188458103737,0.0,0.5334173824083577,3.0,-1,-1
+naked_collapse,4.627334172563018,0.0014772130761724364,0.07946261723473722,1.2981301996607086,0.23838785170421176,0.292019892321185,0.0,1,1
+quantum_completion,4.627514042580521,1.0,0.0,1.4955924807207694,0.003786836726898665,0.47808881834261685,3.0,-1,-1

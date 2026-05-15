@@ -1,0 +1,14 @@
+metric,value
+grid_points,12221
+main_context_correlation,0.350
+max_restraint_score,0.747752
+max_score_monitor_strength,2.033333
+max_score_leakage_fraction,0.000000
+max_score_public_error_mi_bits,0.919466
+max_score_excess_agency_leakage_bits,0.000000
+max_score_regime,restraint_interval
+count_abandonment_no_record,1799
+count_capture_burden,166
+count_capture_leakage,6247
+count_restraint_interval,2732
+count_transition,1277

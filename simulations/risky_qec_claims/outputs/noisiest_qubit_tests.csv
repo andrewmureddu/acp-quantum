@@ -1,0 +1,4 @@
+qubit,physical_error_rate,is_noisiest,bare_memory_ticks,bare_bit_advantage,bare_bit_fidelity,single_round_mi_error_qubit_syndrome_bits,verdict
+0,0.12,1,24,0.0013788791819032296,0.5006894395909516,0.5044141353840019,decoder_attention_not_computation_start
+1,0.02,0,24,0.3754132467271021,0.687706623363551,0.11649381263845815,better_bare_storage_candidate
+2,0.02,0,24,0.3754132467271021,0.687706623363551,0.11649381263845815,better_bare_storage_candidate

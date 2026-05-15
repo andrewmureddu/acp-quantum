@@ -1,0 +1,3 @@
+case,dissipator_spectral_norm
+aligned_scalar_lindblad_action,0.0
+misaligned_non_scalar_lindblad_action,0.8
