@@ -231,7 +231,7 @@ The full result inventory, as of v10:
 
 **6. Heisenberg / A.20 consequences.** A.20 recovers Heisenberg as a special case of the coordination floor once a non-commutative two-MASA partition is specified. This remains important because a stronger operator-algebraic version may connect the quantum-kinematics and quantum-gravity derivation tracks. *(Priority: exploratory.)*
 
-**7. Quantum foundations from ACP.** `bridges/born_rule_from_acp.md`, `bridges/unitary_evolution_from_acp.md`, `bridges/tensor_product_from_acp.md`, and `bridges/measurement_formalism_from_acp.md` prove the conditional local quantum-kinematics package given Hilbert structure. `bridges/hilbert_geometry_from_acp.md` now takes the first geometry step: ACP branch homogeneity (distinguishability-preserving symmetries acting transitively on capacity spheres) forces inner-product geometry in finite dimension, derives BR-1's consequence instead of importing it, and derives exclusivity as phase-robust orthogonality; it also decomposes the residual derivation into named gaps G1–G4 plus a reduction map onto the Hardy/CDP/Masanes–Müller reconstruction axioms. `bridges/operational_state_space_from_acp.md` now closes G1 at the framework level: ACP record-statistics axioms force the compact convex state space (mixing = total probability over decodable coins), the GPT triple \((V,C,u)\) with linear effects, and a finite record-capacity bound on jointly perfectly distinguishable states; both ACP absorbing boundaries appear as operational singletons, so the productive interval requires positive affine state-space dimension. The remaining tasks are G1b (convex state space to branch vector space — the quantum/classical fork via the reconstruction rows), the resolution limit (G2), complex field selection via local decodability (G3/HG-C1), and reconnection to relational gravitational observables (G4). *(Priority: exploratory but strategically important.)*
+**7. Quantum foundations from ACP.** `bridges/born_rule_from_acp.md`, `bridges/unitary_evolution_from_acp.md`, `bridges/tensor_product_from_acp.md`, and `bridges/measurement_formalism_from_acp.md` prove the conditional local quantum-kinematics package given Hilbert structure. `bridges/hilbert_geometry_from_acp.md` now takes the first geometry step: ACP branch homogeneity (distinguishability-preserving symmetries acting transitively on capacity spheres) forces inner-product geometry in finite dimension, derives BR-1's consequence instead of importing it, and derives exclusivity as phase-robust orthogonality; it also decomposes the residual derivation into named gaps G1–G4 plus a reduction map onto the Hardy/CDP/Masanes–Müller reconstruction axioms. `bridges/operational_state_space_from_acp.md` now closes G1 at the framework level: ACP record-statistics axioms force the compact convex state space (mixing = total probability over decodable coins), the GPT triple \((V,C,u)\) with linear effects, and a finite record-capacity bound on jointly perfectly distinguishable states; both ACP absorbing boundaries appear as operational singletons, so the productive interval requires positive affine state-space dimension. `bridges/purification_from_acp.md` now crosses the first half of the G1b fork: purification is ACP-cast as record locatability (no unlocated missingness), the classical-regress theorem shows simplex theories can never complete a mixed state with finite records (so ACP conservation forces non-classical composites), and quantum theory is verified to terminate the regress in one step with minimal, unique-up-to-symmetry record channels. The remaining tasks are deriving PU-2 from CDT proper, the non-classical-to-quantum selection (sharp records, compression, local discriminability, causality), the resolution limit (G2), complex field selection via local decodability (G3/HG-C1), and reconnection to relational gravitational observables (G4). *(Priority: exploratory but strategically important.)*
 
 **8. Collapse/timekeeping bridge: quantum braiding.** `bridges/quantum_braiding_timekeeping.md` treats collapse operationally as a clocking event in a quantum instrument/feedback process. This remains adjacent to OP-21/OP-22 and may help state how boundary records become time in the quantum-gravity derivation. *(Priority: exploratory.)*
 
@@ -304,7 +304,7 @@ Canonical tracker: `OPEN_PROBLEMS.md`. Headline items:
 - **OP-18: Singularity inadmissibility and horizon regularization.** Partial+: ACP/Schur criterion, gravitational bridge note, finite macrocell collapse toy, and first OP-20 kernel skeleton exist; next step is proving the stronger semiclassical collapse failure theorem.
 - **OP-19: ACP derivation of quantum gravity / cosmic coordination floor.** Partial++: derivation roadmap, program bridge, macrocell-vector toy model, and relational macrostate-kernel skeleton exist; next step is proving floor violation or normalization failure for classical collapse under explicit focusing assumptions.
 - **OP-20: Relational observable macrostate kernel.** Partial+: `bridges/relational_observable_macrostate_kernel.md` defines the finite relational observable algebra, macrocell partition, quantum/channel kernel, classical pushforward kernel, Schur-block reading, and boundary-information diagnostics; `simulations/cosmic_coordination_floor/` now instantiates the toy macrocell vector and candidate policy comparison. Next step is candidate-mechanism audit beyond the schematic toy.
-- **OP-21: First-principles Hilbert branch structure / quantum kinematics from ACP.** Partial++++ (G1a closed): the conditional local package includes branch weights, closed unitary flow, tensor-product independent composition, and POVM/projective measurement structure; `bridges/hilbert_geometry_from_acp.md` proves the branch-homogeneity theorem (finite-dimensional inner-product geometry from ACP homogeneity) and names gaps G1–G4; `bridges/operational_state_space_from_acp.md` now derives the GPT state-space frame (compact convex states, linear effects, finite record capacity, boundary singletons) from ACP record-statistics axioms; the remaining tasks are G1b (branch space via reconstruction rows), the resolution limit, complex selection, and gravitational reconnection.
+- **OP-21: First-principles Hilbert branch structure / quantum kinematics from ACP.** Partial++++ (G1a closed; classical exclusion proved): the conditional local package includes branch weights, closed unitary flow, tensor-product independent composition, and POVM/projective measurement structure; `bridges/hilbert_geometry_from_acp.md` proves the branch-homogeneity theorem and names gaps G1–G4; `bridges/operational_state_space_from_acp.md` derives the GPT state-space frame from ACP record-statistics axioms; `bridges/purification_from_acp.md` ACP-casts purification as record locatability, proves the classical-regress/classical-exclusion theorems, and verifies quantum minimality/uniqueness; the remaining tasks are deriving PU-2 from CDT, the non-classical-to-quantum selection rows, the resolution limit, complex selection, and gravitational reconnection.
 - **OP-22: Quantum braiding and collapse as internal timekeeping.** Partial: seed bridge note exists; next step is a monitored-qubit feedback simulation with record entropy, memory, leakage, and clock-regularity diagnostics.
 - **OP-23: Hardware implementation ladder for adaptive syndrome alignment.** Open/partial: roadmap, first fixed-code adaptive decoder scaffold, H1 trace replay interface, and H2 circuit-level syndrome-extraction interface with bit-flip logical-process, Pauli-frame logical-channel, and schedule-phase audits exist; next step is measured hardware-data replay, a phase-protecting stabilizer/subsystem patch, steady-state cycle maps, and live hardware loop.
 - **OP-24: Restraint ethics and conditional-leakage civil systems.** Open/partial: first bridge and binary Gaussian record-channel simulation exist; next step is domain-native observables and empirical/agent-based institutional models.
@@ -315,6 +315,40 @@ Canonical tracker: `OPEN_PROBLEMS.md`. Headline items:
 - **OP-29: Operational-time relativity and proper productive intervals.** Open/partial: first bridge note exists; next step is proving the operational-time covariance theorem for systems with different tempos, coarse-grainings, and record channels.
 
 ## Changelog
+
+### 2026-07-06 — Purification from ACP conservation: the classical regress
+- Added `bridges/purification_from_acp.md`, taking the purification row of the
+  reconstruction table — the highest-value single target after the GPT frame.
+- ACP-cast the CDP purification postulate as a conservation principle:
+  PU-1 mixedness is missing ensemble records, PU-2 record locatability (every
+  admissible state has a complete — extremal — finite composite extension;
+  ⚠ flagged as an axiom casting, not yet a CDT theorem), PU-3 minimal records
+  (completions unique up to reversible record symmetry).
+- **Classical-regress theorem (proved):** in simplex theories with classical
+  composition, every finite classical extension of a mixed state is mixed —
+  the marginal of a point mass is a point mass — so record location never
+  terminates. Corollary: ACP conservation plus finite records **excludes
+  classical state spaces**; complete composite states with mixed marginals
+  (entanglement-like structure) must exist. First quantum/classical fork
+  result in the OP-21 program.
+- **Quantum verification (proved):** finite-dimensional quantum theory
+  terminates the regress in one step — purifications exist iff the record
+  dimension is at least the rank (minimality), the minimal record carries
+  entropy exactly equal to the missing information, and any two purifications
+  on the same record system are related by a record-side unitary.
+- Classical trilemma reading: dangling missingness (conservation violation),
+  infinite regress (finite-record violation), or triviality
+  (crystallization); quantum composites are the unique escape, which recasts
+  entanglement as conservation infrastructure — the kinematic companion of
+  boundary records in the gravitational program.
+- Honest residue: PU-2 remains ACP-cast rather than ACP-derived (the hard
+  core of G1b now has an exact address); non-classicality is not yet
+  quantumness (local discriminability, sharp records, compression, causality
+  rows still owed); the classical-composition definition is load-bearing.
+- Updated the reconstruction table row in
+  `bridges/hilbert_geometry_from_acp.md`, the open directions of
+  `bridges/operational_state_space_from_acp.md`, OP-21, and front 7.
+- Session log: `sessions/2026-07-06_purification_from_acp.md`.
 
 ### 2026-07-06 — Operational state space from ACP record statistics (G1a)
 - Added `bridges/operational_state_space_from_acp.md`, attacking gap G1 of the

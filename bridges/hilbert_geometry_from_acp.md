@@ -344,7 +344,7 @@ admissibility *forces* those axioms. The current mapping:
 | Ideal compression (CDP) | every source has a lossless minimal encoding | finite-record sufficiency of macrostate kernels (`bridges/relational_observable_macrostate_kernel.md`) | ACP-plausible, unproven |
 | Local discriminability / tomographic locality (Hardy; CDP; MM) | local records + correlations decode joint states | boundary-decodable independent composition (TP lineage; §6) | ACP-plausible; known to select \(\mathbb C\) |
 | Continuous reversibility (MM; Hardy) | reversible transformations form a continuous group connecting pure states | UE-1/UE-3 mechanism-preserving continuous flow; HG-3 transitivity is its transitive-action shadow | ACP-forced within the quartet's axiom set |
-| Purification (CDP) | every mixed state has a pure mechanism-preserving dilation, unique up to reversible symmetry | conservation of prediction structure: apparent irreversibility is always tracing over a record channel (restraint-power conservation; Stinespring direction of `bridges/measurement_formalism_from_acp.md`) | ACP-plausible, strategically central |
+| Purification (CDP) | every mixed state has a pure mechanism-preserving dilation, unique up to reversible symmetry | conservation of prediction structure: no unlocated missingness; now ACP-cast as PU-1–PU-3 in `bridges/purification_from_acp.md`, with the classical-regress/classical-exclusion theorems proved and quantum minimality/uniqueness verified | ACP-cast; classical exclusion proved; CDT derivation of PU-2 open |
 
 Derivation strategy for OP-21, restated as a finite lemma list:
 

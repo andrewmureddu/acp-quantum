@@ -480,3 +480,9 @@ So the actual theorem of this note is:
    row of the reconstruction table is the highest-value single target: it is
    the most powerful axiom in the CDP reconstruction and the most
    ACP-resonant (conservation of prediction structure under dilation).
+
+*Update:* item 4 is now taken in `bridges/purification_from_acp.md`:
+purification is ACP-cast as record locatability (PU-1–PU-3), the classical
+regress theorem shows simplex theories can never complete a mixed state with
+finite records, and quantum theory is verified to terminate the regress in
+one step with minimal, unique-up-to-symmetry records. Items 1–3 remain open.
