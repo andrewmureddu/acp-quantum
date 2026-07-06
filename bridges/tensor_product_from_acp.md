@@ -334,3 +334,8 @@ At that point the local quantum-kinematics package would consist of:
 
 The deepest remaining problem after that would be the first one on the list:
 why the underlying branch geometry is complex Hilbertian in the first place.
+
+*Update:* the inner-product part of that problem is now addressed in
+`bridges/hilbert_geometry_from_acp.md`; the complex-field part is Conjecture
+HG-C1 there, and this note's local composition axioms are the designated
+ACP-native selector (local decodability).

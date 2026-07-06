@@ -381,3 +381,8 @@ That would turn the present quartet from
 into
 
 > ACP-derived quantum kinematics.
+
+*Update:* the first step is now taken in
+`bridges/hilbert_geometry_from_acp.md`: branch homogeneity forces
+inner-product geometry in finite dimension, with the remaining gaps named
+G1–G4 there.

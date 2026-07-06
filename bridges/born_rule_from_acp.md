@@ -359,3 +359,8 @@ result to a true first-principles derivation. The target would be:
 5. rederive Theorem 4.2 without importing BR-1 as a separate symmetry axiom.
 
 That is the real "Born rule from ACP" problem.
+
+*Update:* the first step is now taken in
+`bridges/hilbert_geometry_from_acp.md`, which derives the inner-product
+geometry (step 3) from an ACP branch-homogeneity axiom in finite dimension and
+recovers Lemma 4.1 without importing BR-1.

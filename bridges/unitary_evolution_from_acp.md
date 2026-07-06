@@ -274,3 +274,8 @@ That would move the program from
 to
 
 > ACP-derived quantum kinematics.
+
+*Update:* step 2 of this list (branch capacity induces an inner-product
+geometry) is now proved in finite dimension in
+`bridges/hilbert_geometry_from_acp.md`, from a branch-homogeneity axiom that
+is the static shadow of UE-1–UE-3.
