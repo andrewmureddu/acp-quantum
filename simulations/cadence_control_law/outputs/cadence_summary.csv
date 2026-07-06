@@ -1,0 +1,6 @@
+metric,value,prediction
+correction_backaction_exponent_fit,0.5515,0.5
+correction_drift_exponent_fit,-0.9942,-1.0
+adaptation_drift_exponent_fit,-0.6571,-0.6667
+crosscheck_T_star_exact_vs_prior_sim,4 vs 4,continuum 3.17
+crosscheck_T_star_zero_backaction,1,1

@@ -10,6 +10,7 @@
 **Active self-limiting universality bridge:** protected forgetting / final-theory non-totalization: `bridges/self_limiting_universality.md` + `simulations/self_limiting_universality/`
 **Active turbulence bridge:** scale-resolved turbulence productive interval / admissible closure / Kolmogorov cascade as uncertainty allocation: `bridges/turbulence_productive_interval.md`
 **Active operational-time bridge:** operational-time relativity / proper productive intervals: `bridges/operational_time_relativity.md`
+**Active cadence bridge:** cadence control law / optimal record tempo: `bridges/cadence_control_law.md` + `simulations/cadence_control_law/`
 **Active special-cases catalog:** `special_cases/acp_special_cases_v03.md`
 **Active integrity audit:** `audits/integrity_audit_v10.md`
 
@@ -289,6 +290,18 @@ controller/environment is present. This creates a real new formal target:
 cross-system covariance when two systems have different operational tempos and
 non-identical macrostate partitions. *(Priority: exploratory, OP-29.)*
 
+**15. Cadence control law.** `bridges/cadence_control_law.md` answers Andrew's
+tempo question: for systems whose record channel is restorative and costly,
+the persistence cost rate \(J(T)=\alpha T^{s}+c/T\) has a unique interior
+optimum with cadence exponent \(1/(s+1)\) fixed by the accumulation order —
+square-root law for single-error correction cadence, cube-root law for
+adaptation cadence. `simulations/cadence_control_law/` verifies the exponents
+exactly and retrodicts the `risky_qec_claims` monitoring-scan optimum
+(interval 4 at backaction 0.012; interval 1 at zero backaction). Next steps:
+operational-time covariance (Conjecture C-1, feeding OP-29), estimating the
+law's constants from H1/H2 decoder traces to predict update cadence, and
+robustness under correlated drift. *(Priority: exploratory, OP-30.)*
+
 ## Open problems
 
 Canonical tracker: `OPEN_PROBLEMS.md`. Headline items:
@@ -312,9 +325,44 @@ Canonical tracker: `OPEN_PROBLEMS.md`. Headline items:
 - **OP-26: Reality-reflective mathematics and admissible model-world coupling.** Open/partial: first bridge note exists and now includes structured innovation quantities plus an uncertainty-allocation functional \(\mathcal P_t[\mathcal N]\); next step is categorical/invariant formalization of admissible descriptions and quantitative conditions for \(\mathcal N_t^*\).
 - **OP-27: Turbulence productive interval and admissible closure.** Open/partial: first bridge note exists and now includes scale-local Reynolds / Kolmogorov-cascade uncertainty allocation plus spectral-allocation Conjecture T-2; next step is a DNS or shell-model scale diagnostic for inertial-range productive scores, spectra, and closure failure modes.
 - **OP-28: Self-limiting universality and protected forgetting.** Open/partial+: first bridge note and first finite record-channel toy simulation exist; next step is formalizing protected forgetting as a bounded-leakage morphism and deriving a downstream semantic-field bound for final-scope theories.
-- **OP-29: Operational-time relativity and proper productive intervals.** Open/partial: first bridge note exists; next step is proving the operational-time covariance theorem for systems with different tempos, coarse-grainings, and record channels.
+- **OP-29: Operational-time relativity and proper productive intervals.** Open/partial: first bridge note exists; next step is proving the operational-time covariance theorem for systems with different tempos, coarse-grainings, and record channels. The cadence law's Conjecture C-1 (OP-30) is now the concrete first target.
+- **OP-30: Cadence control law.** Open/partial: bridge note and exact verification harness exist; the interior-optimum law \(T^{*}=(c/(s\alpha))^{1/(s+1)}\) is proved at toy level, exponents verified (`0.5515`, `-0.9942`, `-0.6571` vs \(1/2\), \(-1\), \(-2/3\)), and the prior `risky_qec_claims` monitoring optimum is retrodicted exactly. Next steps: operational-time covariance (C-1), estimating \(\alpha,c,s\) from H1/H2 traces, robustness under correlated drift, gravitational/institutional instances.
 
 ## Changelog
+
+### 2026-07-06 — Cadence control law recognized and verified (OP-30)
+- Added `bridges/cadence_control_law.md`, answering Andrew's question "is
+  there a cadence control law to be discovered/recognized?" — recognized: it
+  was already implicit in the project's own simulation data.
+- General proposition (proved): for restorative, costly record channels, the
+  persistence cost rate \(J(T)=\alpha T^{s}+c/T\) has unique interior optimum
+  \(T^{*}=(c/(s\alpha))^{1/(s+1)}\); the cadence exponent \(1/(s+1)\) is set
+  by the drift accumulation order alone. Interior optimum exists iff records
+  are costly (\(c>0\)) and restorative (\(s>0\)) — otherwise the tempo
+  interval collapses to the Zeno/crystallization side or the
+  never-monitor/dissolution side.
+- Instance A (correction cadence): \(t\)-error-correcting memory gives
+  \(s=t\); the repetition code obeys the square-root law
+  \(T^{*}\approx\sqrt{\gamma_b/3}/p\). Instance B (adaptation cadence):
+  tracking drifting noise with a moving average gives \(s=2\), the cube-root
+  law \(W^{*}\approx(2\sigma^{2}/a^{2})^{1/3}\) — the quantitative content of
+  the H1/H2 finding that gated adaptation beats overactive updating.
+- Added `simulations/cadence_control_law/`, an exact (no Monte Carlo)
+  verification harness: fitted exponents `0.5515`, `-0.9942`, `-0.6571`
+  against predictions \(1/2\), \(-1\), \(-2/3\); and the law retrodicts the
+  `risky_qec_claims` monitoring-scan optimum exactly (integer argmin 4 at
+  \(p=0.02, b=0.012\), matching the prior empirical best interval 4;
+  optimum 1 at zero backaction, matching).
+- Invariant forms identified: the fill fraction \(pT^{*}\) and the optimal
+  record-cost share \(s/(s+1)\) (one half for single-error correction, two
+  thirds for tracking) — dimensionless, clock-free signatures; their tempo
+  covariance is Conjecture C-1, the new concrete OP-29 target.
+- Prior-art honesty: Zeno/anti-Zeno, QEC cycle-time optimization, and
+  bias-variance window selection are standard; the claimed contribution is
+  the unification, exponent classification, two-boundary tempo reading, and
+  the exact retrodiction.
+- Added OP-30; updated OP-29 headline and the active-front list.
+- Session log: `sessions/2026-07-06_cadence_control_law.md`.
 
 ### 2026-07-06 — Purification from ACP conservation: the classical regress
 - Added `bridges/purification_from_acp.md`, taking the purification row of the
