@@ -426,3 +426,10 @@ Priority order for continuing OP-21:
 4. **G4 reconnection:** state the branch-homogeneity axioms for the
    relational macrostate kernel's sector spaces and check whether the
    gravitational boundary-record overlap structure satisfies HG-3.
+
+*Update:* step 1 is now taken in
+`bridges/operational_state_space_from_acp.md`: ACP record-statistics axioms
+(OS-1–OS-5) force the compact convex state space, the linear effect structure
+on a generating cone with order unit, and finite record capacity. This closes
+G1 at the framework (GPT) level — G1a — leaving G1b: the passage from the
+convex state space to the branch vector space via the §7 reconstruction rows.
