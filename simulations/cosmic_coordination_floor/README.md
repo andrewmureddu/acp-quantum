@@ -3,7 +3,9 @@
 This is the first executable toy for
 `bridges/cosmic_coordination_floor.md` and
 `bridges/singularity_inadmissibility.md`, now upgraded to instantiate the
-finite macrocell target in `bridges/relational_observable_macrostate_kernel.md`.
+finite macrocell target in `bridges/relational_observable_macrostate_kernel.md`
+and the certificate quantities of
+`proofs/classical_collapse_failure_theorem.md`.
 
 It is not a gravitational simulation. It is a finite stochastic model of the
 ACP selection rule.
@@ -50,7 +52,16 @@ python3 simulations/cosmic_coordination_floor/cosmic_coordination_floor.py
 ## Metrics
 
 - `future_entropy_bits`: entropy of the next admissible macrostate
-  distribution.
+  distribution (a marginal spread diagnostic).
+- `conditional_future_entropy_bits`: mass-weighted per-cell conditional future
+  entropy \(H_{\ell,\Delta}(m)\) of the forward kernel — the quantity bounded
+  by the entropy-ceiling lemma of the classical collapse failure theorem. This
+  is the ACP crystallization diagnostic proper; the marginal entropy can stay
+  high while the per-cell channel freezes.
+- `mean_forward_drift`: mass-weighted \(E[c'-c]\) of the forward compactness
+  law — the F1 focusing-drift certificate.
+- `forward_width`: mass-weighted standard deviation of the forward compactness
+  law — the F2 concentration certificate.
 - `admissible_mass`: probability mass remaining in the admissible state space.
 - `singular_mass`: probability mass leaking into the inadmissible singular bin.
 - `geometry_record_mi_bits`: mutual information between the geometry sector and
@@ -61,7 +72,10 @@ python3 simulations/cosmic_coordination_floor/cosmic_coordination_floor.py
   exterior record.
 - `cumulative_late_decodable_bits`: accumulated late-decoding proxy, capped by
   the interior label entropy.
-- `floor_violation`: whether the policy violates the toy coordination floor.
+- `floor_violation`: whether the policy violates the toy coordination floor
+  (marginal entropy or admissible mass).
+- `conditional_floor_violation`: whether the per-cell conditional future
+  entropy falls below the toy floor — the theorem's case (b) diagnostic.
 - `privacy_violation`: whether early protected-interior leakage exceeds the toy
   privacy threshold.
 
@@ -73,11 +87,20 @@ normalized but eventually violates the future-entropy floor, and the two repair
 policies preserve normalization, keep early privacy below threshold, and emit
 late decodable boundary information.
 
+The run instantiates both classical failure cases of
+`proofs/classical_collapse_failure_theorem.md`: `naked_collapse` is case (a) —
+its conditional future entropy stays high (min `4.039` bits) while admissible
+mass is exhausted geometrically — and `hard_exclusion` is case (b) — mass stays
+normalized while the per-cell forward channel crystallizes
+(`min_cond_H=0.068` bits, forward width `0.0009`, far below the compactness
+bin width `0.0099`, i.e. the deterministic-freeze endpoint), breaching the
+conditional floor at step 15, earlier than the marginal diagnostic shows.
+
 Default summary:
 
 ```text
-hard_exclusion: min_H=0.205, min_adm=1.000, max_sing=0.000, max_I_G_R=2.101, max_priv=0.000, final_I_late=0.000, first_floor=22, first_privacy=-1
-horizon_transfer: min_H=4.628, min_adm=1.000, max_sing=0.000, max_I_G_R=1.928, max_priv=0.000, final_I_late=3.000, first_floor=-1, first_privacy=-1
-naked_collapse: min_H=4.627, min_adm=0.001, max_sing=0.079, max_I_G_R=1.298, max_priv=0.238, final_I_late=0.000, first_floor=1, first_privacy=1
-quantum_completion: min_H=4.628, min_adm=1.000, max_sing=0.000, max_I_G_R=1.496, max_priv=0.004, final_I_late=3.000, first_floor=-1, first_privacy=-1
+hard_exclusion: min_H=0.205, min_cond_H=0.068, min_adm=1.000, max_sing=0.000, max_I_G_R=2.101, max_priv=0.000, final_I_late=0.000, first_floor=22, first_cond_floor=15, first_privacy=-1
+horizon_transfer: min_H=4.628, min_cond_H=3.501, min_adm=1.000, max_sing=0.000, max_I_G_R=1.928, max_priv=0.000, final_I_late=3.000, first_floor=-1, first_cond_floor=-1, first_privacy=-1
+naked_collapse: min_H=4.627, min_cond_H=4.039, min_adm=0.001, max_sing=0.079, max_I_G_R=1.298, max_priv=0.238, final_I_late=0.000, first_floor=1, first_cond_floor=-1, first_privacy=1
+quantum_completion: min_H=4.628, min_cond_H=4.034, min_adm=1.000, max_sing=0.000, max_I_G_R=1.496, max_priv=0.004, final_I_late=3.000, first_floor=-1, first_cond_floor=-1, first_privacy=-1
 ```

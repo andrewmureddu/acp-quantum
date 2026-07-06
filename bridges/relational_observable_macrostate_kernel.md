@@ -1,11 +1,13 @@
 # Relational Observable Macrostate Kernel
 
 *Status: active OP-20 bridge. Formal at the finite-partition kernel level;
-partial at the classical-collapse failure theorem level; conjectural as a
-complete microscopic quantum-gravity construction.*
+the classical-collapse failure proposition below is now superseded by the
+quantitative trichotomy in `proofs/classical_collapse_failure_theorem.md`;
+conjectural as a complete microscopic quantum-gravity construction.*
 
 Companion notes:
 
+- `proofs/classical_collapse_failure_theorem.md`
 - `bridges/quantum_gravity_derivation_program.md`
 - `bridges/cosmic_coordination_floor.md`
 - `bridges/singularity_inadmissibility.md`
@@ -329,6 +331,19 @@ quantum-gravity mechanism. It proves that the classical pushforward is the
 wrong kind of object once collapse drives positive mass outside the admissible
 state space.
 
+**Upgrade (2026-07-06).** Proposition 2 is now strengthened to a quantitative
+theorem: `proofs/classical_collapse_failure_theorem.md` states explicit
+focusing assumptions F1–F4 (focusing drift and band monotonicity,
+semiclassical concentration, record rigidity/censorship, mechanism rigidity)
+and proves the exhaustive trichotomy with explicit failure-time bounds —
+geometric normalization failure for the leaking kernel, sub-floor
+crystallization \(H_{\ell,\Delta}(m)\leq H_{\mathrm{top}}\) for the
+conservative/postselected kernel, and mechanism change as the only remaining
+continuation — together with a record-starvation corollary showing the
+classical boundary channel cannot repay the coordination debt. The residual
+open content is deriving F1–F4 from explicit general-relativistic pushforwards
+rather than assuming them.
+
 ## 7. Diagnostics
 
 The kernel supplies the ACP quantum-gravity diagnostics.
@@ -520,6 +535,16 @@ paying the coordination debt. The completion-like policies pass only because
 they combine normalization, floor preservation, syndrome-like geometry records,
 early privacy, and late decodability.
 
+The toy now also reports the theorem-facing certificates of
+`proofs/classical_collapse_failure_theorem.md`: the per-cell conditional
+future entropy \(H_{\ell,\Delta}(m)\), the F1 drift, and the F2 forward width.
+These sharpen the two classical failures: naked collapse keeps conditional
+entropy high (min `4.039` bits) while exhausting admissible mass — case (a) —
+whereas hard exclusion crystallizes the per-cell channel
+(`min_cond_H=0.068` bits, forward width `0.0009` against bin width `0.0099`)
+and breaches the conditional floor at step 15 — case (b) — earlier than the
+marginal entropy diagnostic registers.
+
 ## 10. Candidate-Mechanism Audit
 
 For any proposed completion, the question is not only whether curvature is
@@ -574,14 +599,16 @@ $$
 \text{ACP diagnostics}.
 $$
 
-It also turns the next quantum-gravity step into a concrete theorem/simulation
-target:
+The theorem half of the next step is now discharged at the finite-kernel
+level: `proofs/classical_collapse_failure_theorem.md` proves exactly where the
+classical pushforward fails normalization or the entropy floor, with explicit
+bounds. The remaining targets are:
 
-> build the minimal collapse macrocell, compute the classical pushforward, show
-> exactly where it fails normalization or the entropy floor, and then test
+> derive the focusing assumptions F1–F4 from explicit semiclassical collapse
+> pushforwards (Oppenheimer–Snyder, Vaidya, or numerical interiors), and test
 > candidate completion kernels by geometry-record information, protected
 > interior leakage, and late boundary decodability.
 
 The open physics remains large, but the missing object is no longer only a
-placeholder. It is now a finite relational channel with explicit failure modes
-and measurable acceptance criteria.
+placeholder. It is now a finite relational channel with a proven classical
+failure trichotomy and measurable acceptance criteria.

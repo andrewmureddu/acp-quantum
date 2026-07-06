@@ -299,9 +299,14 @@ records.
 
 ## 9. Next Formal Target
 
-The broader formalization program is now laid out in
-`bridges/cosmic_coordination_floor.md`. The first executable toy model exists
-in `simulations/cosmic_coordination_floor/` and implements three competing
+The collapse-side formal target is now discharged at the finite-kernel level:
+`proofs/classical_collapse_failure_theorem.md` proves that under explicit
+focusing assumptions the classical collapse kernel ends in normalization
+failure (the naked case), sub-floor crystallization (the hard-exclusion case),
+or mechanism change, with explicit failure-time bounds. The broader
+formalization program is laid out in `bridges/cosmic_coordination_floor.md`.
+The first executable toy model exists in
+`simulations/cosmic_coordination_floor/` and implements three competing
 descriptions:
 
 1. **naked collapse:** the boundary channel is forced to score records against
