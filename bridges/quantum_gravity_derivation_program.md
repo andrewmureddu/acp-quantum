@@ -65,12 +65,21 @@ narrows the set of admissible future macrostates and pushes the effective
 description toward geodesic incompleteness, divergent observables, or an
 undefined future channel.
 
-The target theorem is:
+The target theorem was:
 
 > For a finite-resolution relational collapse macrostate satisfying the
 > classical focusing assumptions, the classical transition kernel either
 > becomes undefined on admissible future macrostates or violates the positive
 > future-entropy floor.
+
+This is now proven at the finite relational-kernel level:
+`proofs/classical_collapse_failure_theorem.md` states the focusing assumptions
+F1–F4 explicitly and proves the quantitative trichotomy — geometric
+normalization failure, sub-floor crystallization of the postselected kernel,
+or mechanism change — plus a record-starvation corollary showing the classical
+boundary channel cannot satisfy the Stage 5 decodability requirement. The
+residual Stage 2 work is deriving F1–F4 from explicit general-relativistic
+collapse pushforwards instead of assuming them.
 
 ### Stage 3: Required Completion
 
@@ -114,9 +123,10 @@ OP-20 construction: finite relational observables, macrocells, quantum/channel
 and classical-pushforward kernel forms, and diagnostics for future entropy,
 geometry-record information, protected interior leakage, and late boundary
 decodability. The first executable macrocell toy now lives in
-`simulations/cosmic_coordination_floor/`; the next step is to strengthen the
-semiclassical collapse failure theorem and then instantiate candidate
-quantum-gravity mechanisms.
+`simulations/cosmic_coordination_floor/`, and the collapse failure theorem is
+proven in `proofs/classical_collapse_failure_theorem.md`; the next step is to
+derive the focusing assumptions from explicit semiclassical pushforwards and
+instantiate candidate quantum-gravity mechanisms.
 
 ### Stage 5: Boundary Decodability
 
@@ -190,9 +200,13 @@ The expected result is not "quantize the metric" as a starting axiom, but:
 
 - `bridges/singularity_inadmissibility.md`: singularities are inadmissible
   physical states; horizons are candidate finite boundary transfers.
+- `proofs/classical_collapse_failure_theorem.md`: the Stage 2 theorem — under
+  explicit focusing assumptions, classical collapse ends in normalization
+  failure, sub-floor crystallization, or mechanism change, with explicit
+  failure-time bounds and a record-starvation corollary.
 - `bridges/relational_observable_macrostate_kernel.md`: finite relational
   observables to macrocells, transition kernels, Schur-block diagnostics, and
-  the first classical-collapse failure proposition.
+  the predecessor classical-collapse failure proposition.
 - `bridges/cosmic_coordination_floor.md`: future-entropy floor, collapse
   trigger, and visible redistribution criteria.
 - `bridges/dark_constraint_quantum_gravity.md`: null records as
@@ -205,9 +219,11 @@ The expected result is not "quantize the metric" as a starting axiom, but:
 
 ## 5. Near-Term Work
 
-1. Strengthen the classical failure theorem for the finite semiclassical
-   collapse macrocell using compactness, expansion, curvature, boundary area,
-   null records, and outgoing radiation bins.
+1. Derive the focusing assumptions F1–F4 of
+   `proofs/classical_collapse_failure_theorem.md` from explicit semiclassical
+   collapse pushforwards (Oppenheimer–Snyder, Vaidya, or numerical interiors),
+   turning the drift, defect, and concentration constants into computed
+   quantities rather than hypotheses.
 2. Instantiate candidate completion kernels for that macrocell and compare them
    against the floor, privacy, and decodability diagnostics.
 3. Upgrade the dark-constraint simulations from hidden optical phase bumps to

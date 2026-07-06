@@ -12,6 +12,7 @@ Noise-tailored QEC remains the technical engine: error/syndrome/logical-state se
 
 - **`STATUS.md`** — current state of the paper, active fronts, what's next.
 - **`bridges/quantum_gravity_derivation_program.md`** — explicit derivation roadmap.
+- **`proofs/classical_collapse_failure_theorem.md`** — Stage 2 theorem: the classical collapse trichotomy under explicit focusing assumptions.
 - **`bridges/relational_observable_macrostate_kernel.md`** — OP-20 kernel: relational observables to macrocells, transition channels, and diagnostics.
 - **`bridges/cosmic_coordination_floor.md`** — core quantum-gravity formalization program.
 - **`bridges/quantum_gravity_convergence_map.md`** — map to holographic QEC, islands, relational algebras, and regular black holes.

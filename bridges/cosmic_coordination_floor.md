@@ -348,7 +348,11 @@ diffeomorphism and coarse-graining.
 **Stage B: Classical failure theorem.** Under the assumptions of the
 singularity theorems, show that the induced classical transition kernel either
 concentrates on an inadmissible endpoint or fails to define a normalized kernel
-over admissible macrostates.
+over admissible macrostates. *Now proven at the finite relational-kernel
+level:* `proofs/classical_collapse_failure_theorem.md` establishes the
+quantitative trichotomy under explicit focusing assumptions F1–F4; the
+remaining Stage B work is deriving those assumptions from explicit
+general-relativistic pushforwards.
 
 **Stage C: Floor axiom.** State the cosmic coordination floor as an
 admissibility axiom for quantum-gravity transition kernels:

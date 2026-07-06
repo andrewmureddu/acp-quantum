@@ -272,6 +272,26 @@ def mutual_information_bits(
     return info
 
 
+def forward_cell_stats(weights: list[float], source_compactness: float) -> tuple[float, float, float]:
+    """Per-cell statistics of the normalized forward compactness law.
+
+    Returns (entropy_bits, drift, width): the conditional future entropy
+    H_{l,Delta}(m) of Definition 3 in
+    proofs/classical_collapse_failure_theorem.md (the macrocell map is
+    injective in the compactness index for a fixed record kind, so the
+    entropy over compactness bins equals the entropy over target
+    macrocells), the F1 drift certificate E[c'-c], and the F2
+    concentration certificate std(c').
+    """
+
+    probabilities = normalize(weights)
+    entropy = entropy_bits(probabilities)
+    mean_c = sum(p * c for p, c in zip(probabilities, CENTERS))
+    second_moment = sum(p * c * c for p, c in zip(probabilities, CENTERS))
+    width = math.sqrt(max(0.0, second_moment - mean_c * mean_c))
+    return entropy, mean_c - source_compactness, width
+
+
 def geometry_sector(cell: Macrocell) -> tuple[int, ...]:
     compactness_band = cell.compactness // 10
     return (compactness_band, cell.expansion, cell.curvature)
@@ -287,6 +307,18 @@ def transition(policy: str, current: Distribution) -> tuple[Distribution, dict[s
     triggered_mass = 0.0
     late_decodable = 0.0
     early_privacy_leakage = 0.0
+    stat_mass = 0.0
+    weighted_conditional_entropy = 0.0
+    weighted_drift = 0.0
+    weighted_width = 0.0
+
+    def accumulate_forward_stats(weights: list[float], mass: float, compactness: float) -> None:
+        nonlocal stat_mass, weighted_conditional_entropy, weighted_drift, weighted_width
+        entropy, drift, width = forward_cell_stats(weights, compactness)
+        stat_mass += mass
+        weighted_conditional_entropy += mass * entropy
+        weighted_drift += mass * drift
+        weighted_width += mass * width
 
     for cell, mass in current.items():
         if mass == 0.0:
@@ -299,12 +331,11 @@ def transition(policy: str, current: Distribution) -> tuple[Distribution, dict[s
             late_decodable += mass * symmetric_channel_mi_bits(
                 INTERIOR_CLASSES, HORIZON_DECODE_CORRECT_PROB
             )
-            add_weight(
-                raw_next,
-                gaussian_weights(HORIZON_TRANSFER_CENTER, HORIZON_TRANSFER_SIGMA),
-                mass,
-                "horizon",
+            transfer_weights = gaussian_weights(
+                HORIZON_TRANSFER_CENTER, HORIZON_TRANSFER_SIGMA
             )
+            accumulate_forward_stats(transfer_weights, mass, compactness)
+            add_weight(raw_next, transfer_weights, mass, "horizon")
             continue
 
         if policy == "quantum_completion" and compactness >= QG_TRIGGER_C:
@@ -315,17 +346,14 @@ def transition(policy: str, current: Distribution) -> tuple[Distribution, dict[s
             # A schematic completion: part bounce-like redistribution, part
             # horizon-scale broadening. The point is nonzero future entropy
             # with a finite, privacy-preserving boundary record.
-            add_weight(
-                raw_next,
-                mixture_weights(
-                    [
-                        (0.34, QG_TRANSFER_SIGMA, 0.58),
-                        (0.55, QG_TRANSFER_SIGMA * 1.25, 0.42),
-                    ]
-                ),
-                mass,
-                "qg",
+            completion_weights = mixture_weights(
+                [
+                    (0.34, QG_TRANSFER_SIGMA, 0.58),
+                    (0.55, QG_TRANSFER_SIGMA * 1.25, 0.42),
+                ]
             )
+            accumulate_forward_stats(completion_weights, mass, compactness)
+            add_weight(raw_next, completion_weights, mass, "qg")
             early_privacy_leakage += 0.018 * mass
             continue
 
@@ -340,12 +368,10 @@ def transition(policy: str, current: Distribution) -> tuple[Distribution, dict[s
         else:
             retained_mass = mass
 
-        add_weight(
-            raw_next,
-            gaussian_weights(min(center, 0.995), sigma),
-            retained_mass,
-            "collapse",
-        )
+        collapse_weights = gaussian_weights(min(center, 0.995), sigma)
+        # Conditional-on-admissibility statistics, so weight by retained mass.
+        accumulate_forward_stats(collapse_weights, retained_mass, compactness)
+        add_weight(raw_next, collapse_weights, retained_mass, "collapse")
 
     admissible_mass = sum(raw_next.values())
     if policy != "naked_collapse":
@@ -373,11 +399,25 @@ def transition(policy: str, current: Distribution) -> tuple[Distribution, dict[s
         for cell, mass in normalized_next.items()
     )
 
+    if stat_mass > 0.0:
+        conditional_future_entropy = weighted_conditional_entropy / stat_mass
+        mean_forward_drift = weighted_drift / stat_mass
+        forward_width = weighted_width / stat_mass
+    else:
+        conditional_future_entropy = 0.0
+        mean_forward_drift = 0.0
+        forward_width = 0.0
+
     floor_violation = float(future_entropy < FLOOR_BITS or admissible_mass < 0.999)
+    conditional_floor_violation = float(conditional_future_entropy < FLOOR_BITS)
     privacy_violation = float(early_privacy_leakage > PRIVACY_EPS_BITS)
 
     return next_distribution, {
         "future_entropy_bits": future_entropy,
+        "conditional_future_entropy_bits": conditional_future_entropy,
+        "mean_forward_drift": mean_forward_drift,
+        "forward_width": forward_width,
+        "conditional_floor_violation": conditional_floor_violation,
         "admissible_mass": admissible_mass,
         "singular_mass": singular_mass,
         "triggered_mass": triggered_mass,
@@ -422,6 +462,11 @@ def simulate_policy(policy: str) -> list[dict[str, float | int | str]]:
                 "mean_expansion": metrics["mean_expansion"],
                 "mean_curvature": metrics["mean_curvature"],
                 "future_entropy_bits": metrics["future_entropy_bits"],
+                "conditional_future_entropy_bits": metrics[
+                    "conditional_future_entropy_bits"
+                ],
+                "mean_forward_drift": metrics["mean_forward_drift"],
+                "forward_width": metrics["forward_width"],
                 "admissible_mass": metrics["admissible_mass"],
                 "singular_mass": metrics["singular_mass"],
                 "triggered_mass": metrics["triggered_mass"],
@@ -432,6 +477,7 @@ def simulate_policy(policy: str) -> list[dict[str, float | int | str]]:
                 "floor_bits": FLOOR_BITS,
                 "privacy_epsilon_bits": PRIVACY_EPS_BITS,
                 "floor_violation": metrics["floor_violation"],
+                "conditional_floor_violation": metrics["conditional_floor_violation"],
                 "privacy_violation": metrics["privacy_violation"],
             }
         )
@@ -460,12 +506,25 @@ def summarize(rows: list[dict[str, float | int | str]]) -> list[dict[str, float 
             (int(r["step"]) for r in pr if float(r["privacy_violation"]) > 0.0),
             -1,
         )
+        first_conditional_floor_violation = next(
+            (
+                int(r["step"])
+                for r in pr
+                if float(r["conditional_floor_violation"]) > 0.0
+            ),
+            -1,
+        )
         summary.append(
             {
                 "policy": policy,
                 "min_future_entropy_bits": min(
                     float(r["future_entropy_bits"]) for r in pr
                 ),
+                "min_conditional_future_entropy_bits": min(
+                    float(r["conditional_future_entropy_bits"]) for r in pr
+                ),
+                "final_mean_forward_drift": float(pr[-1]["mean_forward_drift"]),
+                "final_forward_width": float(pr[-1]["forward_width"]),
                 "min_admissible_mass": min(float(r["admissible_mass"]) for r in pr),
                 "max_singular_mass": max(float(r["singular_mass"]) for r in pr),
                 "max_geometry_record_mi_bits": max(
@@ -479,6 +538,7 @@ def summarize(rows: list[dict[str, float | int | str]]) -> list[dict[str, float 
                     pr[-1]["cumulative_late_decodable_bits"]
                 ),
                 "first_floor_violation_step": first_floor_violation,
+                "first_conditional_floor_violation_step": first_conditional_floor_violation,
                 "first_privacy_violation_step": first_privacy_violation,
             }
         )
@@ -582,12 +642,14 @@ def main() -> None:
         print(
             f"{row['policy']}: "
             f"min_H={float(row['min_future_entropy_bits']):.3f}, "
+            f"min_cond_H={float(row['min_conditional_future_entropy_bits']):.3f}, "
             f"min_adm={float(row['min_admissible_mass']):.3f}, "
             f"max_sing={float(row['max_singular_mass']):.3f}, "
             f"max_I_G_R={float(row['max_geometry_record_mi_bits']):.3f}, "
             f"max_priv={float(row['max_early_privacy_leakage_bits']):.3f}, "
             f"final_I_late={float(row['final_cumulative_late_decodable_bits']):.3f}, "
             f"first_floor={int(row['first_floor_violation_step'])}, "
+            f"first_cond_floor={int(row['first_conditional_floor_violation_step'])}, "
             f"first_privacy={int(row['first_privacy_violation_step'])}"
         )
 
