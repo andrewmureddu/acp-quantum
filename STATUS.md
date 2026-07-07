@@ -316,6 +316,28 @@ Canonical tracker: `OPEN_PROBLEMS.md`. Headline items:
 
 ## Changelog
 
+### 2026-07-07 — Darkness's Story essay
+- Added `essays/darkness_story.md`, the sibling essay to
+  `essays/lights_story.md`. Its organizing observation is that darkness enters
+  the gravitational program's formalism twice: as testimony (null records,
+  \(I(G;R_0)>0\), the dark-constraint bridge) and as sanctuary (the protected
+  interior, \(I(L_R;R_\partial^{\mathrm{early}})\approx 0\), whose
+  quantum-optics realization — the decoherence-free subspace — is literally
+  called a dark state).
+- Physical anchors: shadow/fringe duality of dark births, superluminal shadow
+  edges as constraint-without-causation (null records as relational
+  information requiring a prior), Olbers' paradox as the oldest null-record
+  measurement, absorption spectroscopy and the dark sector as
+  ledger-of-absences inference, the EHT shadow portrait, dark states / Zeno /
+  measurement-induced transitions as darkness-as-protection, and the quantum
+  vacuum floor as the channel-level instance of \(H_{\mathrm{floor}}>0\)
+  (perfect darkness inadmissible as a crystallized channel).
+- Essay register only — no new formal claims; the quantum-gravity completion
+  is explicitly marked as conjecture in the text. No open-problem changes,
+  though the dark-sector section gestures at OP-17's lensing null-record
+  upgrade.
+- Session log: `sessions/2026-07-07_darkness_story.md`.
+
 ### 2026-07-07 — Light's Story essay
 - Added `essays/lights_story.md`, a philosophical companion essay telling
   light's biography through the project's structural lens: zero proper time
