@@ -1,6 +1,6 @@
 # STATUS
 
-**Last updated:** 2026-05-15
+**Last updated:** 2026-07-07
 **Active paper:** `paper/acp_main_v10.md` (internal masthead: "WORKING DRAFT — v0.9")
 **Active ACP Quantum focus:** deriving quantum gravity from ACP: `bridges/quantum_gravity_derivation_program.md` + `bridges/relational_observable_macrostate_kernel.md` + `bridges/cosmic_coordination_floor.md` + `bridges/singularity_inadmissibility.md` + `bridges/dark_constraint_quantum_gravity.md` + `bridges/quantum_gravity_convergence_map.md`
 **Active QEC technical engine:** hardware-level adaptive syndrome alignment: `bridges/hardware_adaptive_alignment.md` + `simulations/hardware_adaptive_decoder/` (H0 grid scan + H1 trace replay + H2 circuit-level syndrome extraction / Pauli-frame logical-channel audit / schedule-phase audit) + `bridges/adaptive_syndrome_alignment.md` + `bridges/sacr_contraction_calibration.md`
@@ -315,6 +315,20 @@ Canonical tracker: `OPEN_PROBLEMS.md`. Headline items:
 - **OP-29: Operational-time relativity and proper productive intervals.** Open/partial: first bridge note exists; next step is proving the operational-time covariance theorem for systems with different tempos, coarse-grainings, and record channels.
 
 ## Changelog
+
+### 2026-07-07 — Light's Story essay
+- Added `essays/lights_story.md`, a philosophical companion essay telling
+  light's biography through the project's structural lens: zero proper time
+  (light as relation, not persistent system), light as the physical carrier of
+  boundary records \(R_\partial\) and the universe's syndrome channel (Zurek
+  redundancy, pointer-observable broadcast without coherence capture),
+  darkness/null records as constraint (dark-constraint bridge), redshift and
+  the CMB anisotropies as noise-as-signal at cosmological scale, horizons and
+  singularity inadmissibility stated in light's terms, and finite \(c\) as the
+  universe's verification latency \(\tau_v\).
+- Essay register only — no new formal claims; proven/conjectural boundaries of
+  the gravitational program are preserved in the text. No open-problem changes.
+- Session log: `sessions/2026-07-07_lights_story.md`.
 
 ### 2026-05-15 — CC0 license added
 - Added root `LICENSE` with the CC0 1.0 Universal legal code.
