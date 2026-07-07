@@ -348,7 +348,10 @@ diffeomorphism and coarse-graining.
 **Stage B: Classical failure theorem.** Under the assumptions of the
 singularity theorems, show that the induced classical transition kernel either
 concentrates on an inadmissible endpoint or fails to define a normalized kernel
-over admissible macrostates.
+over admissible macrostates. **Done:** `proofs/semiclassical_collapse_failure.md`
+proves the quantitative trichotomy and the no-go over all classical kernel
+constructions, with the focusing bound and mass-loss curve verified in
+`simulations/cosmic_coordination_floor/raychaudhuri_floor_check.py`.
 
 **Stage C: Floor axiom.** State the cosmic coordination floor as an
 admissibility axiom for quantum-gravity transition kernels:
@@ -480,7 +483,14 @@ the composite system.
 this transfer through a bounce, horizon microstructure, holographic unitary
 evolution, topology change, or some other finite mechanism.
 
+**Proven at the finite relational-kernel level (2026-07-07):** the Stage B
+classical failure theorem, in strengthened no-go form, with the horizon
+deferral deadline and the forced-completion corollary
+(`proofs/semiclassical_collapse_failure.md`).
+
 **Open technical problem:** instantiate the relational macrostate kernel in a
-semiclassical collapse model and then in a concrete candidate theory, proving
-the floor, trigger, and visibility criteria rather than stating them as
-selection rules.
+concrete candidate theory, proving the floor, trigger, and visibility criteria
+for the *completion* rather than stating them as selection rules; upgrade the
+theorem's pointwise NEC to averaged/quantum focusing conditions; and prove the
+relational clock transformation (OP-29) that the theorem's F5 assumption
+imports.

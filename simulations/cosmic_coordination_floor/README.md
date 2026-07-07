@@ -35,10 +35,27 @@ Four policies are compared:
   keeps the channel normalized, emits geometry-sector boundary records,
   suppresses early logical leakage, and releases late decodable information.
 
+A second script, `raychaudhuri_floor_check.py`, is the numerical companion to
+`proofs/semiclassical_collapse_failure.md`. It checks the theorem's three
+quantitative claims in a finite ensemble:
+
+1. **Lemma 1 focusing bound:** null Raychaudhuri integration with random
+   NEC-respecting shear/Ricci terms diverges no later than the comparison
+   bound `lambda* <= 2/alpha` (and the tighter `2/|theta0|`), sample by
+   sample.
+2. **Theorem 1(a) normalization failure:** the retained admissible mass
+   `Z(Delta)` is monotone nonincreasing, strictly below 1 past the earliest
+   failure time, and exactly 0 at `Delta*`.
+3. **Theorem 1(b)-(c) exclusion/absorption failures:** the hard-exclusion
+   channel's discarded coordination `-log2 Z` diverges while its surviving
+   renormalized distribution concentrates (entropy collapse), and the
+   terminal-absorption channel has exactly zero future entropy.
+
 ## Run
 
 ```bash
 python3 simulations/cosmic_coordination_floor/cosmic_coordination_floor.py
+python3 simulations/cosmic_coordination_floor/raychaudhuri_floor_check.py
 ```
 
 ## Outputs
@@ -46,6 +63,9 @@ python3 simulations/cosmic_coordination_floor/cosmic_coordination_floor.py
 - `outputs/cosmic_coordination_floor_timeseries.csv`
 - `outputs/cosmic_coordination_floor_summary.csv`
 - `outputs/cosmic_coordination_floor.svg`
+- `outputs/raychaudhuri_focusing_check.csv`
+- `outputs/raychaudhuri_mass_loss.csv`
+- `outputs/raychaudhuri_floor_check.svg`
 
 ## Metrics
 
@@ -80,4 +100,16 @@ hard_exclusion: min_H=0.205, min_adm=1.000, max_sing=0.000, max_I_G_R=2.101, max
 horizon_transfer: min_H=4.628, min_adm=1.000, max_sing=0.000, max_I_G_R=1.928, max_priv=0.000, final_I_late=3.000, first_floor=-1, first_privacy=-1
 naked_collapse: min_H=4.627, min_adm=0.001, max_sing=0.079, max_I_G_R=1.298, max_priv=0.238, final_I_late=0.000, first_floor=1, first_privacy=1
 quantum_completion: min_H=4.628, min_adm=1.000, max_sing=0.000, max_I_G_R=1.496, max_priv=0.004, final_I_late=3.000, first_floor=-1, first_privacy=-1
+```
+
+Default `raychaudhuri_floor_check.py` result (seeded):
+
+```text
+focusing samples: 400
+lambda* <= 2/alpha violations: 0
+lambda* <= 2/|theta0| violations: 0
+Z(Delta) monotone nonincreasing: True
+Z(Delta*) = 0.000000
+exclusion entropy: 3.6174 bits (early) -> 0.0000 bits (last surviving grid point)
+absorption channel future entropy: 0.000000 bits by construction
 ```

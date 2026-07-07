@@ -1,11 +1,13 @@
 # Relational Observable Macrostate Kernel
 
 *Status: active OP-20 bridge. Formal at the finite-partition kernel level;
-partial at the classical-collapse failure theorem level; conjectural as a
-complete microscopic quantum-gravity construction.*
+the classical-collapse failure trichotomy is now proven in strengthened form
+in `proofs/semiclassical_collapse_failure.md`; conjectural as a complete
+microscopic quantum-gravity construction.*
 
 Companion notes:
 
+- `proofs/semiclassical_collapse_failure.md` (strengthens Proposition 2 below)
 - `bridges/quantum_gravity_derivation_program.md`
 - `bridges/cosmic_coordination_floor.md`
 - `bridges/singularity_inadmissibility.md`
@@ -329,6 +331,21 @@ quantum-gravity mechanism. It proves that the classical pushforward is the
 wrong kind of object once collapse drives positive mass outside the admissible
 state space.
 
+**Strengthened version.** The proposition's working hypothesis — that a
+positive-measure subset of the cell reaches inadmissible support — is now
+derived rather than assumed. `proofs/semiclassical_collapse_failure.md`
+proves, under explicit focusing assumptions (NEC, trapped bins, Penrose
+causality inputs, fixed description, relational clock compatibility,
+nondegenerate cell measure), that the failing subset is the entire trapped
+macrocell, that the normalization failure is quantitative
+(\(Z^{\mathrm{adm}}_{\ell,\Delta}(m)=1-\mu_m(\tau_{\mathrm{fail}}\leq\Delta)\),
+vanishing at a finite \(\Delta^*(m)\) controlled by the focusing bound
+\(\lambda^*\leq 2/\alpha\)), and that *no* kernel constructible from the
+classical description alone — naked pushforward, hard exclusion, or terminal
+absorption — satisfies normalization, record balance, and the entropy floor
+simultaneously. The horizon-deferral and forced-completion corollaries live
+there as well.
+
 ## 7. Diagnostics
 
 The kernel supplies the ACP quantum-gravity diagnostics.
@@ -574,14 +591,18 @@ $$
 \text{ACP diagnostics}.
 $$
 
-It also turns the next quantum-gravity step into a concrete theorem/simulation
-target:
+The theorem half of the next step is now done:
+`proofs/semiclassical_collapse_failure.md` shows exactly where every classical
+kernel construction fails normalization, record balance, or the entropy floor,
+with the focusing bound and mass-loss curve verified numerically in
+`simulations/cosmic_coordination_floor/raychaudhuri_floor_check.py`. The
+remaining target is the completion half:
 
-> build the minimal collapse macrocell, compute the classical pushforward, show
-> exactly where it fails normalization or the entropy floor, and then test
-> candidate completion kernels by geometry-record information, protected
-> interior leakage, and late boundary decodability.
+> test candidate completion kernels — holographic/QEC, loop/effective bounces,
+> asymptotic-safety interiors, fuzzball-like structures — against the
+> geometry-record, protected-interior-leakage, and late-decodability
+> diagnostics, beyond the schematic toy policy.
 
 The open physics remains large, but the missing object is no longer only a
-placeholder. It is now a finite relational channel with explicit failure modes
-and measurable acceptance criteria.
+placeholder. It is now a finite relational channel with a proven classical
+failure theorem and measurable acceptance criteria for completions.

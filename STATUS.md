@@ -1,8 +1,8 @@
 # STATUS
 
-**Last updated:** 2026-05-15
+**Last updated:** 2026-07-07
 **Active paper:** `paper/acp_main_v10.md` (internal masthead: "WORKING DRAFT — v0.9")
-**Active ACP Quantum focus:** deriving quantum gravity from ACP: `bridges/quantum_gravity_derivation_program.md` + `bridges/relational_observable_macrostate_kernel.md` + `bridges/cosmic_coordination_floor.md` + `bridges/singularity_inadmissibility.md` + `bridges/dark_constraint_quantum_gravity.md` + `bridges/quantum_gravity_convergence_map.md`
+**Active ACP Quantum focus:** deriving quantum gravity from ACP: `bridges/quantum_gravity_derivation_program.md` + `proofs/semiclassical_collapse_failure.md` + `bridges/relational_observable_macrostate_kernel.md` + `bridges/cosmic_coordination_floor.md` + `bridges/singularity_inadmissibility.md` + `bridges/dark_constraint_quantum_gravity.md` + `bridges/quantum_gravity_convergence_map.md`
 **Active QEC technical engine:** hardware-level adaptive syndrome alignment: `bridges/hardware_adaptive_alignment.md` + `simulations/hardware_adaptive_decoder/` (H0 grid scan + H1 trace replay + H2 circuit-level syndrome extraction / Pauli-frame logical-channel audit / schedule-phase audit) + `bridges/adaptive_syndrome_alignment.md` + `bridges/sacr_contraction_calibration.md`
 **Active civil-systems bridge:** restraint ethics / conditional-leakage record channels: `bridges/restraint_ethics.md` + `simulations/restraint_ethics/`
 **Active cross-domain QEC bridge:** otherness-preserving recovery: `bridges/otherness_preserving_recovery.md` + `simulations/otherness_preserving_recovery/`
@@ -29,19 +29,34 @@ before a coordination floor is breached; the open physics task is proving that
 the required microscopic completion is exactly quantum gravity, with the right
 relational observable algebra, boundary records, and classical limit.
 
-The first OP-20 kernel skeleton is now in place:
-`bridges/relational_observable_macrostate_kernel.md` defines a finite
-relational observable algebra, macrocells \(m\in\mathcal M_\ell\), quantum and
-classical forms of \(P_{\ell,\Delta}(m'|m)\), the diagnostics
-\(H_{\ell,\Delta}(m)\), \(I(G_\ell;R_{\partial})\), and
-\(I(L_R;R_{\partial}^{\mathrm{early}}\mid G_\ell)\), and a modest
-classical-collapse failure proposition. The first executable macrocell version
-now lives in `simulations/cosmic_coordination_floor/`: it uses compactness,
-expansion, curvature, boundary-area, null-record, and radiation bins and
-compares naked collapse, hard exclusion, horizon transfer, and a schematic
-quantum-completion policy. The next hard step is to strengthen the
-semiclassical collapse failure theorem and then test candidate completion
-kernels beyond the toy.
+The Stage 2 theorem of the derivation ladder is now proven at the finite
+relational-kernel level. `proofs/semiclassical_collapse_failure.md` derives
+the failing subset of a trapped collapse macrocell from explicit focusing
+assumptions (NEC, trapped bins, Penrose incompleteness, fixed description,
+relational clock compatibility) instead of assuming it, quantifies the
+normalization failure
+(\(Z^{\mathrm{adm}}_{\ell,\Delta}(m)=1-\mu_m(\tau_{\mathrm{fail}}\leq\Delta)\),
+vanishing at finite \(\Delta^*\) via the focusing bound
+\(\lambda^*\leq 2/\alpha\)), and proves a no-go theorem: no kernel
+constructible from the classical description alone — naked pushforward, hard
+exclusion, or terminal absorption — satisfies normalization, record balance,
+and the future-entropy floor simultaneously. Corollary 1 makes horizon
+formation a deferral with a semiclassical evaporation deadline; Corollary 2
+derives the forced-completion requirements (mechanism change before floor
+breach, normalization, boundary decodability). Imported classical-GR inputs
+and referee seams (relational clock F5, trapped bin design F2, pointwise NEC,
+extendible MGHDs) are labeled explicitly. The numerical companion
+`simulations/cosmic_coordination_floor/raychaudhuri_floor_check.py` verifies
+the focusing bound on 400 NEC-respecting samples (zero violations of
+\(2/\alpha\) or the tighter \(2/|\theta_0|\)), the monotone mass-loss curve
+with \(Z(\Delta^*)=0\), and the hard-exclusion entropy collapse (3.617 bits to
+0.000). The kernel skeleton itself remains
+`bridges/relational_observable_macrostate_kernel.md`, and the macrocell toy in
+`simulations/cosmic_coordination_floor/` still compares naked collapse, hard
+exclusion, horizon transfer, and a schematic quantum-completion policy. The
+next hard step is the completion half: instantiate candidate quantum-gravity
+mechanisms as completion kernels and audit them against the six
+candidate-mechanism tests.
 
 The working gravitational targets are:
 
@@ -219,7 +234,7 @@ The full result inventory, as of v10:
 
 ## Active fronts
 
-**1. ACP quantum-gravity derivation program.** This is now the primary ACP Quantum front. The target is explicit: derive quantum gravity as the persistence-forced completion of classical spacetime. The roadmap is `bridges/quantum_gravity_derivation_program.md`, now supported by `bridges/relational_observable_macrostate_kernel.md`, `bridges/cosmic_coordination_floor.md`, `bridges/singularity_inadmissibility.md`, `bridges/dark_constraint_quantum_gravity.md`, and `bridges/quantum_gravity_convergence_map.md`. OP-20 now has a formal skeleton plus a first finite macrocell toy in `simulations/cosmic_coordination_floor/`; the next serious step is strengthening the semiclassical collapse failure theorem and showing what boundary-decodable quantum completion is forced. *(Priority: highest.)*
+**1. ACP quantum-gravity derivation program.** This is now the primary ACP Quantum front. The target is explicit: derive quantum gravity as the persistence-forced completion of classical spacetime. The roadmap is `bridges/quantum_gravity_derivation_program.md`, supported by `bridges/relational_observable_macrostate_kernel.md`, `bridges/cosmic_coordination_floor.md`, `bridges/singularity_inadmissibility.md`, `bridges/dark_constraint_quantum_gravity.md`, and `bridges/quantum_gravity_convergence_map.md`. The Stage 2 collapse failure theorem is now proven: `proofs/semiclassical_collapse_failure.md` (no-go over classical kernel constructions, horizon-deferral deadline, forced-completion corollary), with numerical verification in `simulations/cosmic_coordination_floor/raychaudhuri_floor_check.py`. The next serious step is instantiating candidate completion kernels (holographic/QEC, loop/effective bounce, asymptotic-safety, fuzzball) and auditing them against the six candidate-mechanism tests; theorem refinements (averaged/quantum focusing conditions, OP-29 clock covariance) are secondary. *(Priority: highest.)*
 
 **2. Hardware-level adaptive syndrome alignment as QEC laboratory.** The QEC program remains the technical engine for the quantum-gravity derivation. The device-facing target is a fixed logical memory, noisy syndrome stream, online noise estimation, decoder/gauge/schedule updates, explicit overhead, and logical-channel audits. The current scaffold is `bridges/hardware_adaptive_alignment.md` plus `simulations/hardware_adaptive_decoder/`; H0, H1, and an H2 circuit-level syndrome-extraction scaffold with bit-flip logical-PTM, Pauli-frame logical-channel metrics, terminal phase-window metrics, and calibration schedule-phase replay are in place. The next step is measured backend-log replay or moving H2 from the repetition-code Pauli audit to a phase-protecting stabilizer/subsystem-code circuit with true steady-state per-cycle maps. *(Priority: high.)*
 
@@ -301,9 +316,9 @@ Canonical tracker: `OPEN_PROBLEMS.md`. Headline items:
 - **OP-15: Shannon form of noise-as-signal.** Partially upgraded: `bridges/quantum_noise_as_signal.md` now uses explicit classical environment-fragment mutual information and induced logical-channel entanglement fidelity / coherent information. Remaining work is the full microscopic environment-state version and recoverability / active decoding.
 - **OP-16: Adaptive syndrome-space alignment under drifting structured noise.** Partial+++: first bridge, axis-switching toy, fixed-code adaptive-decoder scaffold, H1 trace replay harness, H2 circuit-level syndrome-extraction scaffold with bit-flip logical-PTM / Pauli-frame logical-channel / phase-window / schedule-phase metrics, and finite-cycle contraction calibration harness exist. Next step is improving the hardware scaffold toward measured backend replay or decoder-likelihood, gauge, or schedule adaptation inside a phase-protecting stabilizer/subsystem-code circuit while computing \(q^*\), \(\eta^*\), and the alignment floor for a real syndrome-extraction/recovery map.
 - **OP-17: Dark constraints as quantum-gravity syndrome information.** Partial+: bridge seed, ray-count mirror-room simulation, and wave-interference dark-fringe simulation exist; next step is a weak-metric/lensing null-record upgrade that feeds the derivation program's boundary-record stage.
-- **OP-18: Singularity inadmissibility and horizon regularization.** Partial+: ACP/Schur criterion, gravitational bridge note, finite macrocell collapse toy, and first OP-20 kernel skeleton exist; next step is proving the stronger semiclassical collapse failure theorem.
-- **OP-19: ACP derivation of quantum gravity / cosmic coordination floor.** Partial++: derivation roadmap, program bridge, macrocell-vector toy model, and relational macrostate-kernel skeleton exist; next step is proving floor violation or normalization failure for classical collapse under explicit focusing assumptions.
-- **OP-20: Relational observable macrostate kernel.** Partial+: `bridges/relational_observable_macrostate_kernel.md` defines the finite relational observable algebra, macrocell partition, quantum/channel kernel, classical pushforward kernel, Schur-block reading, and boundary-information diagnostics; `simulations/cosmic_coordination_floor/` now instantiates the toy macrocell vector and candidate policy comparison. Next step is candidate-mechanism audit beyond the schematic toy.
+- **OP-18: Singularity inadmissibility and horizon regularization.** Partial++: ACP/Schur criterion, gravitational bridge note, finite macrocell collapse toy, OP-20 kernel skeleton, and now the proven semiclassical collapse failure theorem (`proofs/semiclassical_collapse_failure.md`); next steps are averaged/quantum focusing conditions and the OP-29 clock transformation.
+- **OP-19: ACP derivation of quantum gravity / cosmic coordination floor.** Partial+++: derivation roadmap, program bridge, macrocell-vector toy model, relational macrostate-kernel skeleton, and the Stage 2 theorem (quantitative normalization failure, no-go over classical kernels, horizon deadline, forced completion) now exist; next step is candidate completion kernels.
+- **OP-20: Relational observable macrostate kernel.** Partial++: `bridges/relational_observable_macrostate_kernel.md` defines the finite relational observable algebra, macrocell partition, quantum/channel kernel, classical pushforward kernel, Schur-block reading, and boundary-information diagnostics; the classical-collapse failure proposition is superseded by the proven theorem; `simulations/cosmic_coordination_floor/` instantiates the toy macrocell vector, the candidate policy comparison, and the theorem's numerical checks. Next step is candidate-mechanism audit beyond the schematic toy.
 - **OP-21: First-principles Hilbert branch structure / quantum kinematics from ACP.** Partial+++: the conditional local package now includes branch weights, closed unitary flow, tensor-product independent composition, and POVM/projective measurement structure; the remaining task is to derive that kinematics from ACP alone.
 - **OP-22: Quantum braiding and collapse as internal timekeeping.** Partial: seed bridge note exists; next step is a monitored-qubit feedback simulation with record entropy, memory, leakage, and clock-regularity diagnostics.
 - **OP-23: Hardware implementation ladder for adaptive syndrome alignment.** Open/partial: roadmap, first fixed-code adaptive decoder scaffold, H1 trace replay interface, and H2 circuit-level syndrome-extraction interface with bit-flip logical-process, Pauli-frame logical-channel, and schedule-phase audits exist; next step is measured hardware-data replay, a phase-protecting stabilizer/subsystem patch, steady-state cycle maps, and live hardware loop.
@@ -315,6 +330,42 @@ Canonical tracker: `OPEN_PROBLEMS.md`. Headline items:
 - **OP-29: Operational-time relativity and proper productive intervals.** Open/partial: first bridge note exists; next step is proving the operational-time covariance theorem for systems with different tempos, coarse-grainings, and record channels.
 
 ## Changelog
+
+### 2026-07-07 — semiclassical collapse failure theorem
+- Added `proofs/semiclassical_collapse_failure.md`, the Stage 2 theorem of the
+  quantum-gravity derivation ladder. It strengthens Proposition 2 of the OP-20
+  kernel bridge in four ways: the failing subset of a trapped collapse
+  macrocell is derived from explicit focusing assumptions (F1–F6: NEC,
+  trapped bins, Penrose causality inputs, fixed description, relational clock
+  compatibility, nondegenerate cell measure) instead of assumed; the
+  normalization failure is quantitative, with retained mass
+  \(Z^{\mathrm{adm}}_{\ell,\Delta}(m)=1-\mu_m(\tau_{\mathrm{fail}}\leq\Delta)\)
+  vanishing at finite \(\Delta^*\) controlled by the focusing bound
+  \(\lambda^*\leq 2/\alpha\); hard exclusion is shown to violate record
+  balance with divergent discarded coordination \(-\log Z\); and an
+  exhaustiveness lemma upgrades the trichotomy to a no-go theorem over every
+  kernel constructible from the classical description.
+- Corollary 1 formalizes horizon deferral: an admissible exterior
+  regularization whose permanent-horizon idealization is removed by
+  semiclassical evaporation, so the trichotomy reappears in the exterior
+  algebra at the decoding scale. Corollary 2 derives the forced-completion
+  requirements (mechanism change before floor breach, normalization,
+  boundary decodability) from the theorem plus the floor and record-balance
+  axioms.
+- Imported classical-GR inputs (Raychaudhuri comparison, Penrose theorem,
+  trapped-surface existence/stability) and referee seams (F5 clock, F2 bin
+  design, pointwise NEC, extendible MGHDs) are labeled explicitly.
+- Added `simulations/cosmic_coordination_floor/raychaudhuri_floor_check.py`:
+  400 NEC-respecting Raychaudhuri integrations with zero violations of the
+  \(2/\alpha\) bound (or the tighter \(2/|\theta_0|\)), a monotone mass-loss
+  curve with \(Z(\Delta^*)=0\), and hard-exclusion entropy collapse from
+  3.617 bits to 0.000; the absorption channel has exactly zero future entropy.
+- Updated `bridges/relational_observable_macrostate_kernel.md`,
+  `bridges/quantum_gravity_derivation_program.md`,
+  `bridges/cosmic_coordination_floor.md`,
+  `bridges/singularity_inadmissibility.md`, the simulation README, and
+  OP-18/OP-19/OP-20.
+- Session log: `sessions/2026-07-07_semiclassical_collapse_failure.md`.
 
 ### 2026-05-15 — CC0 license added
 - Added root `LICENSE` with the CC0 1.0 Universal legal code.

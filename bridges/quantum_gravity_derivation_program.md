@@ -37,6 +37,13 @@ unless new structure is supplied.
 must undergo a mechanism-changing, decodable redistribution before its
 future-bearing channel crystallizes.
 
+**Proven at the finite relational-kernel level, given imported classical-GR
+inputs.** The Stage 2 collapse failure theorem:
+`proofs/semiclassical_collapse_failure.md` shows that on trapped relational
+macrocells no classical kernel construction is admissible, and that any
+admissible continuation must be mechanism-changing, normalization-preserving,
+and boundary-decodable.
+
 **Conjectural in quantum gravity.** The microscopic mechanism implementing
 that redistribution for spacetime is quantum gravity.
 
@@ -71,6 +78,19 @@ The target theorem is:
 > classical focusing assumptions, the classical transition kernel either
 > becomes undefined on admissible future macrostates or violates the positive
 > future-entropy floor.
+
+**This theorem is now proven at the finite relational-kernel level.**
+`proofs/semiclassical_collapse_failure.md` derives the failing set from
+explicit focusing assumptions (Raychaudhuri comparison, Penrose
+incompleteness, trapped bins), quantifies the normalization failure, and
+closes the exit routes: no kernel constructible from the classical
+description alone satisfies normalization, record balance, and the entropy
+floor simultaneously. Its Corollary 1 makes horizon formation a deferral with
+a semiclassical deadline; its Corollary 2 derives the Stage 3 requirements
+from the failure theorem plus the floor and record-balance axioms. The
+imported classical-GR inputs and the referee seams (relational clock, trapped
+bin design, NEC, censorship-violating extendible cases) are explicitly
+labeled there.
 
 ### Stage 3: Required Completion
 
@@ -188,6 +208,10 @@ The expected result is not "quantize the metric" as a starting axiom, but:
 
 ## 4. Current Anchors
 
+- `proofs/semiclassical_collapse_failure.md`: the Stage 2 theorem — no
+  classical kernel construction on trapped relational macrocells is
+  admissible; horizon deferral has a semiclassical deadline; the completion
+  requirements are forced.
 - `bridges/singularity_inadmissibility.md`: singularities are inadmissible
   physical states; horizons are candidate finite boundary transfers.
 - `bridges/relational_observable_macrostate_kernel.md`: finite relational
@@ -205,9 +229,12 @@ The expected result is not "quantize the metric" as a starting axiom, but:
 
 ## 5. Near-Term Work
 
-1. Strengthen the classical failure theorem for the finite semiclassical
-   collapse macrocell using compactness, expansion, curvature, boundary area,
-   null records, and outgoing radiation bins.
+1. ~~Strengthen the classical failure theorem for the finite semiclassical
+   collapse macrocell~~ — done: `proofs/semiclassical_collapse_failure.md`
+   plus the numerical companion
+   `simulations/cosmic_coordination_floor/raychaudhuri_floor_check.py`.
+   Remaining refinements: replace pointwise NEC with averaged/quantum focusing
+   conditions, and prove the F5 clock transformation via OP-29 covariance.
 2. Instantiate candidate completion kernels for that macrocell and compare them
    against the floor, privacy, and decodability diagnostics.
 3. Upgrade the dark-constraint simulations from hidden optical phase bumps to

@@ -299,7 +299,14 @@ records.
 
 ## 9. Next Formal Target
 
-The broader formalization program is now laid out in
+The first hard formal target named here is now met:
+`proofs/semiclassical_collapse_failure.md` proves that on trapped relational
+macrocells, under explicit focusing assumptions, every kernel constructible
+from the classical description fails normalization, record balance, or the
+future-entropy floor — and that horizon formation is an admissible exterior
+regularization with a semiclassical deadline, exactly as §5 anticipated.
+
+The broader formalization program is laid out in
 `bridges/cosmic_coordination_floor.md`. The first executable toy model exists
 in `simulations/cosmic_coordination_floor/` and implements three competing
 descriptions:
