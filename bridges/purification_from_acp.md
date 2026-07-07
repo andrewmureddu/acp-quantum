@@ -354,6 +354,11 @@ So the actual theorems of this note are:
    OS-3 as a physical record channel inside a closed mechanism-preserving
    composite (Stinespring direction), and show that CDT conservation for the
    closed system forces an extremal joint description at some finite cut.
+   *Update:* taken in `bridges/closed_preparability.md` — PU-2 is now a
+   theorem given the dynamical closure axiom CL-1 (every preparation is a
+   reversible transformation of a blank composite at some finite cut), with
+   classical theories provably violating CL-1. The residue is a single
+   reversibility axiom shared with UE-1.
 2. **Sharp records lemma** (shared with
    `bridges/operational_state_space_from_acp.md` §10): perfect
    distinguishability from asymptotic repetition.
