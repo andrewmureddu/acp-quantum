@@ -316,6 +316,32 @@ Canonical tracker: `OPEN_PROBLEMS.md`. Headline items:
 
 ## Changelog
 
+### 2026-07-07 — The Horizon's Story essay (triptych complete)
+- Added `essays/horizons_story.md`, the third and closing panel of the
+  light/darkness/horizon triptych. Its organizing observation is that the
+  horizon is not a place but a distinction — locally nonexistent (nothing is
+  there for an infalling observer), globally load-bearing — and that the
+  first two essays' protagonists are positions relative to it: a record is a
+  fact outside the line, a secret is a fact inside it.
+- Physical anchors: the teleological definition of event horizons (drawn by
+  the future, quasi-local apparent-horizon surrogates), the membrane paradigm
+  and black hole complementarity (witness-indexed descriptions; firewall
+  debate flagged open), Bekenstein-Hawking area entropy and holography as the
+  reason the program's targets are boundary quantities \(R_\partial\),
+  Hawking's area theorem heard and checked in LIGO ringdowns, Rindler/Unruh
+  and cosmological horizons as witness-relative and universal, and the
+  cross-scale lift: cell membranes, Friston Markov blankets (parent-paper
+  reduction), and QEC code boundaries as horizons of persistence.
+- The ACP placement: the horizon as the repair — cosmic censorship as dress
+  code (flagged conjecture), the horizon as the implementation surface of
+  both persistence clauses (\(I(G_\ell;R_\partial)>0\) published at once;
+  \(I(L_R;R_\partial^{\mathrm{early}})\approx 0\) enforced by going dark) and
+  as escrow/timekeeper of the late decodable release (Page-curve picture
+  flagged conjecture).
+- Essay register only — no new formal claims; proven/derived/conjectured
+  markers preserved in prose. No open-problem changes.
+- Session log: `sessions/2026-07-07_horizons_story.md`.
+
 ### 2026-07-07 — Darkness's Story essay
 - Added `essays/darkness_story.md`, the sibling essay to
   `essays/lights_story.md`. Its organizing observation is that darkness enters
