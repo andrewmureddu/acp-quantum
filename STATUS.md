@@ -1,6 +1,6 @@
 # STATUS
 
-**Last updated:** 2026-05-15
+**Last updated:** 2026-07-17
 **Active paper:** `paper/acp_main_v10.md` (internal masthead: "WORKING DRAFT — v0.9")
 **Active ACP Quantum focus:** deriving quantum gravity from ACP: `bridges/quantum_gravity_derivation_program.md` + `bridges/relational_observable_macrostate_kernel.md` + `bridges/cosmic_coordination_floor.md` + `bridges/singularity_inadmissibility.md` + `bridges/dark_constraint_quantum_gravity.md` + `bridges/quantum_gravity_convergence_map.md`
 **Active QEC technical engine:** hardware-level adaptive syndrome alignment: `bridges/hardware_adaptive_alignment.md` + `simulations/hardware_adaptive_decoder/` (H0 grid scan + H1 trace replay + H2 circuit-level syndrome extraction / Pauli-frame logical-channel audit / schedule-phase audit) + `bridges/adaptive_syndrome_alignment.md` + `bridges/sacr_contraction_calibration.md`
@@ -233,7 +233,7 @@ The full result inventory, as of v10:
 
 **7. Quantum foundations from ACP.** `bridges/born_rule_from_acp.md`, `bridges/unitary_evolution_from_acp.md`, `bridges/tensor_product_from_acp.md`, and `bridges/measurement_formalism_from_acp.md` now prove the conditional local quantum-kinematics package given Hilbert structure. The remaining task is to derive the Hilbert branch geometry itself and reconnect it to relational gravitational observables. *(Priority: exploratory but strategically important.)*
 
-**8. Collapse/timekeeping bridge: quantum braiding.** `bridges/quantum_braiding_timekeeping.md` treats collapse operationally as a clocking event in a quantum instrument/feedback process. This remains adjacent to OP-21/OP-22 and may help state how boundary records become time in the quantum-gravity derivation. *(Priority: exploratory.)*
+**8. Collapse/timekeeping bridge: quantum braiding.** `bridges/quantum_braiding_timekeeping.md` treats collapse operationally as a clocking event in a quantum instrument/feedback process. The first executable braided-clock toy now exists at `simulations/quantum_braiding_clock/`: a pulsed-monitored qubit whose own collapse records are clock, detuning syndrome, and PLL feedback input, with a structurally noncentral controller. Key finding: continuous monitoring admits no productive interval at all; pulsed record formation opens a modest one. This remains adjacent to OP-21/OP-22/OP-29 and may help state how boundary records become time in the quantum-gravity derivation. *(Priority: exploratory.)*
 
 **9. Meta-theoretic coherence / admissible mathematics.** `bridges/reality_reflective_mathematics.md` now matters directly to quantum gravity because admissible mathematical descriptions must have finite observables, normalizable record channels, nondegenerate continuation, and structured uncertainty allocation. This is the meta-theoretic shell of the derivation program. *(Priority: supporting.)*
 
@@ -315,6 +315,33 @@ Canonical tracker: `OPEN_PROBLEMS.md`. Headline items:
 - **OP-29: Operational-time relativity and proper productive intervals.** Open/partial: first bridge note exists; next step is proving the operational-time covariance theorem for systems with different tempos, coarse-grainings, and record channels.
 
 ## Changelog
+
+### 2026-07-17 — braided quantum clock simulation (OP-22)
+- Added `simulations/quantum_braiding_clock/`, the first executable companion
+  to `bridges/quantum_braiding_timekeeping.md`: a pulsed-monitored qubit whose
+  own weak-measurement records are simultaneously its clock, its detuning
+  syndrome channel, and the input of an integrating record-driven
+  phase-locked loop, with the logical bit stored in the unmonitored x
+  component so all control rotations are logically noncentral by
+  construction.
+- Negative result with content: the first, continuous-monitoring version of
+  the model has no productive overlap — transverse coherence decay and
+  drift-syndrome readability never intersect, and a constant z drift under
+  fast precession hides in the unmonitored y quadrature. A single
+  continuously monitored qubit cannot be its own clock, syndrome meter, and
+  memory at once; the braid needs pulsed rhythm.
+- Positive result, modest in the house register: the seeded 12x12 scan over
+  burst strength and feedback gain finds an interior productive interval at
+  `kappa = 0.2136`, `g = 3.3`, with memory retention `0.307318`, tick-stream
+  error information `0.061023` bits, phase lock raised by feedback from
+  `0.094241` to `0.425850`, and grid-max logical leak `0.011986` bits
+  (finite-sample floor). Both boundaries are fatal: weak monitoring never
+  locks and carries no syndrome; strong monitoring kills the memory and the
+  syndrome, because the escapement's backaction destroys the oscillation it
+  reads.
+- Extended `bridges/quantum_braiding_timekeeping.md` with section 10 and
+  upgraded OP-22 to partial+.
+- Session log: `sessions/2026-07-17_braided_quantum_clock.md`.
 
 ### 2026-05-15 — CC0 license added
 - Added root `LICENSE` with the CC0 1.0 Universal legal code.

@@ -298,7 +298,7 @@ The sharper claim is narrower:
 > open quantum feedback braid, and persistence requires the entropy released
 > by clocking to remain bounded, decodable, and partially reusable.
 
-## 9. Next Simulation Target
+## 9. Simulation Target
 
 The natural simulation is a monitored qubit or small code with feedback:
 
@@ -323,4 +323,49 @@ Expected ACP shape:
 - intermediate measurement / feedback: braided productive interval;
 - high measurement / feedback: Zeno crystallization or noisy dissolution,
   depending on whether the record pins or randomizes the state.
+
+## 10. First Simulation Result: the Braid Needs Rhythm
+
+The first executable version now exists at
+`simulations/quantum_braiding_clock/`. It implements the section 9 target as
+a pulsed-monitored qubit clock: logical bit in the x component, clock carrier
+precessing about x at a hidden detuned frequency (the error sector is whether
+the clock runs fast or slow), a two-burst-per-period weak-measurement
+escapement, and an integrating phase-locked loop driven by the qubit's own
+quadrature records. Because every control rotation is about x, the controller
+is logically noncentral by construction, and the audit confirms it: the
+maximum \(I(\mathrm{logical};R\mid\mathrm{error})\) anywhere on the
+\(12\times12\) grid is `0.012` bits, the finite-sample floor.
+
+Two results, one negative and one positive, both ACP-shaped:
+
+1. **Continuous monitoring admits no braid.** In the first, continuous
+   version of the model there is no productive overlap at all: transverse
+   coherence dies like \(e^{-\kappa^2 t/2}\) while reading the drift against
+   backaction requires near-Zeno strength, and a constant z drift under fast
+   precession hides in the unmonitored y quadrature. A single continuously
+   monitored qubit cannot be simultaneously its own clock, syndrome meter,
+   and memory. The braid needs rhythm: record formation must be pulsed, with
+   free coherent flow between ticks. This is the release/record/feedback
+   alternation of section 2 appearing as a necessity, not a stylistic choice.
+
+2. **Pulsed monitoring opens a modest productive interval.** The seeded scan
+   finds an interior optimum at burst strength \(\kappa\approx0.21\) with
+   strong feedback gain: memory retention `0.307`, tick-stream detuning
+   syndrome `0.061` bits, phase lock raised by feedback from `0.094` (zero
+   gain) to `0.426` (max gain), and near-zero logical leak. Both boundaries
+   are visibly fatal: at \(\kappa=0.05\) the record carries no syndrome and
+   the clock never locks; at \(\kappa=0.95\) the memory is dead and the
+   error information also collapses, because the escapement's backaction
+   destroys the oscillation it reads. Over-measurement dissolves the clock
+   itself.
+
+The honest status is unchanged in kind: this is a diagnostic toy, not a
+derivation. But the conjecture of section 7 now has its first instrument,
+and the first cautionary refinement: the braided interval exists for pulsed,
+not continuous, record formation, and backaction phase jitter
+(\(\sim\kappa/Y_0\) per quadrature tick) keeps the lock partial. The next
+step is a tick-rate versus tick-strength tradeoff at fixed total dephasing
+budget, and a clock-regularity metric stated in the system's own operational
+time (OP-29).
 
