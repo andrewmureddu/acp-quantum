@@ -1,0 +1,14 @@
+metric,value
+pflip_grid,0.0 0.005 0.01 0.02 0.04 0.08
+zero_noise_bare_retention,0.320885
+zero_noise_checked_retention,0.243152
+mid_noise_bare_retention,0.074113
+mid_noise_unchecked_retention,0.052449
+mid_noise_checked_retention,0.139905
+mid_noise_overactive_retention,0.06482
+mid_noise_checked_sign_fidelity,0.78
+mid_noise_bare_sign_fidelity,0.625
+mid_noise_checked_flip_id_mi,0.013312
+mid_noise_checked_corrections,1.708333
+mid_noise_overactive_corrections,7.448333
+grid_max_leak_bits,0.006029

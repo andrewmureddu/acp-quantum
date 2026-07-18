@@ -442,6 +442,44 @@ interval of the braided clock is measured in ticks, invariant under lab
 reparameterization when the environment is co-clocked, and undefined —
 because record selectivity fails — when it is not.
 
-The remaining next step is a small-code version connecting the braided
-clock to the hardware ladder (OP-23).
+## 13. Fourth Result: the Clocked Repetition Code
+
+The small-code rung now exists (Experiment D in the same simulation): three
+braided-clock qubits carrying one logical bit, one shared clock and PLL
+drive, and a per-period phase-flip channel. Two structural findings:
+
+1. **The tick stream cannot be its own syndrome.** The first design tried
+   to decode flips from the weak tick records alone, exploiting the fact
+   that a flipped qubit's clock carrier inverts. The failure is exact
+   enough to keep: a z-tick statistic with flip-identification SNR \(S\)
+   costs \(e^{-S^2/2}\) of the logical coherence it protects, so tick
+   records gentle enough to preserve memory are too dilute to decode flips
+   within a run. This is the cheapest possible statement of why codes
+   exist: a phase-flip code's parity operators commute with the logical
+   algebra, so parity can be read strongly at zero logical cost — the
+   Knill-Laflamme condition doing real work. Experiment D therefore gives
+   parity its own record channel (noisy readout, no logical backaction,
+   KL-imported), while the tick stream keeps timekeeping and feedback.
+
+2. **Correction has its own productive interval.** On the same terminal
+   logical readout, evidence-gated correction beats bare, unchecked, and
+   overactive baselines only in the middle noise window
+   \(p_{\mathrm{flip}}\approx0.005\)–\(0.04\) (at \(p=0.02\): checked
+   `0.140` vs bare `0.074`, unchecked `0.052`, overactive `0.065`; checked
+   sign fidelity `0.78` vs bare `0.625`). Below the window, residual false
+   positives make checking a net cost (bare wins at zero noise, `0.321` vs
+   `0.243`); above it, multi-flips overwhelm the distance-3 decoder
+   (checked retention `0.000` at \(p=0.08\)). The overactive policy is
+   worse everywhere, and the common-mode clock feedback remains logically
+   noncentral (grid-max leak `0.006` bits). This is the same cautionary
+   shape as the H0–H2 hardware scans — adaptation wins exactly where error
+   structure is real, decodable, and unsaturated — reproduced inside the
+   braided-clock architecture, which is what OP-23 asks a candidate
+   control stack to demonstrate before it earns hardware data.
+
+The scaffold is honest about its rank: product-state Bloch dynamics with
+classical parity records is the D0 rung. The next rungs are an entangled
+stabilizer simulation of the same architecture (deriving, not importing,
+the parity channel's zero logical cost) and the existing H-ladder's
+measured-trace replay discipline applied to a clocked code.
 

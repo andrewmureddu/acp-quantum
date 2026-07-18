@@ -110,6 +110,9 @@ BUDGET_PNG = OUT / "braiding_clock_budget_heatmaps.png"
 OPTIME_CSV = OUT / "braiding_clock_optime_scan.csv"
 OPTIME_SUMMARY_CSV = OUT / "braiding_clock_optime_summary.csv"
 OPTIME_PNG = OUT / "braiding_clock_optime_curves.png"
+CODE_CSV = OUT / "braiding_clock_code_scan.csv"
+CODE_SUMMARY_CSV = OUT / "braiding_clock_code_summary.csv"
+CODE_PNG = OUT / "braiding_clock_code_curves.png"
 
 SEED = 20260717
 
@@ -168,6 +171,44 @@ OPTIME_MEASURED_PERIODS = 16
 OPTIME_K_LIST = [1, 2, 3, 4, 6]
 OPTIME_KAPPA = 0.21
 OPTIME_GAIN = 3.3
+
+# --- Experiment D: clocked repetition code (OP-23 small-code rung) ---
+# Three braided-clock qubits carry the same logical bit (sign of each x
+# component) and share one clock (common detuning sector, common PLL drive).
+# The channel adds phase flips: each period each qubit independently flips
+# (x, y) -> (-x, -y) with probability p_flip.
+#
+# Syndrome channel. A first version tried to decode flips from the weak
+# tick records alone (a flipped qubit's clock carrier inverts, so it ticks
+# upside-down). That fails structurally, and the failure is worth keeping:
+# a z-tick statistic with flip-identification SNR S costs exp(-S^2 / 2) of
+# the logical coherence it is protecting, so tick records gentle enough to
+# preserve memory are too dilute to decode flips within a run. This is
+# precisely why codes exist. A phase-flip code measures X(i)X(j) parity
+# STRONGLY at zero logical cost, because the parity operator commutes with
+# the logical algebra - the Knill-Laflamme condition in its cheapest form.
+# Experiment D therefore adds a dedicated parity record channel: per
+# in-phase tick, each qubit pair emits a binary record with bias
+# PARITY_KAPPA * sign(x_i x_j), noisy in readout but free of x backaction.
+#
+# Honesty note: this is a product-state Bloch scaffold, not an entangled
+# stabilizer code; the parity records are classical comparisons standing in
+# for collective stabilizer measurements, and their zero-backaction status
+# is imported from the Knill-Laflamme argument, not derived here. This is
+# the D0 rung of a small-code ladder: it tests the control architecture
+# (clock and syndrome records kept separate by commutation, noncentral
+# common-mode feedback, evidence-gated correction) rather than genuine
+# stabilizer protection. The OP-23 acceptance discipline still applies: the
+# checked code must beat bare and unchecked baselines on the same logical
+# readout, and the overactive policy must be visibly worse.
+CODE_PERIODS = 36
+CODE_KAPPA = 0.18
+CODE_GAIN = 3.3
+PARITY_KAPPA = 0.6       # readout fidelity of the pair parity records
+CODE_EMA_ALPHA = 0.30    # parity-record EMA (syndrome evidence)
+CODE_THRESHOLD = 0.25    # evidence gate for the checked decoder
+CODE_PFLIP_GRID = [0.0, 0.005, 0.01, 0.02, 0.04, 0.08]
+CODE_POLICIES = ["bare", "code_unchecked", "code_checked", "code_overactive"]
 
 # --- Experiment A grid ---
 # Each burst multiplies transverse coherence by roughly sqrt(1 - kappa^2),
@@ -392,6 +433,214 @@ def main() -> None:
 
     run_budget_experiment(rng)
     run_optime_experiment(rng)
+    run_code_experiment(rng)
+
+
+def run_code_point(p_flip: float, policy: str, rng: np.random.Generator) -> dict:
+    """One cell of Experiment D: the clocked repetition code."""
+    n = N_TRAJ
+    nq = 1 if policy == "bare" else 3
+    b = rng.integers(0, 2, size=n)
+    e = rng.integers(0, 2, size=n)
+    sb = np.where(b == 1, 1.0, -1.0)
+    se = np.where(e == 1, 1.0, -1.0)
+
+    theta = OMEGA * (1.0 + se * DETUNING) * DT
+    cos_t, sin_t = np.cos(theta), np.sin(theta)
+
+    PAIRS = [(0, 1), (1, 2), (0, 2)]
+    x = np.tile((sb * X0)[None, :], (nq, 1))
+    y = np.full((nq, n), Y0)
+    z = np.zeros((nq, n))
+    pm = np.zeros((3, n))            # pair parity-record EMAs (syndrome)
+    ema_c = np.zeros(n)              # common-mode quadrature EMA (PLL)
+    corrections = np.zeros(n)
+    first_flip = np.zeros(n, dtype=int)   # 0 = none, 1..nq = first flipped qubit
+    quad_common: list[np.ndarray] = []
+
+    steps = CODE_PERIODS * STEPS_PER_PERIOD
+    for t in range(steps):
+        y, z = y * cos_t - z * sin_t, y * sin_t + z * cos_t
+
+        step_in_period = t % STEPS_PER_PERIOD
+        if step_in_period == 0 and p_flip > 0.0:
+            flips = rng.random((nq, n)) < p_flip
+            sign = np.where(flips, -1.0, 1.0)
+            x *= sign
+            y *= sign
+            for q in range(nq):
+                newly = flips[q] & (first_flip == 0)
+                first_flip[newly] = q + 1
+
+        if step_in_period == IN_PHASE_STEP:
+            for q in range(nq):
+                x[q], y[q], z[q], _ = weak_measure_z(x[q], y[q], z[q], CODE_KAPPA, rng)
+            if nq == 3:
+                # Parity record channel: binary readout of sign(x_i x_j),
+                # noisy at PARITY_KAPPA, no x backaction (KL-justified).
+                latest_p = np.empty((3, n))
+                for pi, (i, j) in enumerate(PAIRS):
+                    bias = PARITY_KAPPA * np.sign(x[i] * x[j])
+                    r = np.where(rng.random(n) < (1.0 + bias) / 2.0, 1.0, -1.0)
+                    latest_p[pi] = r
+                    pm[pi] = (1.0 - CODE_EMA_ALPHA) * pm[pi] + CODE_EMA_ALPHA * r
+                if policy == "code_checked":
+                    evidence, gate = pm, CODE_THRESHOLD
+                elif policy == "code_overactive":
+                    evidence, gate = latest_p, 0.5
+                else:
+                    evidence = None
+                if evidence is not None:
+                    for q in range(3):
+                        own = [pi for pi, pr in enumerate(PAIRS) if q in pr]
+                        other = next(
+                            pi for pi, pr in enumerate(PAIRS) if q not in pr
+                        )
+                        hit = (
+                            (evidence[own[0]] < -gate)
+                            & (evidence[own[1]] < -gate)
+                            & (evidence[other] > gate)
+                        )
+                        if not hit.any():
+                            continue
+                        x[q][hit] *= -1.0
+                        y[q][hit] *= -1.0
+                        pm[own[0]][hit] = 0.0
+                        pm[own[1]][hit] = 0.0
+                        corrections[hit] += 1
+        elif step_in_period == QUADRATURE_STEP:
+            s_sum = np.zeros(n)
+            for q in range(nq):
+                x[q], y[q], z[q], s = weak_measure_z(x[q], y[q], z[q], CODE_KAPPA, rng)
+                s_sum += s
+            s_common = s_sum / nq
+            quad_common.append(s_common)
+            ema_c = (1.0 - EMA_ALPHA) * ema_c + EMA_ALPHA * s_common
+            phi = CODE_GAIN * PHI0 * ema_c
+            cphi, sphi = np.cos(phi), np.sin(phi)
+            y, z = y * cphi - z * sphi, y * sphi + z * cphi
+
+    # --- Logical readout: median over the block (majority for sign,
+    # amplitude-honest), assumed ideal. ---
+    x_logical = x[0] if nq == 1 else np.median(x, axis=0)
+    retention = max(0.0, float(np.mean(sb * x_logical) / X0))
+    sign_fidelity = float(np.mean(np.sign(x_logical) == sb))
+
+    # --- Syndrome decode audit: first flipped qubit vs terminal parity
+    # verdict (which qubit, if any, the pair EMAs currently implicate). ---
+    if nq == 3:
+        inferred = np.zeros(n, dtype=int)
+        for q in range(3):
+            own = [pi for pi, pr in enumerate(PAIRS) if q in pr]
+            other = next(pi for pi, pr in enumerate(PAIRS) if q not in pr)
+            hit = (
+                (pm[own[0]] < 0) & (pm[own[1]] < 0) & (pm[other] > 0)
+            )
+            inferred[hit] = q + 1
+        joint = np.zeros((4, 4))
+        for a in range(4):
+            for c in range(4):
+                joint[a, c] = np.sum((first_flip == a) & (inferred == c))
+        flip_id_mi = binary_mi(joint)
+    else:
+        flip_id_mi = 0.0
+
+    # --- Leak audit on the common-mode quadrature record. ---
+    late = np.array(quad_common).mean(axis=0)
+    leak = 0.0
+    for ei in range(2):
+        mask = e == ei
+        if mask.sum() < 8:
+            continue
+        sub_b = b[mask]
+        sub_r = (late[mask] > np.median(late[mask])).astype(int)
+        joint_b = np.zeros((2, 2))
+        for bi in range(2):
+            for ri in range(2):
+                joint_b[bi, ri] = np.sum((sub_b == bi) & (sub_r == ri))
+        leak += mask.mean() * binary_mi(joint_b)
+
+    return {
+        "p_flip": p_flip,
+        "policy": policy,
+        "logical_retention": round(retention, 6),
+        "sign_fidelity": round(sign_fidelity, 6),
+        "flip_id_mi_bits": round(flip_id_mi, 6),
+        "logical_leak_bits": round(leak, 6),
+        "mean_corrections": round(float(corrections.mean()), 6),
+    }
+
+
+def run_code_experiment(rng: np.random.Generator) -> None:
+    """Experiment D: the clocked repetition code (OP-23 D0 rung)."""
+    rows = [
+        run_code_point(p, policy, rng)
+        for p in CODE_PFLIP_GRID
+        for policy in CODE_POLICIES
+    ]
+
+    with CODE_CSV.open("w", newline="") as fh:
+        writer = csv.DictWriter(fh, fieldnames=list(rows[0].keys()))
+        writer.writeheader()
+        writer.writerows(rows)
+
+    def get(p, policy, key):
+        return next(
+            r[key] for r in rows if r["p_flip"] == p and r["policy"] == policy
+        )
+
+    mid = 0.02
+    summary = [
+        ("pflip_grid", " ".join(str(p) for p in CODE_PFLIP_GRID)),
+        ("zero_noise_bare_retention", get(0.0, "bare", "logical_retention")),
+        ("zero_noise_checked_retention", get(0.0, "code_checked", "logical_retention")),
+        ("mid_noise_bare_retention", get(mid, "bare", "logical_retention")),
+        ("mid_noise_unchecked_retention", get(mid, "code_unchecked", "logical_retention")),
+        ("mid_noise_checked_retention", get(mid, "code_checked", "logical_retention")),
+        ("mid_noise_overactive_retention", get(mid, "code_overactive", "logical_retention")),
+        ("mid_noise_checked_sign_fidelity", get(mid, "code_checked", "sign_fidelity")),
+        ("mid_noise_bare_sign_fidelity", get(mid, "bare", "sign_fidelity")),
+        ("mid_noise_checked_flip_id_mi", get(mid, "code_checked", "flip_id_mi_bits")),
+        ("mid_noise_checked_corrections", get(mid, "code_checked", "mean_corrections")),
+        ("mid_noise_overactive_corrections", get(mid, "code_overactive", "mean_corrections")),
+        ("grid_max_leak_bits", round(max(r["logical_leak_bits"] for r in rows), 6)),
+    ]
+    with CODE_SUMMARY_CSV.open("w", newline="") as fh:
+        writer = csv.writer(fh)
+        writer.writerow(["metric", "value"])
+        writer.writerows(summary)
+
+    plot_code_curves(rows)
+
+    print("clocked repetition code scan complete")
+    for key, value in summary:
+        print(f"  {key}: {value}")
+
+
+def plot_code_curves(rows: list[dict]) -> None:
+    import matplotlib
+
+    matplotlib.use("Agg")
+    import matplotlib.pyplot as plt
+
+    panels = [
+        ("logical_retention", "signed logical retention"),
+        ("sign_fidelity", "logical sign fidelity"),
+        ("flip_id_mi_bits", "I(first flip; decoder verdict) bits"),
+    ]
+    fig, axes = plt.subplots(1, 3, figsize=(14, 4), constrained_layout=True)
+    for ax, (key, title) in zip(axes, panels):
+        for policy, marker in zip(CODE_POLICIES, "osd^"):
+            ps = [r["p_flip"] for r in rows if r["policy"] == policy]
+            vals = [r[key] for r in rows if r["policy"] == policy]
+            ax.plot(ps, vals, marker=marker, label=policy)
+        ax.set_xlabel("phase-flip probability per qubit per period")
+        ax.set_title(title)
+        ax.grid(alpha=0.3)
+    axes[0].legend()
+    fig.suptitle("Clocked repetition code: the tick stream as syndrome (OP-23 D0)")
+    fig.savefig(CODE_PNG, dpi=130)
+    plt.close(fig)
 
 
 def run_optime_experiment(rng: np.random.Generator) -> None:

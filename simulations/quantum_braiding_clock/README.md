@@ -80,6 +80,31 @@ number of verification steps. Two disturbance conventions:
 
 `gamma = 0` here so the detuning is the only lab-clocked process.
 
+## Experiment D: clocked repetition code (OP-23 D0 rung)
+
+Three braided-clock qubits carry the same logical bit and share one clock
+(common detuning sector, common PLL drive). The channel adds per-period
+phase flips at probability `p_flip` per qubit. Policies compared on the
+same logical readout (terminal median across the block): `bare` (single
+qubit), `code_unchecked` (redundancy, no checks), `code_checked`
+(evidence-gated correction from a pair-parity record channel), and
+`code_overactive` (correction from single raw parity records).
+
+Two design lessons are baked in and documented in the module:
+
+- **The tick stream cannot be the syndrome.** A z-tick statistic with
+  flip-identification SNR `S` costs `exp(-S^2 / 2)` of the coherence it
+  protects, so gentle ticks are too dilute to decode flips in time. This
+  is precisely why codes exist: parity operators commute with the logical
+  algebra, so parity can be read strongly at zero logical cost
+  (Knill-Laflamme in its cheapest form). Experiment D gives parity its own
+  record channel — noisy in readout (`PARITY_KAPPA = 0.6`), free of x
+  backaction — while the tick stream keeps the clock and PLL.
+- This is a product-state Bloch scaffold, not an entangled stabilizer
+  code; the zero-backaction status of the parity records is imported from
+  the KL argument, not derived. D0 tests the control architecture, not
+  stabilizer protection.
+
 ## Run
 
 ```bash
@@ -97,6 +122,9 @@ python3 simulations/quantum_braiding_clock/quantum_braiding_clock.py
 - `outputs/braiding_clock_optime_scan.csv`
 - `outputs/braiding_clock_optime_summary.csv`
 - `outputs/braiding_clock_optime_curves.png`
+- `outputs/braiding_clock_code_scan.csv`
+- `outputs/braiding_clock_code_summary.csv`
+- `outputs/braiding_clock_code_curves.png`
 
 ## Current Run
 
@@ -161,6 +189,21 @@ Braid score against budget at the fastest tick rate (best gain per cell):
 | `I(error; record)` across k | `0.020 - 0.079` bits (one band) | `0.053` at k=1, `<= 0.004` bits for k>=2 |
 | Logical leak across k | `<= 0.0036` bits everywhere | `<= 0.0069` bits everywhere |
 
+## Current Code Run
+
+Signed logical retention by policy (seeded, 600 trajectories per cell):
+
+| `p_flip` | bare | unchecked | checked | overactive | checked sign fid. | checked corrections |
+|---:|---:|---:|---:|---:|---:|---:|
+| 0.000 | **0.3209** | 0.2503 | 0.2432 | 0.1272 | 1.000 | 0.24 |
+| 0.005 | 0.2174 | 0.2055 | **0.2233** | 0.1118 | 0.963 | 0.79 |
+| 0.010 | 0.1326 | 0.1273 | **0.1947** | 0.1008 | 0.918 | 1.17 |
+| 0.020 | 0.0741 | 0.0524 | **0.1399** | 0.0648 | 0.780 | 1.71 |
+| 0.040 | 0.0200 | 0.0287 | **0.0317** | 0.0001 | 0.592 | 2.57 |
+| 0.080 | 0.0329 | 0.0048 | 0.0000 | 0.0045 | 0.498 | 3.28 |
+
+Grid-max logical leak on the common-mode record: `0.006029` bits.
+
 ## Interpretation
 
 - **Weak monitoring** (`kappa ~ 0.05`): memory survives but the record
@@ -206,3 +249,16 @@ Braid score against budget at the fastest tick rate (best gain per cell):
   conjugacy condition holds, and fails catastrophically, not gracefully,
   when it does not. Residual co-clocked scatter is consistent with mutual-
   information estimator noise at 600 trajectories.
+- **The code run passes the OP-23 acceptance discipline, with a productive
+  interval for correction itself.** Evidence-gated correction beats bare,
+  unchecked, and overactive baselines on the same logical readout — but
+  only in the middle noise window `p_flip ~ 0.005-0.04`. Below it, the
+  decoder's residual false positives make checking a net cost (bare wins
+  at zero noise: `0.321` vs `0.243`); above it, multi-flips overwhelm a
+  distance-3 decoder (checked retention `0.000` at `p_flip = 0.08`).
+  Correction is not free and not unconditional: it wins exactly where
+  error structure is real, decodable, and not yet saturating — the same
+  cautionary shape as the H0-H2 hardware scans, now reproduced inside the
+  braided-clock architecture. The overactive policy is worse everywhere,
+  and the common-mode clock feedback stays logically noncentral
+  (grid-max leak `0.006` bits).

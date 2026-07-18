@@ -316,6 +316,28 @@ Canonical tracker: `OPEN_PROBLEMS.md`. Headline items:
 
 ## Changelog
 
+### 2026-07-18 — clocked repetition code (OP-23 D0 rung)
+- Added Experiment D to `simulations/quantum_braiding_clock/`: three
+  braided-clock qubits carrying one logical bit under a per-period
+  phase-flip channel, with one shared clock/PLL, a pair-parity record
+  channel, and four policies (bare, unchecked, evidence-gated checked,
+  overactive) compared on the same terminal logical readout.
+- Negative lemma kept in the module: the tick stream cannot be its own
+  syndrome — a z-tick statistic with flip-identification SNR \(S\) costs
+  \(e^{-S^2/2}\) of the coherence it protects, so the syndrome must be a
+  commuting, strongly-readable parity observable (Knill-Laflamme doing
+  real work).
+- Correction has its own productive interval: checked wins only for
+  \(p_{\mathrm{flip}}\approx0.005\)–\(0.04\) (at `0.02`: checked `0.140`
+  vs bare `0.074`, unchecked `0.052`, overactive `0.065`; sign fidelity
+  `0.78` vs `0.625`), pays a monitoring cost below it (bare `0.321` vs
+  checked `0.243` at zero noise), and saturates above it (checked `0.000`
+  at `0.08`). Overactive is worse everywhere; common-mode clock feedback
+  stays noncentral (grid-max leak `0.006` bits).
+- Extended `bridges/quantum_braiding_timekeeping.md` with section 13 and
+  updated OP-22/OP-23 and the simulation README.
+- Session log: `sessions/2026-07-18_clocked_repetition_code.md`.
+
 ### 2026-07-18 — operational-time covariance probe (OP-29 x OP-22)
 - Added Experiment C to `simulations/quantum_braiding_clock/`: a family of
   braided clocks with identical operational length (32 ticks, same per-tick
