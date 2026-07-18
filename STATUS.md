@@ -2,7 +2,8 @@
 
 **Last updated:** 2026-07-18
 **Active paper:** `paper/acp_main_v10.md` (internal masthead: "WORKING DRAFT — v0.9")
-**Active ACP Quantum focus:** deriving quantum gravity from ACP: `bridges/quantum_gravity_derivation_program.md` + `bridges/relational_observable_macrostate_kernel.md` + `bridges/cosmic_coordination_floor.md` + `bridges/singularity_inadmissibility.md` + `bridges/dark_constraint_quantum_gravity.md` + `bridges/quantum_gravity_convergence_map.md`
+**Active ACP Quantum focus:** deriving quantum gravity from ACP: `bridges/quantum_gravity_derivation_program.md` + `bridges/relational_observable_macrostate_kernel.md` + `bridges/cosmic_coordination_floor.md` + `bridges/singularity_inadmissibility.md` + `bridges/dark_constraint_quantum_gravity.md` + `bridges/quantum_gravity_convergence_map.md` + `bridges/boundary_records_interior_time.md`
+**Active braided-clock / record-splitting thread:** `bridges/quantum_braiding_timekeeping.md` (§10-14) + `bridges/clock_syndrome_record_splitting.md` (Propositions 1-6) + `simulations/quantum_braiding_clock/` (Experiments A-G)
 **Active QEC technical engine:** hardware-level adaptive syndrome alignment: `bridges/hardware_adaptive_alignment.md` + `simulations/hardware_adaptive_decoder/` (H0 grid scan + H1 trace replay + H2 circuit-level syndrome extraction / Pauli-frame logical-channel audit / schedule-phase audit) + `bridges/adaptive_syndrome_alignment.md` + `bridges/sacr_contraction_calibration.md`
 **Active civil-systems bridge:** restraint ethics / conditional-leakage record channels: `bridges/restraint_ethics.md` + `simulations/restraint_ethics/`
 **Active cross-domain QEC bridge:** otherness-preserving recovery: `bridges/otherness_preserving_recovery.md` + `simulations/otherness_preserving_recovery/`
@@ -315,6 +316,38 @@ Canonical tracker: `OPEN_PROBLEMS.md`. Headline items:
 - **OP-29: Operational-time relativity and proper productive intervals.** Open/partial: first bridge note exists; next step is proving the operational-time covariance theorem for systems with different tempos, coarse-grainings, and record channels.
 
 ## Changelog
+
+### 2026-07-18 — boundary records and interior time (gravitational lift)
+- Added `bridges/boundary_records_interior_time.md`, lifting the proved
+  record-splitting propositions into the quantum-gravity derivation
+  program. Stage 6's privacy condition
+  \(I(\mathrm{interior};R_{\partial}^{\mathrm{early}})\approx0\) is the
+  gravitational form of instrument transparency, so:
+- Corollary G1 (conjectural lift): interior clock censorship — early
+  boundary records of any admissible completion mechanism are blind to
+  every interior relational clock; pre-decoding boundary tempo is
+  geometry-sector tempo, not interior proper time. Mechanism-independent:
+  it follows from the admissibility condition itself.
+- Corollary G2 (conjectural lift): time release equals information
+  release — by the Proposition 6 dichotomy, the transition where the
+  boundary can first read interior time and where it can first read
+  interior information are the same transition; interior proper time is a
+  post-Page observable in this framework.
+- Stage 6 thereby gains a forced substructure: the admissible
+  gravitational record channel splits into a geometry-central channel and
+  an interior-transparent channel; no single channel can serve both roles
+  before decoding.
+- The honesty gap is flagged, not hidden: Stage 6 privacy is a
+  mutual-information condition while the finite propositions assume
+  algebraic transparency; the approximate converse is OP-30(a)'s
+  remaining half.
+- Checkable next rung named: add an interior-clock register to
+  `simulations/cosmic_coordination_floor/` and verify zero early boundary
+  clock information turning on exactly at the decoding step; OP-17's null
+  records are classified as geometry-central and predicted interior-blind.
+- Updated the derivation program anchors, OP-17/OP-19/OP-22, and the
+  STATUS header.
+- Session log: `sessions/2026-07-18_boundary_records_interior_time.md`.
 
 ### 2026-07-18 — Proposition 6: algebraic defect and blindness dichotomy
 - Added Definition 4 and Proposition 6 to

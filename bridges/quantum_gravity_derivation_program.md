@@ -202,6 +202,15 @@ The expected result is not "quantize the metric" as a starting axiom, but:
   regular-black-hole work.
 - `bridges/quantum_noise_as_signal.md`: finite QEC prototype for structured
   records that reveal error sectors while preserving logical states.
+- `bridges/boundary_records_interior_time.md`: interior clock censorship.
+  Lifting the proved clock-syndrome record-splitting propositions
+  (`bridges/clock_syndrome_record_splitting.md`), Stage 6 privacy forces
+  early boundary records to be blind to every interior relational clock,
+  and the transition where the boundary can first read interior time
+  coincides with the decoding transition of Stage 5. The admissible
+  gravitational record channel is therefore split — geometry-central
+  versus interior-transparent — as a theorem-backed substructure of
+  Stage 6 rather than a modeling choice.
 
 ## 5. Near-Term Work
 
