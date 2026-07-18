@@ -316,6 +316,34 @@ Canonical tracker: `OPEN_PROBLEMS.md`. Headline items:
 
 ## Changelog
 
+### 2026-07-18 — clock-syndrome record-splitting proposition
+- Added `bridges/clock_syndrome_record_splitting.md`, the first
+  theorem-shaped output of the braided-clock thread.
+- Proposition 1: a logically transparent instrument (all Kraus operators
+  commuting with the logical algebra on the code sector) yields record
+  distributions exactly independent of any logical clock phase, including
+  under adaptive record-conditioned sequences — transparent syndromes are
+  clock-blind by the same commutation that makes them free.
+- Lemma 3: for weak binary probes of a logical observable, record Fisher
+  information about the clock phase and conjugate-coherence disturbance
+  trade off exactly, giving the budget \(C_N\le e^{-J_{\mathrm{tot}}/2}\)
+  in the gentle limit — the formal version of the empirical
+  \(e^{-S^2/2}\) tick-cost lemma from Experiments A/D.
+- Corollary 4: an encoded braided clock must split its records into a
+  transparent syndrome channel and a central clock channel with
+  \(J_{\mathrm{clock}}\le-2\ln F_{\mathrm{floor}}\); the single monitored
+  qubit is the degenerate case with no transparent channel available.
+- Honesty note included: this is a finite, instrument-level cousin of
+  known covariant-QEC/Eastin-Knill-type results; local contributions are
+  the explicit Fisher/coherence budget and the record-splitting reading
+  inside the braided persistence criterion.
+- Numerical anchors verified against Experiments B/E (`0.9967` vs
+  `0.0008` retention at equal probe strength; predicted
+  \(3.3\times10^{-4}\)).
+- Added OP-30 (approximate/covariant record splitting, operational-time
+  link); updated OP-22/OP-23 and bridge §14.
+- Session log: `sessions/2026-07-18_record_splitting_proposition.md`.
+
 ### 2026-07-18 — entangled stabilizer code (OP-23 D1 rung)
 - Added Experiment E to `simulations/quantum_braiding_clock/`: a true
   state-vector simulation of the three-qubit phase-flip code with the

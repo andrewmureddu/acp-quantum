@@ -521,7 +521,13 @@ also why they can never serve as a logical clock readout. A braided clock
 built on a code must therefore split its record stream into a noncentral
 syndrome channel and a deliberately central (and hence costly) clock
 channel; the single-qubit Experiment A was the degenerate case where one
-stream did both jobs badly.
+stream did both jobs badly. This remark is now formalized in
+`bridges/clock_syndrome_record_splitting.md`: transparency implies exact
+clock-blindness (Proposition 1), clock information implies centrality with
+an explicit Fisher-information/coherence budget
+\(C_N\le e^{-J_{\mathrm{tot}}/2}\) in the gentle limit (Lemma 3), and the
+two-channel split follows as a corollary, with the approximate/covariant
+generalization tracked as OP-30.
 
 The remaining rung is the H-ladder's measured-trace replay discipline
 applied to a clocked code.
