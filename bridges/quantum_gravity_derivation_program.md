@@ -188,6 +188,14 @@ The expected result is not "quantize the metric" as a starting axiom, but:
 
 ## 4. Current Anchors
 
+- `proofs/semiclassical_collapse_failure.md`: the Stage 2/3 theorem at kernel
+  level. Under an explicit Raychaudhuri-shadow drift assumption, classical
+  collapse kernels lose all admissible mass in finite expected time
+  (Theorem 1), postselected survivor theories are exponentially unnatural
+  and record-free, and any normalized floor-respecting kernel family must
+  change mechanism strictly before the singular threshold, at compactness
+  \(C_{\mathrm{trig}}\le1-\delta\) (Theorem 2). The remaining physics gap
+  is OP-19a, the drift transfer lemma.
 - `bridges/singularity_inadmissibility.md`: singularities are inadmissible
   physical states; horizons are candidate finite boundary transfers.
 - `bridges/relational_observable_macrostate_kernel.md`: finite relational

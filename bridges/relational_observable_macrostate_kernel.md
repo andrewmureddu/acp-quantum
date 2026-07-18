@@ -329,6 +329,18 @@ quantum-gravity mechanism. It proves that the classical pushforward is the
 wrong kind of object once collapse drives positive mass outside the admissible
 state space.
 
+**Upgrade.** Proposition 2 is now superseded by the quantitative version in
+`proofs/semiclassical_collapse_failure.md`: under an explicit focusing-drift
+assumption (A1, the kernel shadow of Raychaudhuri) with bounded increments,
+Theorem 1 gives finite expected absorption time \(\mathbb E[T]\le B_0/\delta\),
+total normalization failure \(Z^{\mathrm{adm}}_n\le B_0/(\delta n)\to0\), and
+exponential unnaturalness of the postselected survivor theory; Theorem 2
+proves that any normalized, floor-respecting kernel family obeying the drift
+outside a core must change mechanism strictly before the singular threshold,
+with \(C_{\mathrm{trig}}\le1-\delta\). The remaining physics gap is the
+drift transfer lemma (OP-19a): deriving A1 from semiclassical focusing for
+the relational coarse map \(\sigma_\ell\).
+
 ## 7. Diagnostics
 
 The kernel supplies the ACP quantum-gravity diagnostics.

@@ -317,6 +317,41 @@ Canonical tracker: `OPEN_PROBLEMS.md`. Headline items:
 
 ## Changelog
 
+### 2026-07-18 — semiclassical collapse failure theorem (kernel form)
+- Added `proofs/semiclassical_collapse_failure.md`, upgrading the
+  qualitative Proposition 2 of the relational kernel bridge to proved
+  quantitative theorems. The physics is isolated into a named assumption:
+  (A1) focusing drift, the kernel shadow of Raychaudhuri —
+  \(\mathbb E[B_{t+1}|\mathcal F_t]\le B_t-\delta\) for the admissibility
+  margin \(B=1-C\) on trapped macrocells — plus bounded increments and
+  mechanism stationarity.
+- Theorem 1 (quantitative classical collapse failure): finite expected
+  absorption \(\mathbb E[T]\le B_0/\delta\) (supermartingale + optional
+  stopping); total normalization failure, retained admissible mass
+  \(\le B_0/(\delta n)\to0\); exponentially small survival probability
+  (Azuma), so the postselected hard-exclusion theory conditions on an
+  exponentially unnatural branch, sits at total variation \(\to1\) from
+  the physical channel, and carries no boundary record of the discarded
+  coordination; survivor-branch entropy-floor breach under a
+  concentration hypothesis (observed in the toy, flagged ⚠ as assumed in
+  general).
+- Theorem 2 (persistence-forced completion trigger): any kernel family
+  that stays normalized, respects the future-entropy floor, and obeys the
+  focusing drift outside a core must change mechanism strictly before the
+  singular threshold, with \(C_{\mathrm{trig}}\le1-\delta\) — the project
+  thesis "quantum gravity is the persistence-forced completion of
+  classical spacetime" now has its kernel-level skeleton as a theorem.
+- Named the remaining physics gap precisely as OP-19a, the drift transfer
+  lemma: derive A1 from semiclassical focusing for the relational coarse
+  map (this is also where OP-29's operational-clock choice enters).
+- Numerical anchors: the collapse toy realizes all branches (naked
+  collapse mass `0.001`; hard-exclusion floor breach at step 22 with
+  `0.205` bits; the two transfer policies as Theorem 2 triggers with
+  interior-clock censorship intact).
+- Updated the kernel bridge (Proposition 2 superseded), derivation
+  program anchors, and OP-18/OP-19.
+- Session log: `sessions/2026-07-18_semiclassical_collapse_failure.md`.
+
 ### 2026-07-18 — interior clock register in the macrocell collapse toy
 - Upgraded `simulations/cosmic_coordination_floor/` from a macrocell
   distribution to a joint distribution over (macrocell, interior clock
