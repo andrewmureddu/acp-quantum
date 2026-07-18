@@ -55,6 +55,15 @@ tick times — is what opens a productive interval. The braid needs rhythm.
 - `phase_lock`: mean in-phase tick bias over its ideal locked value.
 - `braid_score`: memory x error-info x phase-lock x (1 - leak penalty).
 
+## Experiment B: tick rate vs tick strength at fixed dephasing budget
+
+A run with `N` ticks at strength `kappa` spends a total dephasing budget
+`B = -(N/2) ln(1 - kappa^2)` (ideal logical retention `exp(-B)`). The budget
+scan holds `B` fixed, fires the escapement only every k-th period, sets
+`kappa` to spend the whole budget, and takes the best feedback gain per
+cell. The question: should a clock spend its decoherence budget on many
+weak ticks or a few strong ones?
+
 ## Run
 
 ```bash
@@ -66,6 +75,9 @@ python3 simulations/quantum_braiding_clock/quantum_braiding_clock.py
 - `outputs/braiding_clock_scan.csv`
 - `outputs/braiding_clock_summary.csv`
 - `outputs/braiding_clock_heatmaps.png`
+- `outputs/braiding_clock_budget_scan.csv`
+- `outputs/braiding_clock_budget_summary.csv`
+- `outputs/braiding_clock_budget_heatmaps.png`
 
 ## Current Run
 
@@ -89,6 +101,37 @@ feedback gain `g` in [0, 3.3] currently reports:
 | Max-gain mean phase lock | `0.425850` |
 | Grid max logical leak | `0.011986` bits |
 
+## Current Budget Run
+
+The seeded budget scan (6 budgets x 7 tick rates x 3 gains, best gain per
+cell) currently reports:
+
+| Probe | Result |
+|---|---:|
+| Budget cells | `42` |
+| Best braid score | `0.006942` |
+| Best budget `B` | `1.05` |
+| Best tick rate | every period (`k = 1`, 48 ticks) |
+| Best implied `kappa` | `0.206898` |
+| Fastest-rate mean braid score | `0.004503` |
+| Slowest-rate (`k = 12`) mean braid score | `0.000071` |
+| Fastest-rate mean `I(error; record)` | `0.064618` bits |
+| Slowest-rate mean `I(error; record)` | `0.002415` bits |
+| Fastest-rate mean memory | `0.329269` |
+| Slowest-rate mean memory | `0.336041` |
+| Grid max logical leak | `0.010816` bits |
+
+Braid score against budget at the fastest tick rate (best gain per cell):
+
+| Budget `B` | Memory | `I(error; record)` bits | Braid score |
+|---:|---:|---:|---:|
+| 0.35 | 0.701223 | 0.019014 | 0.002040 |
+| 0.70 | 0.509784 | 0.031569 | 0.005918 |
+| 1.05 | 0.361444 | 0.060515 | **0.006942** |
+| 1.40 | 0.227764 | 0.064292 | 0.004973 |
+| 2.10 | 0.119064 | 0.088765 | 0.004288 |
+| 2.80 | 0.056334 | 0.123555 | 0.002856 |
+
 ## Interpretation
 
 - **Weak monitoring** (`kappa ~ 0.05`): memory survives but the record
@@ -106,6 +149,18 @@ feedback gain `g` in [0, 3.3] currently reports:
   reading the protected bit.
 - The result is modest rather than triumphal, in keeping with the hardware
   scaffolds: the productive interval exists, but backaction phase jitter
-  (`~kappa / Y0` radians per quadrature tick) keeps the lock partial. A
-  sharper toy would trade tick rate against tick strength at fixed total
-  dephasing budget.
+  (`~kappa / Y0` radians per quadrature tick) keeps the lock partial.
+- **Budget verdict: spend the decoherence budget on many weak ticks.** With
+  the budget held fixed, memory retention is rate-independent (the
+  normalization check: `0.329` vs `0.336` at the two extremes), but the
+  syndrome and the lock live almost entirely at the fast end — sparse
+  strong ticks let phase error accumulate between corrections, alias the
+  slow drift, and inject large per-tick backaction jitter, so the slowest
+  rate loses ~26x in error information and ~60x in braid score against the
+  fastest. Continuous-in-spirit but pulsed-in-form monitoring is optimal:
+  the earlier "the braid needs rhythm" result plus this one bracket the
+  design rule as tick as often as possible, as gently as possible.
+- **The budget itself has an interior optimum** (`B ~ 1.05`, retention
+  `exp(-B) ~ 0.35`): memory falls monotonically in `B`, error information
+  rises monotonically, and the braid score peaks between — the ACP
+  productive interval reappearing in the spend dimension.

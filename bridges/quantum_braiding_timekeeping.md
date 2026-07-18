@@ -364,8 +364,42 @@ The honest status is unchanged in kind: this is a diagnostic toy, not a
 derivation. But the conjecture of section 7 now has its first instrument,
 and the first cautionary refinement: the braided interval exists for pulsed,
 not continuous, record formation, and backaction phase jitter
-(\(\sim\kappa/Y_0\) per quadrature tick) keeps the lock partial. The next
-step is a tick-rate versus tick-strength tradeoff at fixed total dephasing
-budget, and a clock-regularity metric stated in the system's own operational
-time (OP-29).
+(\(\sim\kappa/Y_0\) per quadrature tick) keeps the lock partial.
+
+## 11. Second Result: How to Spend a Decoherence Budget
+
+The tick-rate versus tick-strength tradeoff is now implemented in the same
+simulation. A run with \(N\) ticks at burst strength \(\kappa\) spends a
+total dephasing budget \(B=-(N/2)\ln(1-\kappa^2)\), with ideal logical
+retention \(e^{-B}\). Holding \(B\) fixed and varying the escapement rate
+(fire every \(k\)-th period, \(\kappa\) set to spend the whole budget, best
+feedback gain per cell) separates two questions the first scan entangled:
+how much to measure, and how to distribute it.
+
+Both answers are ACP-shaped:
+
+1. **Distribution: many weak ticks, decisively.** Memory retention is
+   rate-independent once the budget is fixed (the normalization check:
+   `0.329` vs `0.336` at the two rate extremes), but the syndrome and the
+   phase lock live almost entirely at the fast end. Sparse strong ticks let
+   phase error accumulate between corrections, alias the slow detuning
+   drift, and inject large per-tick backaction jitter: the slowest rate
+   loses roughly a factor 26 in \(I(\mathrm{error};R)\) (`0.0646` vs
+   `0.0024` bits) and a factor 60 in braid score. Together with section
+   10's continuous-monitoring null, this brackets the design rule from both
+   sides: record formation must be pulsed, but as finely pulsed as the
+   budget allows — tick as often as possible, as gently as possible.
+
+2. **Amount: the budget has an interior optimum.** At the fastest rate,
+   memory falls monotonically in \(B\) while error information rises
+   monotonically, and the braid score peaks at \(B\approx1.05\) (retention
+   \(e^{-B}\approx0.35\), braid `0.006942`, against `0.002040` at
+   \(B=0.35\) and `0.002856` at \(B=2.8\)). The productive interval
+   reappears in the spend dimension: a clock that hoards coherence cannot
+   read its own tempo, and a clock that spends everything on readout has
+   nothing left to protect.
+
+The remaining next steps are a clock-regularity metric stated in the
+system's own operational time (OP-29) and a small-code version connecting
+the braided clock to the hardware ladder (OP-23).
 

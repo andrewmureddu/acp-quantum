@@ -104,6 +104,9 @@ OUT = ROOT / "outputs"
 SCAN_CSV = OUT / "braiding_clock_scan.csv"
 SUMMARY_CSV = OUT / "braiding_clock_summary.csv"
 HEATMAP_PNG = OUT / "braiding_clock_heatmaps.png"
+BUDGET_CSV = OUT / "braiding_clock_budget_scan.csv"
+BUDGET_SUMMARY_CSV = OUT / "braiding_clock_budget_summary.csv"
+BUDGET_PNG = OUT / "braiding_clock_budget_heatmaps.png"
 
 SEED = 20260717
 
@@ -127,6 +130,19 @@ LATE_FRACTION = 0.5
 IN_PHASE_STEP = STEPS_PER_PERIOD // 4
 QUADRATURE_STEP = STEPS_PER_PERIOD // 2
 
+# --- Experiment B: tick rate versus tick strength at fixed dephasing ---
+# Each burst multiplies transverse coherence by roughly sqrt(1 - kappa^2),
+# so a run with N ticks at strength kappa spends a total dephasing budget
+# B = -(N / 2) * ln(1 - kappa^2) (ideal logical retention exp(-B)). The
+# budget scan holds B fixed, varies the tick rate (escapement fires every
+# k-th period), and sets kappa = sqrt(1 - exp(-2 B / N)). The question:
+# should a clock spend its decoherence budget on many weak ticks or a few
+# strong ones?
+BUDGET_GRID = np.round(np.array([0.35, 0.7, 1.05, 1.4, 2.1, 2.8]), 4)
+EVERY_K_GRID = [1, 2, 3, 4, 6, 8, 12]
+BUDGET_GAINS = [0.0, 1.65, 3.3]
+
+# --- Experiment A grid ---
 # Each burst multiplies transverse coherence by roughly sqrt(1 - kappa^2),
 # so terminal logical retention is about (1 - kappa^2)^PERIODS. This grid
 # straddles the crossover: the top rows read the error sector loudly but
@@ -163,7 +179,12 @@ def weak_measure_z(
     return x * shrink, y * shrink, z_new, s
 
 
-def run_grid_point(kappa: float, gain: float, rng: np.random.Generator) -> dict:
+def run_grid_point(
+    kappa: float, gain: float, rng: np.random.Generator, every_k: int = 1
+) -> dict:
+    """Run one scan cell. `every_k` sets the tick rate: the two-burst
+    escapement fires only on every k-th nominal period, so the number of
+    measured periods is PERIODS // every_k."""
     n = N_TRAJ
     b = rng.integers(0, 2, size=n)          # logical bit -> sign of x
     e = rng.integers(0, 2, size=n)          # error sector -> clock fast/slow
@@ -189,7 +210,9 @@ def run_grid_point(kappa: float, gain: float, rng: np.random.Generator) -> dict:
         y *= contraction
         z *= contraction
 
-        step_in_period = t % STEPS_PER_PERIOD
+        period_index, step_in_period = divmod(t, STEPS_PER_PERIOD)
+        if period_index % every_k != 0:
+            continue
         if step_in_period == IN_PHASE_STEP:
             x, y, z, s = weak_measure_z(x, y, z, kappa, rng)
             in_phase_records.append(s)
@@ -206,12 +229,13 @@ def run_grid_point(kappa: float, gain: float, rng: np.random.Generator) -> dict:
                 cphi, sphi = np.cos(phi), np.sin(phi)
                 y, z = y * cphi - z * sphi, y * sphi + z * cphi
 
-    ticks_in = np.array(in_phase_records)        # (PERIODS, n)
-    ticks_quad = np.array(quadrature_records)    # (PERIODS, n)
+    n_measured = len(in_phase_records)
+    ticks_in = np.array(in_phase_records)        # (n_measured, n)
+    ticks_quad = np.array(quadrature_records)    # (n_measured, n)
 
     # --- Clock slack: pooled Markov conditional entropy of the interleaved
     # burst-record stream (in-phase, quadrature, in-phase, ...). ---
-    stream = np.empty((2 * PERIODS, n))
+    stream = np.empty((2 * n_measured, n))
     stream[0::2] = ticks_in
     stream[1::2] = ticks_quad
     prev = stream[:-1].ravel()
@@ -262,8 +286,10 @@ def run_grid_point(kappa: float, gain: float, rng: np.random.Generator) -> dict:
     braid_score = memory_retention * error_info * phase_lock * leak_penalty
 
     return {
-        "kappa": kappa,
+        "kappa": round(kappa, 6),
         "gain": gain,
+        "every_k": every_k,
+        "n_ticks": 2 * n_measured,
         "clock_slack_bits": round(h_cond, 6),
         "slack_gate": round(slack_gate, 6),
         "memory_retention": round(memory_retention, 6),
@@ -328,6 +354,108 @@ def main() -> None:
     print("braided clock scan complete")
     for key, value in summary:
         print(f"  {key}: {value}")
+
+    run_budget_experiment(rng)
+
+
+def run_budget_experiment(rng: np.random.Generator) -> None:
+    """Experiment B: fixed dephasing budget, tick rate vs tick strength."""
+    rows = []
+    for budget in BUDGET_GRID:
+        for every_k in EVERY_K_GRID:
+            n_ticks = 2 * (PERIODS // every_k + (1 if PERIODS % every_k else 0))
+            # kappa implied by spending the whole budget across n_ticks.
+            inner = 1.0 - math.exp(-2.0 * budget / n_ticks)
+            kappa = math.sqrt(inner)
+            if kappa > 0.98:
+                continue  # budget not spendable at this rate without kappa ~ 1
+            for gain in BUDGET_GAINS:
+                row = run_grid_point(float(kappa), float(gain), rng, every_k=every_k)
+                row["budget"] = float(budget)
+                rows.append(row)
+
+    fieldnames = list(rows[0].keys())
+    with BUDGET_CSV.open("w", newline="") as fh:
+        writer = csv.DictWriter(fh, fieldnames=fieldnames)
+        writer.writeheader()
+        writer.writerows(rows)
+
+    # Best gain per (budget, rate) cell for the headline comparison.
+    best_cells: dict[tuple[float, int], dict] = {}
+    for row in rows:
+        key = (row["budget"], row["every_k"])
+        if key not in best_cells or row["braid_score"] > best_cells[key]["braid_score"]:
+            best_cells[key] = row
+
+    best = max(best_cells.values(), key=lambda r: r["braid_score"])
+    fastest = [r for r in best_cells.values() if r["every_k"] == 1]
+    slowest = [r for r in best_cells.values() if r["every_k"] == EVERY_K_GRID[-1]]
+
+    def mean_of(rows_, key):
+        return round(float(np.mean([r[key] for r in rows_])), 6)
+
+    summary = [
+        ("budget_cells", len(best_cells)),
+        ("best_braid_score", best["braid_score"]),
+        ("best_budget", best["budget"]),
+        ("best_every_k", best["every_k"]),
+        ("best_kappa", best["kappa"]),
+        ("best_gain", best["gain"]),
+        ("best_n_ticks", best["n_ticks"]),
+        ("best_memory_retention", best["memory_retention"]),
+        ("best_error_info_bits", best["error_info_bits"]),
+        ("best_phase_lock", best["phase_lock"]),
+        ("fastest_rate_mean_braid", mean_of(fastest, "braid_score")),
+        ("slowest_rate_mean_braid", mean_of(slowest, "braid_score")),
+        ("fastest_rate_mean_error_info", mean_of(fastest, "error_info_bits")),
+        ("slowest_rate_mean_error_info", mean_of(slowest, "error_info_bits")),
+        ("fastest_rate_mean_memory", mean_of(fastest, "memory_retention")),
+        ("slowest_rate_mean_memory", mean_of(slowest, "memory_retention")),
+        ("grid_max_leak_bits", round(max(r["logical_leak_bits"] for r in rows), 6)),
+    ]
+    with BUDGET_SUMMARY_CSV.open("w", newline="") as fh:
+        writer = csv.writer(fh)
+        writer.writerow(["metric", "value"])
+        writer.writerows(summary)
+
+    plot_budget_heatmaps(best_cells)
+
+    print("budget (tick-rate vs tick-strength) scan complete")
+    for key, value in summary:
+        print(f"  {key}: {value}")
+
+
+def plot_budget_heatmaps(best_cells: dict[tuple[float, int], dict]) -> None:
+    import matplotlib
+
+    matplotlib.use("Agg")
+    import matplotlib.pyplot as plt
+
+    budgets = sorted({k[0] for k in best_cells})
+    rates = sorted({k[1] for k in best_cells})
+    panels = [
+        ("braid_score", "braid score (best gain)"),
+        ("memory_retention", "memory retention"),
+        ("error_info_bits", "I(error; record) bits"),
+        ("phase_lock", "phase lock"),
+        ("kappa", "implied burst strength kappa"),
+        ("clock_slack_bits", "H(r_{n+1} | r_n) bits"),
+    ]
+    fig, axes = plt.subplots(2, 3, figsize=(15, 8), constrained_layout=True)
+    for ax, (key, title) in zip(axes.ravel(), panels):
+        grid = np.full((len(budgets), len(rates)), np.nan)
+        for (b, k), row in best_cells.items():
+            grid[budgets.index(b), rates.index(k)] = row[key]
+        im = ax.imshow(grid, origin="lower", aspect="auto", cmap="viridis")
+        ax.set_xticks(range(len(rates)), [str(r) for r in rates])
+        ax.set_yticks(range(len(budgets)), [f"{b:g}" for b in budgets])
+        ax.set_xlabel("escapement fires every k-th period")
+        ax.set_ylabel("dephasing budget B")
+        ax.set_title(title)
+        fig.colorbar(im, ax=ax, shrink=0.85)
+    fig.suptitle("Braided clock: tick rate vs tick strength at fixed dephasing budget")
+    fig.savefig(BUDGET_PNG, dpi=130)
+    plt.close(fig)
 
 
 def plot_heatmaps(rows: list[dict]) -> None:

@@ -1,6 +1,6 @@
 # STATUS
 
-**Last updated:** 2026-07-17
+**Last updated:** 2026-07-18
 **Active paper:** `paper/acp_main_v10.md` (internal masthead: "WORKING DRAFT — v0.9")
 **Active ACP Quantum focus:** deriving quantum gravity from ACP: `bridges/quantum_gravity_derivation_program.md` + `bridges/relational_observable_macrostate_kernel.md` + `bridges/cosmic_coordination_floor.md` + `bridges/singularity_inadmissibility.md` + `bridges/dark_constraint_quantum_gravity.md` + `bridges/quantum_gravity_convergence_map.md`
 **Active QEC technical engine:** hardware-level adaptive syndrome alignment: `bridges/hardware_adaptive_alignment.md` + `simulations/hardware_adaptive_decoder/` (H0 grid scan + H1 trace replay + H2 circuit-level syndrome extraction / Pauli-frame logical-channel audit / schedule-phase audit) + `bridges/adaptive_syndrome_alignment.md` + `bridges/sacr_contraction_calibration.md`
@@ -315,6 +315,26 @@ Canonical tracker: `OPEN_PROBLEMS.md`. Headline items:
 - **OP-29: Operational-time relativity and proper productive intervals.** Open/partial: first bridge note exists; next step is proving the operational-time covariance theorem for systems with different tempos, coarse-grainings, and record channels.
 
 ## Changelog
+
+### 2026-07-18 — braided clock budget scan: tick rate vs tick strength
+- Extended `simulations/quantum_braiding_clock/` with Experiment B: the
+  escapement fires every k-th period, burst strength is set to spend a fixed
+  total dephasing budget \(B=-(N/2)\ln(1-\kappa^2)\), and the best feedback
+  gain is taken per cell (6 budgets x 7 rates x 3 gains).
+- Distribution verdict: with the budget fixed, memory is rate-independent
+  (`0.329` vs `0.336` at the extremes — the normalization check) but the
+  syndrome and lock concentrate at the fast end; the slowest rate loses
+  ~26x in \(I(\mathrm{error};R)\) and ~60x in braid score. Combined with the
+  continuous-monitoring null, the design rule is bracketed from both sides:
+  tick as often as possible, as gently as possible.
+- Amount verdict: the budget has an interior optimum at \(B\approx1.05\)
+  (retention `0.361`, braid `0.006942`, falling to `0.002040` at `B=0.35`
+  and `0.002856` at `B=2.8`) — the ACP productive interval reappearing in
+  the spend dimension. Grid-max logical leak stays at the finite-sample
+  floor (`0.010816` bits).
+- Extended `bridges/quantum_braiding_timekeeping.md` with section 11 and
+  updated OP-22 and the simulation README.
+- Session log: `sessions/2026-07-18_braided_clock_budget_scan.md`.
 
 ### 2026-07-17 — braided quantum clock simulation (OP-22)
 - Added `simulations/quantum_braiding_clock/`, the first executable companion
