@@ -64,6 +64,22 @@ scan holds `B` fixed, fires the escapement only every k-th period, sets
 cell. The question: should a clock spend its decoherence budget on many
 weak ticks or a few strong ones?
 
+## Experiment C: operational-time covariance probe (OP-29)
+
+A family of clocks with identical operational length — same tick count (32),
+same per-tick strength (`kappa = 0.21`), same per-tick feedback — but
+different lab-time tempos: ticks land on every k-th period, k in
+{1,2,3,4,6}, with the run stretched so every member executes the same
+number of verification steps. Two disturbance conventions:
+
+- `co_clocked`: detuning scaled by 1/k, so the phase error accrued between
+  consecutive ticks is identical for every member — the per-tick transition
+  kernels match (OP-29 operational conjugacy);
+- `lab_clocked`: fixed detuning in lab time, so slow-ticking members accrue
+  k times the phase error per verification step — conjugacy fails.
+
+`gamma = 0` here so the detuning is the only lab-clocked process.
+
 ## Run
 
 ```bash
@@ -78,6 +94,9 @@ python3 simulations/quantum_braiding_clock/quantum_braiding_clock.py
 - `outputs/braiding_clock_budget_scan.csv`
 - `outputs/braiding_clock_budget_summary.csv`
 - `outputs/braiding_clock_budget_heatmaps.png`
+- `outputs/braiding_clock_optime_scan.csv`
+- `outputs/braiding_clock_optime_summary.csv`
+- `outputs/braiding_clock_optime_curves.png`
 
 ## Current Run
 
@@ -132,6 +151,16 @@ Braid score against budget at the fastest tick rate (best gain per cell):
 | 2.10 | 0.119064 | 0.088765 | 0.004288 |
 | 2.80 | 0.056334 | 0.123555 | 0.002856 |
 
+## Current Operational-Time Run
+
+| Quantity | co-clocked (conjugate) | lab-clocked (non-conjugate) |
+|---|---:|---:|
+| Memory retention across k | `0.479 - 0.494` (flat) | `0.458 - 0.482` (flat) |
+| Clock slack `H(r'\|r)` across k | spread `0.0008` | spread `0.0007` |
+| Phase lock across k | `0.281 - 0.443` (one band) | `0.363` at k=1, `~0` for k>=2 |
+| `I(error; record)` across k | `0.020 - 0.079` bits (one band) | `0.053` at k=1, `<= 0.004` bits for k>=2 |
+| Logical leak across k | `<= 0.0036` bits everywhere | `<= 0.0069` bits everywhere |
+
 ## Interpretation
 
 - **Weak monitoring** (`kappa ~ 0.05`): memory survives but the record
@@ -164,3 +193,16 @@ Braid score against budget at the fastest tick rate (best gain per cell):
   `exp(-B) ~ 0.35`): memory falls monotonically in `B`, error information
   rises monotonically, and the braid score peaks between — the ACP
   productive interval reappearing in the spend dimension.
+- **Operational-time covariance behaves exactly as OP-29 predicts.**
+  Tick-native scalars — memory retention (the pure per-tick measurement
+  cost) and record slack — are invariant across lab tempos in BOTH modes:
+  they depend only on how many verification steps were executed, not on
+  how sparsely those steps sit in lab time. Record-facing diagnostics
+  (phase lock, syndrome information) are invariant only in the co-clocked
+  mode, where the disturbance kernel commutes with the tempo map; when the
+  error process keeps lab time, every slowed member fails as a clock in
+  its own tick frame — by k=2 the lock is gone and the tick stream carries
+  essentially no syndrome. Covariance holds exactly when OP-29's
+  conjugacy condition holds, and fails catastrophically, not gracefully,
+  when it does not. Residual co-clocked scatter is consistent with mutual-
+  information estimator noise at 600 trajectories.

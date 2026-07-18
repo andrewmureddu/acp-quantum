@@ -252,3 +252,21 @@ Until that theorem is written, operational-time relativity should be treated
 as a disciplined bridge: correct for reparameterizing a single process, a
 candidate comparison principle across systems, and an open problem when the
 systems' macrostate partitions are not already known to match.
+
+## 6. First executable covariance probe
+
+The braided quantum clock (`simulations/quantum_braiding_clock/`, Experiment
+C; see `bridges/quantum_braiding_timekeeping.md` §12) now instantiates the
+simplest nontrivial case of the covariance problem: a family of monitored
+qubits with identical tick count, per-tick measurement strength, and
+per-tick feedback, differing only in lab-time tick spacing. The result
+matches section 3's classification. Tick-native scalars (memory retention,
+record slack) are invariant across tempos unconditionally. Record-facing
+diagnostics (phase lock, syndrome information) are invariant exactly when
+the disturbance kernel commutes with the tempo map — detuning scaled to the
+system's own tick — and fail completely when the disturbance keeps lab time,
+in which case the slowed members leave the proper productive interval
+altogether because record selectivity condition 5 fails. The failure mode is
+sharp rather than gradual, which is encouraging for the theorem target: the
+conjugate and non-conjugate cases are empirically distinguishable even in a
+32-tick toy.

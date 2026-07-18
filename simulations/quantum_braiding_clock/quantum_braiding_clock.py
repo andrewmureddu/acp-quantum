@@ -107,6 +107,9 @@ HEATMAP_PNG = OUT / "braiding_clock_heatmaps.png"
 BUDGET_CSV = OUT / "braiding_clock_budget_scan.csv"
 BUDGET_SUMMARY_CSV = OUT / "braiding_clock_budget_summary.csv"
 BUDGET_PNG = OUT / "braiding_clock_budget_heatmaps.png"
+OPTIME_CSV = OUT / "braiding_clock_optime_scan.csv"
+OPTIME_SUMMARY_CSV = OUT / "braiding_clock_optime_summary.csv"
+OPTIME_PNG = OUT / "braiding_clock_optime_curves.png"
 
 SEED = 20260717
 
@@ -141,6 +144,30 @@ QUADRATURE_STEP = STEPS_PER_PERIOD // 2
 BUDGET_GRID = np.round(np.array([0.35, 0.7, 1.05, 1.4, 2.1, 2.8]), 4)
 EVERY_K_GRID = [1, 2, 3, 4, 6, 8, 12]
 BUDGET_GAINS = [0.0, 1.65, 3.3]
+
+# --- Experiment C: operational-time covariance probe (OP-29) ---
+# A family of clocks with IDENTICAL operational length (same tick count,
+# same per-tick strength, same per-tick feedback) but different lab-time
+# tempos: the escapement fires every k-th period, and the run is stretched
+# to k * OPTIME_MEASURED_PERIODS nominal periods so every member executes
+# the same number of verification steps. The tempo map between members is
+# linear in lab time and the identity in tick time. Per the OP-29 candidate
+# transformation laws, tick-native scalars should be invariant across k
+# exactly when the disturbance kernel commutes with the tempo map:
+#   - co_clocked mode: detuning scaled by 1/k, so the phase error accrued
+#     between consecutive ticks is the same for every member - the per-tick
+#     transition kernels match (operational conjugacy) and ALL diagnostics
+#     should collapse onto one point.
+#   - lab_clocked mode: fixed detuning in lab time, so slower-ticking
+#     members accrue k times the phase error per verification step - the
+#     kernels do not match, conjugacy fails, and record-facing quantities
+#     (error information, phase lock) should fan out with k while the
+#     purely tick-native measurement cost (memory retention) stays flat.
+# GAMMA is set to zero here so the detuning is the only lab-clocked process.
+OPTIME_MEASURED_PERIODS = 16
+OPTIME_K_LIST = [1, 2, 3, 4, 6]
+OPTIME_KAPPA = 0.21
+OPTIME_GAIN = 3.3
 
 # --- Experiment A grid ---
 # Each burst multiplies transverse coherence by roughly sqrt(1 - kappa^2),
@@ -180,21 +207,29 @@ def weak_measure_z(
 
 
 def run_grid_point(
-    kappa: float, gain: float, rng: np.random.Generator, every_k: int = 1
+    kappa: float,
+    gain: float,
+    rng: np.random.Generator,
+    every_k: int = 1,
+    periods: int = PERIODS,
+    detuning: float = DETUNING,
+    gamma: float = GAMMA,
 ) -> dict:
     """Run one scan cell. `every_k` sets the tick rate: the two-burst
-    escapement fires only on every k-th nominal period, so the number of
-    measured periods is PERIODS // every_k."""
+    escapement fires only on every k-th nominal period. `periods`,
+    `detuning`, and `gamma` are overridable for the operational-time
+    covariance probe (Experiment C)."""
     n = N_TRAJ
     b = rng.integers(0, 2, size=n)          # logical bit -> sign of x
     e = rng.integers(0, 2, size=n)          # error sector -> clock fast/slow
     sb = np.where(b == 1, 1.0, -1.0)
     se = np.where(e == 1, 1.0, -1.0)
 
-    omega_traj = OMEGA * (1.0 + se * DETUNING)
+    omega_traj = OMEGA * (1.0 + se * detuning)
     theta = omega_traj * DT
     cos_t, sin_t = np.cos(theta), np.sin(theta)
-    contraction = 1.0 - GAMMA * DT
+    contraction = 1.0 - gamma * DT
+    steps = periods * STEPS_PER_PERIOD
 
     x = sb * X0
     y = np.full(n, Y0)
@@ -204,7 +239,7 @@ def run_grid_point(
     in_phase_records: list[np.ndarray] = []
     quadrature_records: list[np.ndarray] = []
 
-    for t in range(STEPS):
+    for t in range(steps):
         # Prediction flow: detuned precession about x (z = Y0 sin convention).
         y, z = y * cos_t - z * sin_t, y * sin_t + z * cos_t
         y *= contraction
@@ -356,6 +391,91 @@ def main() -> None:
         print(f"  {key}: {value}")
 
     run_budget_experiment(rng)
+    run_optime_experiment(rng)
+
+
+def run_optime_experiment(rng: np.random.Generator) -> None:
+    """Experiment C: operational-time covariance across lab tempos (OP-29)."""
+    rows = []
+    for mode in ("co_clocked", "lab_clocked"):
+        for k in OPTIME_K_LIST:
+            detuning = DETUNING / k if mode == "co_clocked" else DETUNING
+            row = run_grid_point(
+                OPTIME_KAPPA,
+                OPTIME_GAIN,
+                rng,
+                every_k=k,
+                periods=OPTIME_MEASURED_PERIODS * k,
+                detuning=detuning,
+                gamma=0.0,
+            )
+            row["mode"] = mode
+            row["lab_periods"] = OPTIME_MEASURED_PERIODS * k
+            rows.append(row)
+
+    fieldnames = list(rows[0].keys())
+    with OPTIME_CSV.open("w", newline="") as fh:
+        writer = csv.DictWriter(fh, fieldnames=fieldnames)
+        writer.writeheader()
+        writer.writerows(rows)
+
+    def spread(mode: str, key: str) -> float:
+        vals = [r[key] for r in rows if r["mode"] == mode]
+        mean = float(np.mean(vals))
+        if abs(mean) < 1e-12:
+            return 0.0
+        return round((max(vals) - min(vals)) / mean, 6)
+
+    metrics = [
+        "memory_retention",
+        "clock_slack_bits",
+        "error_info_bits",
+        "phase_lock",
+        "logical_leak_bits",
+    ]
+    summary = [("tick_count_per_member", 2 * OPTIME_MEASURED_PERIODS)]
+    for key in metrics:
+        summary.append((f"co_clocked_spread_{key}", spread("co_clocked", key)))
+        summary.append((f"lab_clocked_spread_{key}", spread("lab_clocked", key)))
+    with OPTIME_SUMMARY_CSV.open("w", newline="") as fh:
+        writer = csv.writer(fh)
+        writer.writerow(["metric", "value"])
+        writer.writerows(summary)
+
+    plot_optime_curves(rows)
+
+    print("operational-time covariance probe complete")
+    for key, value in summary:
+        print(f"  {key}: {value}")
+
+
+def plot_optime_curves(rows: list[dict]) -> None:
+    import matplotlib
+
+    matplotlib.use("Agg")
+    import matplotlib.pyplot as plt
+
+    panels = [
+        ("memory_retention", "memory retention (tick-native cost)"),
+        ("error_info_bits", "I(error; record) bits"),
+        ("phase_lock", "phase lock"),
+        ("clock_slack_bits", "H(r_{n+1} | r_n) bits"),
+    ]
+    fig, axes = plt.subplots(1, 4, figsize=(17, 4), constrained_layout=True)
+    for ax, (key, title) in zip(axes, panels):
+        for mode, marker in (("co_clocked", "o"), ("lab_clocked", "s")):
+            ks = [r["every_k"] for r in rows if r["mode"] == mode]
+            vals = [r[key] for r in rows if r["mode"] == mode]
+            ax.plot(ks, vals, marker=marker, label=mode)
+        ax.set_xlabel("lab-time dilation k (ticks every k-th period)")
+        ax.set_title(title)
+        ax.grid(alpha=0.3)
+    axes[0].legend()
+    fig.suptitle(
+        "Operational-time covariance probe: same tick count, different lab tempo"
+    )
+    fig.savefig(OPTIME_PNG, dpi=130)
+    plt.close(fig)
 
 
 def run_budget_experiment(rng: np.random.Generator) -> None:

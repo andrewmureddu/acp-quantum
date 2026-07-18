@@ -399,7 +399,49 @@ Both answers are ACP-shaped:
    read its own tempo, and a clock that spends everything on readout has
    nothing left to protect.
 
-The remaining next steps are a clock-regularity metric stated in the
-system's own operational time (OP-29) and a small-code version connecting
-the braided clock to the hardware ladder (OP-23).
+## 12. Third Result: the Clock Obeys Operational-Time Covariance
+
+The braided clock is now also the first executable probe of the OP-29
+covariance principle (`bridges/operational_time_relativity.md`). Experiment
+C constructs a family of clocks with identical operational length — the
+same 32 verification ticks at the same per-tick strength and per-tick
+feedback — but different lab tempos: member \(k\) places its ticks on every
+\(k\)-th nominal period, \(k\in\{1,2,3,4,6\}\). The tempo map between
+members is linear in lab time and the identity in tick time, so OP-29's
+conjugacy condition reduces to a single question: does the disturbance
+kernel commute with the tempo map? Two conventions answer it both ways:
+co-clocked detuning (scaled by \(1/k\), identical phase error per tick;
+kernels match) and lab-clocked detuning (fixed in lab time; a slowed member
+accrues \(k\) times the phase error per verification step; kernels do not
+match).
+
+The seeded result matches the candidate transformation laws in both
+directions:
+
+1. **Tick-native scalars are invariant regardless of conjugacy.** Memory
+   retention (`0.458`–`0.494` across all ten runs) and record slack
+   (relative spread below \(10^{-3}\)) depend only on the number of
+   verification steps executed, not on their lab-time spacing. These are
+   OP-29's scalar structural quantities, pulled back unchanged along the
+   tempo map.
+2. **Record-facing diagnostics are invariant exactly when conjugacy
+   holds.** Co-clocked, phase lock (`0.281`–`0.443`) and tick-stream
+   syndrome (`0.020`–`0.079` bits) stay in one band across all tempos,
+   with residual scatter consistent with mutual-information estimator
+   noise. Lab-clocked, covariance fails catastrophically rather than
+   gracefully: by \(k=2\) the lock is zero and by \(k=6\) the syndrome is
+   `0.0003` bits — a slowed clock facing a lab-tempo disturbance is not a
+   slower version of the same productive interval; it is outside the
+   interval in its own proper time.
+3. **Noncentrality is tempo-independent:** logical leak stays at the
+   finite-sample floor in every member of both families.
+
+This is a toy verification, not the OP-29 covariance theorem. But it gives
+the theorem target its first concrete instance: the proper productive
+interval of the braided clock is measured in ticks, invariant under lab
+reparameterization when the environment is co-clocked, and undefined —
+because record selectivity fails — when it is not.
+
+The remaining next step is a small-code version connecting the braided
+clock to the hardware ladder (OP-23).
 

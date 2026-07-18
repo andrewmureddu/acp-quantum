@@ -316,6 +316,28 @@ Canonical tracker: `OPEN_PROBLEMS.md`. Headline items:
 
 ## Changelog
 
+### 2026-07-18 — operational-time covariance probe (OP-29 x OP-22)
+- Added Experiment C to `simulations/quantum_braiding_clock/`: a family of
+  braided clocks with identical operational length (32 ticks, same per-tick
+  strength and feedback) but different lab tempos (ticks every k-th period,
+  k in {1,2,3,4,6}), run under a co-clocked disturbance (detuning scaled by
+  1/k, per-tick kernels match) and a lab-clocked disturbance (fixed
+  detuning, conjugacy fails).
+- Result matches the OP-29 candidate transformation laws in both
+  directions: tick-native scalars are invariant unconditionally (memory
+  retention `0.458`-`0.494` across all ten runs; record-slack spread below
+  `1e-3`), while record-facing diagnostics are invariant only under
+  conjugacy (co-clocked phase lock `0.281`-`0.443` and syndrome
+  `0.020`-`0.079` bits stay in one band; lab-clocked lock is zero by k=2
+  and syndrome `0.0003` bits by k=6). Non-conjugate members leave the
+  proper productive interval in their own tick frame; the failure is sharp,
+  not gradual. Logical leak stays at the finite-sample floor in every
+  member.
+- Extended `bridges/quantum_braiding_timekeeping.md` with section 12, added
+  section 6 to `bridges/operational_time_relativity.md`, upgraded OP-29 to
+  open/partial+, and updated OP-22 and the simulation README.
+- Session log: `sessions/2026-07-18_operational_time_covariance_probe.md`.
+
 ### 2026-07-18 — braided clock budget scan: tick rate vs tick strength
 - Extended `simulations/quantum_braiding_clock/` with Experiment B: the
   escapement fires every k-th period, burst strength is set to spend a fixed

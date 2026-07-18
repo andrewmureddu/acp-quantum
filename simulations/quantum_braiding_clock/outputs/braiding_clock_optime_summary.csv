@@ -1,0 +1,12 @@
+metric,value
+tick_count_per_member,32
+co_clocked_spread_memory_retention,0.031046
+lab_clocked_spread_memory_retention,0.049593
+co_clocked_spread_clock_slack_bits,0.000801
+lab_clocked_spread_clock_slack_bits,0.000694
+co_clocked_spread_error_info_bits,1.328182
+lab_clocked_spread_error_info_bits,3.993445
+co_clocked_spread_phase_lock,0.430463
+lab_clocked_spread_phase_lock,4.665601
+co_clocked_spread_logical_leak_bits,1.411402
+lab_clocked_spread_logical_leak_bits,1.612741
