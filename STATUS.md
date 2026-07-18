@@ -316,6 +316,34 @@ Canonical tracker: `OPEN_PROBLEMS.md`. Headline items:
 
 ## Changelog
 
+### 2026-07-18 — Proposition 6: algebraic defect and blindness dichotomy
+- Added Definition 4 and Proposition 6 to
+  `bridges/clock_syndrome_record_splitting.md`, replacing the
+  commutator-norm defect with the correct object: code compressions of
+  record POVM elements \(\Phi(W^\dagger W)\).
+- Proposition 6.1: sharp dichotomy — an instrument set is clock-blind for
+  every finite adaptive schedule and every code state iff every compressed
+  record POVM commutes with the clock rotation. 6.2: checkable sufficient
+  condition \(\Phi(\mathcal K)\subseteq\{\bar G\}'\); the abelian QND
+  counterexample of Experiment F becomes a corollary. 6.3: filtered defect
+  \(\zeta_n\) with \(\mathrm{TV}\le\zeta_n\) and
+  \(I(\Theta;R)\le2\zeta_n\log_2|\mathcal R|+h_2(2\zeta_n)\); since
+  \(\zeta_n\le2\tau\), this subsumes Proposition 5 while assigning zero to
+  the blind instrument at every filtration level.
+- Remark recorded: the unfiltered defect saturates (\(\zeta_\infty=2\) for
+  any axis leak, since the generated algebra contains \(\bar Z\) exactly),
+  so the dichotomy is Eastin-Knill-like and all quantitative content lives
+  in the filtration growth of \(\zeta_n\).
+- Experiment G (exact enumeration of all \(2^n\) compressed record POVMs)
+  verifies the chain \(\mathrm{TV}\le\zeta_S\le\zeta_n\) in all twelve
+  cells, with the conjugated instrument at exactly zero for every \(n\)
+  and the witness tight to a factor of 2; the exact total variation grows
+  like \(\sqrt n\) (`0.030/0.061/0.087` at \(n=1,4,8\), \(\mu=0.1\)),
+  confirming the conjectured martingale-type rate and leaving its proof as
+  the sharpest remaining OP-30(a) item.
+- Updated OP-30 to open/partial++ and the simulation README.
+- Session log: `sessions/2026-07-18_algebraic_defect.md`.
+
 ### 2026-07-18 — OP-30(a) continuity bound proved and verified
 - Added Proposition 5 to `bridges/clock_syndrome_record_splitting.md`:
   for adaptive sequences of \(\epsilon\)-transparent instruments,

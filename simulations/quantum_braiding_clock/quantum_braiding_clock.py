@@ -118,6 +118,7 @@ STAB_SUMMARY_CSV = OUT / "braiding_clock_stabilizer_summary.csv"
 STAB_PNG = OUT / "braiding_clock_stabilizer_curves.png"
 CONT_CSV = OUT / "braiding_clock_continuity_scan.csv"
 CONT_PNG = OUT / "braiding_clock_continuity_curves.png"
+ALG_CSV = OUT / "braiding_clock_algebraic_defect.csv"
 
 SEED = 20260717
 
@@ -622,8 +623,72 @@ def run_continuity_experiment() -> None:
         writer.writeheader()
         writer.writerows(rows)
 
+    # --- Experiment G: algebraic (filtered) defect, Proposition 6. ---
+    # For each instrument and sequence length n, enumerate all 2^n record
+    # monomials W, compress E_W = W-dagger W to the codeword basis, and
+    # report: the largest single-element commutator witness
+    # 2 |<0_L| E_W |1_L>| (the compressed clock commutator sup over theta
+    # equals twice the off-diagonal magnitude, since X-bar compresses to
+    # diag(1,-1)); the subset witness at the maximizing record set S*; and
+    # the exact total variation TV(theta = pi, 0). Proposition 6.3 demands
+    # TV <= subset witness <= zeta_n; the conjugated instrument must give
+    # exactly zero at every n.
+    alg_rows = []
+    for kind in ("conjugated", "axis_leak"):
+        for mu in (0.1, 0.4):
+            kraus = kraus_pair(mu, kind)
+            for n in (1, 4, 8):
+                monomials = [np.eye(8, dtype=complex)]
+                for _ in range(n):
+                    monomials = [M @ W for W in monomials for M in kraus]
+                elem_witness = 0.0
+                k01 = []
+                for W in monomials:
+                    E = W.conj().T @ W
+                    off = complex(v0.conj() @ E @ v1)
+                    k01.append(off)
+                    elem_witness = max(elem_witness, 2.0 * abs(off))
+                # Exact record distributions at theta = 0 vs pi/2. (The
+                # records read <Z-bar>, which returns to zero at theta =
+                # pi, so pi/2 is the maximally distinguishing phase.)
+                psi_a = psi0
+                psi_b = u_theta(math.pi / 2) @ psi0
+                p_a = np.array(
+                    [float(np.real(np.vdot(W @ psi_a, W @ psi_a))) for W in monomials]
+                )
+                p_b = np.array(
+                    [float(np.real(np.vdot(W @ psi_b, W @ psi_b))) for W in monomials]
+                )
+                tv = 0.5 * float(np.abs(p_b - p_a).sum())
+                s_star = p_b > p_a
+                off_s = sum(o for o, m in zip(k01, s_star) if m)
+                subset_witness = 2.0 * abs(off_s)
+                alg_rows.append(
+                    {
+                        "instrument": kind,
+                        "mu": mu,
+                        "n_measurements": n,
+                        "exact_tv": round(tv, 8),
+                        "subset_witness": round(subset_witness, 8),
+                        "max_element_witness": round(elem_witness, 8),
+                        "chain_ok": bool(tv <= subset_witness + 1e-9),
+                    }
+                )
+
+    with ALG_CSV.open("w", newline="") as fh:
+        writer = csv.DictWriter(fh, fieldnames=list(alg_rows[0].keys()))
+        writer.writeheader()
+        writer.writerows(alg_rows)
+
     plot_continuity(rows)
 
+    print("algebraic defect audit (Proposition 6)")
+    for r in alg_rows:
+        print(
+            f"  {r['instrument']:<11} mu={r['mu']:<4} n={r['n_measurements']} "
+            f"TV={r['exact_tv']:<11} zetaS={r['subset_witness']:<11} "
+            f"zeta_elem={r['max_element_witness']:<11} ok={r['chain_ok']}"
+        )
     print("continuity bound verification complete")
     for r in rows:
         print(

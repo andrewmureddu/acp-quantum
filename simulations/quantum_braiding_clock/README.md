@@ -148,6 +148,17 @@ instruments, both with commutator defect `O(mu)`:
   confirming the proved `O(n^2 epsilon)` bound is loose against the true
   `O(n epsilon^2)` rate. All 20 cells satisfy the bound.
 
+The same harness also runs the **Experiment G algebraic-defect audit**
+(Proposition 6, `braiding_clock_algebraic_defect.csv`): all `2^n` record
+POVM elements are compressed to the codeword basis and their clock
+commutators computed exactly. The conjugated instrument gives filtered
+defect exactly zero at every `n` — the Proposition 6 dichotomy assigns it
+the blindness the commutator-norm defect missed. The axis-leak instrument
+satisfies the chain `TV <= subset witness <= zeta_n` in every cell (the
+witness is tight to a factor of 2), and its exact total variation grows
+like `sqrt(n)` (`0.030 / 0.061 / 0.087` at `n = 1, 4, 8` for `mu = 0.1`),
+confirming the martingale-type growth conjectured in the bridge's Remark 2.
+
 ## Run
 
 ```bash
@@ -173,6 +184,7 @@ python3 simulations/quantum_braiding_clock/quantum_braiding_clock.py
 - `outputs/braiding_clock_stabilizer_curves.png`
 - `outputs/braiding_clock_continuity_scan.csv`
 - `outputs/braiding_clock_continuity_curves.png`
+- `outputs/braiding_clock_algebraic_defect.csv`
 
 ## Current Run
 

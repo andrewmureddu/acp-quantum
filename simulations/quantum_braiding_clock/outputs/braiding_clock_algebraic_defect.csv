@@ -1,0 +1,13 @@
+instrument,mu,n_measurements,exact_tv,subset_witness,max_element_witness,chain_ok
+conjugated,0.1,1,0.0,0.0,0.0,True
+conjugated,0.1,4,0.0,0.0,0.0,True
+conjugated,0.1,8,0.0,0.0,0.0,True
+conjugated,0.4,1,0.0,0.0,0.0,True
+conjugated,0.4,4,0.0,0.0,0.0,True
+conjugated,0.4,8,0.0,0.0,0.0,True
+axis_leak,0.1,1,0.02995002,0.05990005,0.05990005,True
+axis_leak,0.1,4,0.06107937,0.12215874,0.12215874,True
+axis_leak,0.1,8,0.08723864,0.17447728,0.10016322,True
+axis_leak,0.4,1,0.1168255,0.23365101,0.23365101,True
+axis_leak,0.4,4,0.22358493,0.44716987,0.44716987,True
+axis_leak,0.4,8,0.30444735,0.60889471,0.36913845,True
