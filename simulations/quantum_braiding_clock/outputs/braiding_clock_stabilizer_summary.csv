@@ -1,0 +1,12 @@
+metric,value
+pflip_grid,0.0 0.005 0.01 0.02 0.04 0.08
+zero_noise_checked_retention,0.996667
+zero_noise_bare_monitored_retention,0.000832
+zero_noise_bare_retention,1.0
+mid_noise_bare_retention,0.24
+mid_noise_unchecked_retention,0.41
+mid_noise_checked_retention,0.533333
+mid_noise_overactive_retention,0.096667
+high_noise_checked_retention,0.01
+mid_noise_checked_corrections,1.45
+mid_noise_overactive_corrections,19.808333

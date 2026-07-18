@@ -113,6 +113,9 @@ OPTIME_PNG = OUT / "braiding_clock_optime_curves.png"
 CODE_CSV = OUT / "braiding_clock_code_scan.csv"
 CODE_SUMMARY_CSV = OUT / "braiding_clock_code_summary.csv"
 CODE_PNG = OUT / "braiding_clock_code_curves.png"
+STAB_CSV = OUT / "braiding_clock_stabilizer_scan.csv"
+STAB_SUMMARY_CSV = OUT / "braiding_clock_stabilizer_summary.csv"
+STAB_PNG = OUT / "braiding_clock_stabilizer_curves.png"
 
 SEED = 20260717
 
@@ -209,6 +212,38 @@ CODE_EMA_ALPHA = 0.30    # parity-record EMA (syndrome evidence)
 CODE_THRESHOLD = 0.25    # evidence gate for the checked decoder
 CODE_PFLIP_GRID = [0.0, 0.005, 0.01, 0.02, 0.04, 0.08]
 CODE_POLICIES = ["bare", "code_unchecked", "code_checked", "code_overactive"]
+
+# --- Experiment E: entangled stabilizer code (OP-23 D1 rung) ---
+# The state-vector upgrade of Experiment D. Three qubits in the phase-flip
+# code |0_L> = |+++>, |1_L> = |--->, protected information stored as a
+# genuine quantum coherence: the logical-Y eigenstate
+# (|0_L> + i*sb |1_L>)/sqrt(2). The channel applies Z_i phase flips per
+# period. The syndrome is read by WEAK measurements of the stabilizers
+# X1X2 and X2X3 implemented as proper Kraus pairs
+#   M(s) = sqrt((1 + s*kappa)/2) P_+ + sqrt((1 - s*kappa)/2) P_-,
+# so the parity channel's zero logical cost is DERIVED, not imported:
+# because Z errors map stabilizer eigenstates to stabilizer eigenstates,
+# the state is always an eigenstate of the measured operator, the Kraus
+# update is proportional to the identity on it, and the backaction
+# vanishes identically while the record stays noisy (readout fidelity
+# STAB_KAPPA < 1). The control comparison `bare_monitored` probes a single
+# unencoded qubit at the same strength with a weak X measurement, which
+# anticommutes with the stored Y coherence: same measurement budget, total
+# decoherence. The commutation structure - not the gentleness of the
+# probe - is what makes syndrome extraction free.
+STAB_PERIODS = 36
+STAB_KAPPA = 0.6         # readout fidelity of weak stabilizer measurements
+STAB_EMA_ALPHA = 0.20
+STAB_THRESHOLD = 0.35
+STAB_WARMUP = 5          # periods of EMA burn-in before the decoder may fire
+STAB_PFLIP_GRID = [0.0, 0.005, 0.01, 0.02, 0.04, 0.08]
+STAB_POLICIES = [
+    "bare",
+    "bare_monitored",
+    "code_unchecked",
+    "code_checked",
+    "code_overactive",
+]
 
 # --- Experiment A grid ---
 # Each burst multiplies transverse coherence by roughly sqrt(1 - kappa^2),
@@ -434,6 +469,215 @@ def main() -> None:
     run_budget_experiment(rng)
     run_optime_experiment(rng)
     run_code_experiment(rng)
+    run_stabilizer_experiment(rng)
+
+
+# Basis convention for Experiment E: index bits (b1 b2 b3), qubit 1 = MSB.
+# X1X2 permutes index by XOR 0b110; X2X3 by XOR 0b011. Z_i puts a sign
+# (-1)^(bit i). Codewords: |0_L> = |+++>, |1_L> = |--->.
+_V0 = np.ones(8) / math.sqrt(8.0)
+_V1 = np.array([(-1) ** bin(i).count("1") for i in range(8)]) / math.sqrt(8.0)
+_S_PERMS = {1: np.arange(8) ^ 6, 2: np.arange(8) ^ 3}
+_Z_SIGNS = {
+    1: np.array([(-1) ** ((i >> 2) & 1) for i in range(8)], dtype=float),
+    2: np.array([(-1) ** ((i >> 1) & 1) for i in range(8)], dtype=float),
+    3: np.array([(-1) ** (i & 1) for i in range(8)], dtype=float),
+}
+# Syndrome (s1, s2) -> corrective Z. Z1 flips S1 only; Z2 flips both;
+# Z3 flips S2 only.
+_SYNDROME_TO_Z = {(-1, 1): 1, (-1, -1): 2, (1, -1): 3}
+
+
+def _weak_stabilizer_measure(
+    psi: np.ndarray, perm: np.ndarray, kappa: float, rng: np.random.Generator
+) -> tuple[np.ndarray, np.ndarray]:
+    """Weak measurement of a stabilizer S (S^2 = I) given its permutation.
+
+    Returns (updated psi, outcome record in {-1, +1} per trajectory).
+    """
+    phi_plus = (psi + psi[:, perm]) / 2.0
+    phi_minus = (psi - psi[:, perm]) / 2.0
+    expect_s = np.sum(np.abs(phi_plus) ** 2 - np.abs(phi_minus) ** 2, axis=1)
+    p_plus = (1.0 + kappa * expect_s) / 2.0
+    s = np.where(rng.random(psi.shape[0]) < p_plus, 1.0, -1.0)
+    w_plus = np.sqrt((1.0 + s * kappa) / 2.0)[:, None]
+    w_minus = np.sqrt((1.0 - s * kappa) / 2.0)[:, None]
+    psi_new = w_plus * phi_plus + w_minus * phi_minus
+    norm = np.linalg.norm(psi_new, axis=1, keepdims=True)
+    return psi_new / norm, s
+
+
+def _logical_y(psi: np.ndarray, sb: np.ndarray) -> np.ndarray:
+    alpha = psi @ _V0
+    beta = psi @ _V1
+    return sb * 2.0 * np.imag(np.conj(alpha) * beta)
+
+
+def run_stabilizer_point(
+    p_flip: float, policy: str, rng: np.random.Generator
+) -> dict:
+    """One cell of Experiment E: the entangled stabilizer code."""
+    n = N_TRAJ
+    b = rng.integers(0, 2, size=n)
+    sb = np.where(b == 1, 1.0, -1.0)
+
+    if policy.startswith("bare"):
+        # Single qubit, logical-Y eigenstate (|0> + i*sb |1>)/sqrt(2).
+        psi = np.stack(
+            [np.full(n, 1.0 + 0.0j), 1j * sb.astype(complex)], axis=1
+        ) / math.sqrt(2.0)
+    else:
+        psi = (
+            _V0[None, :].astype(complex)
+            + 1j * sb[:, None] * _V1[None, :]
+        ) / math.sqrt(2.0)
+
+    ema = np.zeros((2, n))
+    corrections = np.zeros(n)
+    x_perm_1q = np.array([1, 0])
+
+    for _period in range(STAB_PERIODS):
+        # Error channel: independent Z phase flips.
+        if p_flip > 0.0:
+            if policy.startswith("bare"):
+                flip = rng.random(n) < p_flip
+                psi[flip, 1] *= -1.0
+            else:
+                for q in (1, 2, 3):
+                    flip = rng.random(n) < p_flip
+                    psi[flip] *= _Z_SIGNS[q][None, :]
+
+        if policy == "bare_monitored":
+            # Same-strength weak X measurement on the bare qubit. X
+            # anticommutes with the stored Y coherence, so this probe
+            # decoheres exactly what it is trying to protect.
+            psi, _ = _weak_stabilizer_measure(psi, x_perm_1q, STAB_KAPPA, rng)
+        elif policy in ("code_checked", "code_overactive"):
+            latest = np.empty((2, n))
+            for si, stab in enumerate((1, 2)):
+                psi, s = _weak_stabilizer_measure(
+                    psi, _S_PERMS[stab], STAB_KAPPA, rng
+                )
+                latest[si] = s
+                ema[si] = (1.0 - STAB_EMA_ALPHA) * ema[si] + STAB_EMA_ALPHA * s
+            if policy == "code_checked":
+                if _period < STAB_WARMUP:
+                    continue
+                evidence, gate = ema, STAB_THRESHOLD
+            else:
+                evidence, gate = latest, 0.5
+            # The table lists the stabilizer pattern produced by Z_q; the
+            # decoder fires when the evidence matches it beyond the gate.
+            for (s1, s2), q in _SYNDROME_TO_Z.items():
+                hit = (evidence[0] * s1 > gate) & (evidence[1] * s2 > gate)
+                if not hit.any():
+                    continue
+                psi[hit] *= _Z_SIGNS[q][None, :]
+                ema[0][hit] = 0.0
+                ema[1][hit] = 0.0
+                corrections[hit] += 1
+
+    # Terminal ideal decode for all code policies: projective stabilizer
+    # readout (states are exact eigenstates under this error model, so the
+    # expectation values are +/-1) followed by the table correction.
+    if not policy.startswith("bare"):
+        s_vals = []
+        for stab in (1, 2):
+            perm = _S_PERMS[stab]
+            phi_plus = (psi + psi[:, perm]) / 2.0
+            phi_minus = (psi - psi[:, perm]) / 2.0
+            s_vals.append(
+                np.where(
+                    np.sum(np.abs(phi_plus) ** 2, axis=1)
+                    >= np.sum(np.abs(phi_minus) ** 2, axis=1),
+                    1,
+                    -1,
+                )
+            )
+        for (s1, s2), q in _SYNDROME_TO_Z.items():
+            hit = (s_vals[0] == s1) & (s_vals[1] == s2)
+            if hit.any():
+                psi[hit] *= _Z_SIGNS[q][None, :]
+
+    if policy.startswith("bare"):
+        retention = max(
+            0.0,
+            float(np.mean(sb * 2.0 * np.imag(np.conj(psi[:, 0]) * psi[:, 1]))),
+        )
+    else:
+        retention = max(0.0, float(np.mean(_logical_y(psi, sb))))
+
+    return {
+        "p_flip": p_flip,
+        "policy": policy,
+        "logical_retention": round(retention, 6),
+        "mean_corrections": round(float(corrections.mean()), 6),
+    }
+
+
+def run_stabilizer_experiment(rng: np.random.Generator) -> None:
+    """Experiment E: entangled stabilizer code (OP-23 D1 rung)."""
+    rows = [
+        run_stabilizer_point(p, policy, rng)
+        for p in STAB_PFLIP_GRID
+        for policy in STAB_POLICIES
+    ]
+
+    with STAB_CSV.open("w", newline="") as fh:
+        writer = csv.DictWriter(fh, fieldnames=list(rows[0].keys()))
+        writer.writeheader()
+        writer.writerows(rows)
+
+    def get(p, policy, key="logical_retention"):
+        return next(
+            r[key] for r in rows if r["p_flip"] == p and r["policy"] == policy
+        )
+
+    summary = [
+        ("pflip_grid", " ".join(str(p) for p in STAB_PFLIP_GRID)),
+        ("zero_noise_checked_retention", get(0.0, "code_checked")),
+        ("zero_noise_bare_monitored_retention", get(0.0, "bare_monitored")),
+        ("zero_noise_bare_retention", get(0.0, "bare")),
+        ("mid_noise_bare_retention", get(0.02, "bare")),
+        ("mid_noise_unchecked_retention", get(0.02, "code_unchecked")),
+        ("mid_noise_checked_retention", get(0.02, "code_checked")),
+        ("mid_noise_overactive_retention", get(0.02, "code_overactive")),
+        ("high_noise_checked_retention", get(0.08, "code_checked")),
+        ("mid_noise_checked_corrections", get(0.02, "code_checked", "mean_corrections")),
+        ("mid_noise_overactive_corrections", get(0.02, "code_overactive", "mean_corrections")),
+    ]
+    with STAB_SUMMARY_CSV.open("w", newline="") as fh:
+        writer = csv.writer(fh)
+        writer.writerow(["metric", "value"])
+        writer.writerows(summary)
+
+    plot_stabilizer_curves(rows)
+
+    print("entangled stabilizer code scan complete")
+    for key, value in summary:
+        print(f"  {key}: {value}")
+
+
+def plot_stabilizer_curves(rows: list[dict]) -> None:
+    import matplotlib
+
+    matplotlib.use("Agg")
+    import matplotlib.pyplot as plt
+
+    fig, ax = plt.subplots(figsize=(7.5, 5), constrained_layout=True)
+    for policy, marker in zip(STAB_POLICIES, "osd^v"):
+        ps = [r["p_flip"] for r in rows if r["policy"] == policy]
+        vals = [r["logical_retention"] for r in rows if r["policy"] == policy]
+        ax.plot(ps, vals, marker=marker, label=policy)
+    ax.set_xlabel("phase-flip probability per qubit per period")
+    ax.set_ylabel("logical-Y retention")
+    ax.set_title(
+        "Entangled stabilizer code: syndrome extraction is free by commutation"
+    )
+    ax.grid(alpha=0.3)
+    ax.legend()
+    fig.savefig(STAB_PNG, dpi=130)
+    plt.close(fig)
 
 
 def run_code_point(p_flip: float, policy: str, rng: np.random.Generator) -> dict:

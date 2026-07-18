@@ -316,6 +316,34 @@ Canonical tracker: `OPEN_PROBLEMS.md`. Headline items:
 
 ## Changelog
 
+### 2026-07-18 — entangled stabilizer code (OP-23 D1 rung)
+- Added Experiment E to `simulations/quantum_braiding_clock/`: a true
+  state-vector simulation of the three-qubit phase-flip code with the
+  protected information stored as the logical-\(\bar Y\) coherence, a
+  per-period \(Z_i\) channel, and weak stabilizer measurements of
+  \(X_1X_2\), \(X_2X_3\) as proper Kraus pairs at readout fidelity `0.6`.
+- The D0 rung's imported assumption is now derived: because the state is
+  always a stabilizer eigenstate under this channel, the weak-measurement
+  backaction vanishes identically. Zero-noise contrast: checked code
+  `0.9967` retention through 72 weak stabilizer measurements vs `0.0008`
+  for a bare qubit probed at the same strength with an anticommuting
+  observable — the commutant alone decides whether monitoring is free or
+  fatal.
+- The correction productive interval survives the quantum upgrade:
+  evidence-gated checking dominates all baselines for
+  \(p_{\mathrm{flip}}\approx0.005\)–\(0.04\) (`0.930/0.817/0.533` vs
+  unchecked `0.860/0.697/0.410`), saturates at `0.08`, and the overactive
+  policy is destroyed everywhere. The D0 evidence-gating lesson reproduces
+  exactly: without EMA burn-in and a higher gate, false fires drop
+  zero-noise retention to `0.54`.
+- Structural remark recorded in bridge §14: at code level, syndrome
+  records are free precisely because they commute with the logical
+  algebra, so they cannot serve as a logical clock readout — a braided
+  clock on a code must split its record stream into a noncentral syndrome
+  channel and a deliberately central clock channel.
+- Updated OP-22/OP-23 and the simulation README.
+- Session log: `sessions/2026-07-18_entangled_stabilizer_code.md`.
+
 ### 2026-07-18 — clocked repetition code (OP-23 D0 rung)
 - Added Experiment D to `simulations/quantum_braiding_clock/`: three
   braided-clock qubits carrying one logical bit under a per-period

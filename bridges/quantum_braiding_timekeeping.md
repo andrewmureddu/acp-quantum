@@ -478,8 +478,51 @@ drive, and a per-period phase-flip channel. Two structural findings:
    control stack to demonstrate before it earns hardware data.
 
 The scaffold is honest about its rank: product-state Bloch dynamics with
-classical parity records is the D0 rung. The next rungs are an entangled
-stabilizer simulation of the same architecture (deriving, not importing,
-the parity channel's zero logical cost) and the existing H-ladder's
-measured-trace replay discipline applied to a clocked code.
+classical parity records is the D0 rung.
+
+## 14. Fifth Result: the Entangled Stabilizer Rung
+
+The D1 rung now exists (Experiment E): a true state-vector simulation of
+the three-qubit phase-flip code \(|0_L\rangle=|{+}{+}{+}\rangle\),
+\(|1_L\rangle=|{-}{-}{-}\rangle\), with the protected information stored as
+a genuine quantum coherence — the logical-\(\bar Y\) eigenstate
+\((|0_L\rangle+i\,s_b|1_L\rangle)/\sqrt2\) — a per-period \(Z_i\)
+phase-flip channel, and weak measurements of the stabilizers \(X_1X_2\),
+\(X_2X_3\) implemented as proper Kraus pairs at readout fidelity `0.6`.
+
+What D0 imported, D1 derives. Because \(Z\) errors map stabilizer
+eigenstates to stabilizer eigenstates, the state is always an eigenstate
+of the measured operator, the Kraus update is proportional to the identity
+on it, and the measurement backaction vanishes identically while the
+record remains noisy. The seeded numbers make the commutation argument
+quantitative: at zero noise the checked code retains `0.9967` logical
+coherence through 72 weak stabilizer measurements, while a bare qubit
+probed at the same strength with a weak \(X\) measurement — which
+anticommutes with the stored \(\bar Y\) coherence — retains `0.0008`.
+Identical measurement budget; the commutant decides everything. This is
+the Knill-Laflamme/otherness-preserving-recovery claim of section 4
+exhibited dynamically rather than assumed.
+
+The correction interval survives the upgrade. In the working window
+\(p_{\mathrm{flip}}\approx0.005\)–\(0.04\), evidence-gated checking
+dominates every baseline on the same terminal readout (`0.930 / 0.817 /
+0.533` against unchecked `0.860 / 0.697 / 0.410` and bare `0.733 / 0.473 /
+0.240`); at \(p=0.08\) multi-flips saturate the distance-3 decoder and
+mid-run checking mildly hurts (`0.010` vs unchecked `0.030`). The
+overactive policy is destroyed everywhere, and the D0 evidence-gating
+lesson reproduces exactly at the quantum level: without EMA burn-in and a
+higher threshold, early record fluctuations false-fire the decoder and
+zero-noise retention falls to `0.54`.
+
+One structural remark for the clock program: at the code level the roles
+that coexisted on a single qubit separate cleanly. Stabilizer records are
+free precisely because they commute with the logical algebra — which is
+also why they can never serve as a logical clock readout. A braided clock
+built on a code must therefore split its record stream into a noncentral
+syndrome channel and a deliberately central (and hence costly) clock
+channel; the single-qubit Experiment A was the degenerate case where one
+stream did both jobs badly.
+
+The remaining rung is the H-ladder's measured-trace replay discipline
+applied to a clocked code.
 

@@ -105,6 +105,29 @@ Two design lessons are baked in and documented in the module:
   the KL argument, not derived. D0 tests the control architecture, not
   stabilizer protection.
 
+## Experiment E: entangled stabilizer code (OP-23 D1 rung)
+
+The state-vector upgrade of Experiment D. Three qubits in the phase-flip
+code `|0_L> = |+++>`, `|1_L> = |--->`, protected information stored as a
+genuine quantum coherence (the logical-Y eigenstate
+`(|0_L> + i sb |1_L>)/sqrt(2)`), a per-period `Z_i` phase-flip channel, and
+weak measurements of the stabilizers `X1X2`, `X2X3` implemented as proper
+Kraus pairs at readout fidelity `0.6`.
+
+The point of D1 is that the parity channel's zero logical cost is now
+**derived, not imported**: under this error model the state is always a
+stabilizer eigenstate, so the Kraus update acts as the identity on it and
+the backaction vanishes identically while the record stays noisy. The
+control `bare_monitored` probes a single unencoded qubit at the same
+strength with a weak X measurement, which anticommutes with the stored Y
+coherence. Same measurement budget; the commutation structure alone decides
+whether monitoring is free or fatal.
+
+Policies: `bare`, `bare_monitored`, `code_unchecked` (terminal ideal decode
+only), `code_checked` (EMA syndrome evidence, threshold `0.35`, 5-period
+burn-in), `code_overactive` (raw single records). All code policies get the
+same terminal ideal decode.
+
 ## Run
 
 ```bash
@@ -125,6 +148,9 @@ python3 simulations/quantum_braiding_clock/quantum_braiding_clock.py
 - `outputs/braiding_clock_code_scan.csv`
 - `outputs/braiding_clock_code_summary.csv`
 - `outputs/braiding_clock_code_curves.png`
+- `outputs/braiding_clock_stabilizer_scan.csv`
+- `outputs/braiding_clock_stabilizer_summary.csv`
+- `outputs/braiding_clock_stabilizer_curves.png`
 
 ## Current Run
 
@@ -204,6 +230,19 @@ Signed logical retention by policy (seeded, 600 trajectories per cell):
 
 Grid-max logical leak on the common-mode record: `0.006029` bits.
 
+## Current Stabilizer Run
+
+Logical-Y retention by policy (seeded, 600 trajectories per cell):
+
+| `p_flip` | bare | bare_monitored | unchecked | checked | overactive |
+|---:|---:|---:|---:|---:|---:|
+| 0.000 | 1.0000 | 0.0008 | 1.0000 | 0.9967 | 0.0567 |
+| 0.005 | 0.7333 | 0.0001 | 0.8600 | **0.9300** | 0.0000 |
+| 0.010 | 0.4733 | 0.0000 | 0.6967 | **0.8167** | 0.0300 |
+| 0.020 | 0.2400 | 0.0003 | 0.4100 | **0.5333** | 0.0967 |
+| 0.040 | 0.0200 | 0.0000 | 0.0567 | **0.1000** | 0.0000 |
+| 0.080 | 0.0033 | 0.0001 | 0.0300 | 0.0100 | 0.0000 |
+
 ## Interpretation
 
 - **Weak monitoring** (`kappa ~ 0.05`): memory survives but the record
@@ -262,3 +301,16 @@ Grid-max logical leak on the common-mode record: `0.006029` bits.
   braided-clock architecture. The overactive policy is worse everywhere,
   and the common-mode clock feedback stays logically noncentral
   (grid-max leak `0.006` bits).
+- **The stabilizer run derives what D0 imported.** At zero noise the
+  checked code retains `0.9967` logical coherence through 72 weak
+  stabilizer measurements, while the bare qubit probed at the same
+  strength retains `0.0008` — three orders of magnitude, decided entirely
+  by whether the measured operator commutes with the protected
+  information. In the working window `p_flip ~ 0.005-0.04` the checked
+  code dominates every baseline on the same readout (`0.93 / 0.82 / 0.53`
+  vs unchecked `0.86 / 0.70 / 0.41`); at `0.08` multi-flips saturate the
+  distance-3 decoder and mid-run checking mildly hurts (`0.01` vs
+  unchecked `0.03`). The evidence gate matters at this rung too: without
+  the burn-in and higher threshold, early EMA fluctuations false-fire and
+  the zero-noise retention drops to `0.54` — the D0 lesson reproduced with
+  true state vectors.
