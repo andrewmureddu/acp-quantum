@@ -24,7 +24,19 @@ are still schematic. Their purpose is to separate four logical possibilities:
 4. quantum_completion: a deliberately modest candidate completion that triggers
    earlier, keeps the channel normalized, records geometry sectors, suppresses
    early logical leakage, and releases interior information only as a late
-   decodable channel.
+   decodable channel;
+5. leaky_completion: a control policy identical to quantum_completion except
+   that its transfer record bin depends on the interior clock phase — an
+   inadmissible channel that reads the interior clock early.
+
+Interior clock register (bridges/boundary_records_interior_time.md). The
+interior microstate is now explicit: a clock phase theta in Z_8 with uniform
+prior, advancing deterministically by one bin per step. The per-step
+diagnostic I(Theta; boundary record) tests Corollary G1 — admissible
+policies must keep it at zero before decoding — and the summary records the
+step at which interior (clock) information first becomes boundary-decodable,
+testing Corollary G2: clock release and information release are the same
+transition, and what is decoded is the phase frozen at the transfer step.
 """
 
 from __future__ import annotations
@@ -66,6 +78,10 @@ QG_TRANSFER_SIGMA = 0.12
 QG_DECODE_CORRECT_PROB = 0.74
 
 INTERIOR_CLASSES = 8
+# The interior microstate is identified with a clock phase in Z_8: the
+# INTERIOR_CLASSES-way late decode is now literally a readout of the
+# interior clock frozen at the transfer step.
+CLOCK_PHASES = INTERIOR_CLASSES
 
 
 @dataclass(frozen=True)
@@ -88,6 +104,9 @@ class Macrocell:
 
 
 Distribution = dict[Macrocell, float]
+# Joint state: (macrocell, interior clock phase in Z_8) -> mass.
+JointState = tuple[Macrocell, int]
+JointDistribution = dict[JointState, float]
 
 
 def compactness_centers() -> list[float]:
@@ -154,7 +173,7 @@ def area_value(compactness: float, record_kind: str) -> float:
     base = 1.0 / (1.0 + 2.5 * compactness)
     if record_kind == "horizon":
         return min(1.0, base + 0.38)
-    if record_kind == "qg":
+    if record_kind in ("qg", "qg_leak0", "qg_leak1"):
         return min(1.0, base + 0.24)
     return base
 
@@ -176,7 +195,7 @@ def null_record_bin(compactness: float, record_kind: str) -> int:
     base = bin_index(compactness, [0.35, 0.55, 0.70, 0.84])
     if record_kind == "horizon":
         return 5
-    if record_kind == "qg":
+    if record_kind in ("qg", "qg_leak0", "qg_leak1"):
         return 6
     return base
 
@@ -186,6 +205,12 @@ def radiation_record_bin(compactness: float, record_kind: str) -> int:
         return 3
     if record_kind == "qg":
         return 2
+    # Leaky control: the transfer's radiation record depends on the interior
+    # clock parity - a deliberately inadmissible, clock-central record.
+    if record_kind == "qg_leak0":
+        return 2
+    if record_kind == "qg_leak1":
+        return 4
     if compactness > 0.90:
         return 1
     return 0
@@ -207,15 +232,16 @@ def macrocell_from_index(compactness_idx: int, record_kind: str) -> Macrocell:
 
 
 def add_weight(
-    distribution: defaultdict[Macrocell, float],
+    distribution: defaultdict[JointState, float],
     compactness_weights: list[float],
     mass: float,
     record_kind: str,
+    theta: int,
 ) -> None:
     for idx, weight in enumerate(normalize(compactness_weights)):
         if weight == 0.0:
             continue
-        distribution[macrocell_from_index(idx, record_kind)] += mass * weight
+        distribution[(macrocell_from_index(idx, record_kind), theta)] += mass * weight
 
 
 def collapse_center(compactness: float) -> float:
@@ -272,6 +298,35 @@ def mutual_information_bits(
     return info
 
 
+def clock_record_mi_bits(joint: JointDistribution) -> float:
+    """I(Theta; boundary record) over the joint distribution - the G1 audit."""
+    total = sum(joint.values())
+    if total <= 0.0:
+        return 0.0
+    px: dict[int, float] = defaultdict(float)
+    py: dict[tuple[int, ...], float] = defaultdict(float)
+    pxy: dict[tuple[int, tuple[int, ...]], float] = defaultdict(float)
+    for (cell, theta), mass in joint.items():
+        record = boundary_record(cell)
+        p = mass / total
+        px[theta] += p
+        py[record] += p
+        pxy[(theta, record)] += p
+    info = 0.0
+    for (theta, record), p in pxy.items():
+        denominator = px[theta] * py[record]
+        if p > 0.0 and denominator > 0.0:
+            info += p * math.log2(p / denominator)
+    return max(0.0, info)
+
+
+def macrocell_marginal(joint: JointDistribution) -> Distribution:
+    marginal: defaultdict[Macrocell, float] = defaultdict(float)
+    for (cell, _theta), mass in joint.items():
+        marginal[cell] += mass
+    return dict(marginal)
+
+
 def geometry_sector(cell: Macrocell) -> tuple[int, ...]:
     compactness_band = cell.compactness // 10
     return (compactness_band, cell.expansion, cell.curvature)
@@ -281,18 +336,23 @@ def boundary_record(cell: Macrocell) -> tuple[int, ...]:
     return (cell.null_record, cell.radiation_record)
 
 
-def transition(policy: str, current: Distribution) -> tuple[Distribution, dict[str, float]]:
-    raw_next: defaultdict[Macrocell, float] = defaultdict(float)
+def transition(
+    policy: str, current: JointDistribution
+) -> tuple[JointDistribution, dict[str, float]]:
+    raw_next: defaultdict[JointState, float] = defaultdict(float)
     singular_mass = 0.0
     triggered_mass = 0.0
     late_decodable = 0.0
     early_privacy_leakage = 0.0
 
-    for cell, mass in current.items():
+    completion_like = policy in ("quantum_completion", "leaky_completion")
+
+    for (cell, theta), mass in current.items():
         if mass == 0.0:
             continue
 
         compactness = CENTERS[cell.compactness]
+        theta_next = (theta + 1) % CLOCK_PHASES
 
         if policy == "horizon_transfer" and compactness >= HORIZON_TRIGGER_C:
             triggered_mass += mass
@@ -304,17 +364,24 @@ def transition(policy: str, current: Distribution) -> tuple[Distribution, dict[s
                 gaussian_weights(HORIZON_TRANSFER_CENTER, HORIZON_TRANSFER_SIGMA),
                 mass,
                 "horizon",
+                theta_next,
             )
             continue
 
-        if policy == "quantum_completion" and compactness >= QG_TRIGGER_C:
+        if completion_like and compactness >= QG_TRIGGER_C:
             triggered_mass += mass
             late_decodable += mass * symmetric_channel_mi_bits(
                 INTERIOR_CLASSES, QG_DECODE_CORRECT_PROB
             )
             # A schematic completion: part bounce-like redistribution, part
             # horizon-scale broadening. The point is nonzero future entropy
-            # with a finite, privacy-preserving boundary record.
+            # with a finite, privacy-preserving boundary record. The leaky
+            # control instead writes the interior clock parity into its
+            # transfer record - a clock-central, inadmissible channel.
+            if policy == "leaky_completion":
+                record_kind = f"qg_leak{theta_next % 2}"
+            else:
+                record_kind = "qg"
             add_weight(
                 raw_next,
                 mixture_weights(
@@ -324,7 +391,8 @@ def transition(policy: str, current: Distribution) -> tuple[Distribution, dict[s
                     ]
                 ),
                 mass,
-                "qg",
+                record_kind,
+                theta_next,
             )
             early_privacy_leakage += 0.018 * mass
             continue
@@ -345,6 +413,7 @@ def transition(policy: str, current: Distribution) -> tuple[Distribution, dict[s
             gaussian_weights(min(center, 0.995), sigma),
             retained_mass,
             "collapse",
+            theta_next,
         )
 
     admissible_mass = sum(raw_next.values())
@@ -355,28 +424,34 @@ def transition(policy: str, current: Distribution) -> tuple[Distribution, dict[s
         next_distribution = dict(raw_next)
 
     normalized_next = normalize_distribution(next_distribution)
-    probabilities = list(normalized_next.values())
+    cell_marginal = macrocell_marginal(normalized_next)
+    probabilities = list(cell_marginal.values())
     future_entropy = entropy_bits(probabilities)
     geometry_record_mi = mutual_information_bits(
-        normalized_next, geometry_sector, boundary_record
+        cell_marginal, geometry_sector, boundary_record
     )
+    clock_record_mi = clock_record_mi_bits(normalized_next)
 
     mean_compactness = sum(
-        mass * CENTERS[cell.compactness] for cell, mass in normalized_next.items()
+        mass * CENTERS[cell.compactness] for cell, mass in cell_marginal.items()
     )
     mean_expansion = sum(
         mass * expansion_value(CENTERS[cell.compactness])
-        for cell, mass in normalized_next.items()
+        for cell, mass in cell_marginal.items()
     )
     mean_curvature = sum(
         mass * curvature_value(CENTERS[cell.compactness])
-        for cell, mass in normalized_next.items()
+        for cell, mass in cell_marginal.items()
     )
 
     floor_violation = float(future_entropy < FLOOR_BITS or admissible_mass < 0.999)
-    privacy_violation = float(early_privacy_leakage > PRIVACY_EPS_BITS)
+    privacy_violation = float(
+        early_privacy_leakage > PRIVACY_EPS_BITS
+        or clock_record_mi > PRIVACY_EPS_BITS
+    )
 
     return next_distribution, {
+        "interior_clock_record_mi_bits": clock_record_mi,
         "future_entropy_bits": future_entropy,
         "admissible_mass": admissible_mass,
         "singular_mass": singular_mass,
@@ -392,14 +467,16 @@ def transition(policy: str, current: Distribution) -> tuple[Distribution, dict[s
     }
 
 
-def initial_distribution() -> Distribution:
-    distribution: defaultdict[Macrocell, float] = defaultdict(float)
-    add_weight(
-        distribution,
-        gaussian_weights(INITIAL_COMPACTNESS, INITIAL_SIGMA),
-        1.0,
-        "quiet",
-    )
+def initial_distribution() -> JointDistribution:
+    distribution: defaultdict[JointState, float] = defaultdict(float)
+    for theta in range(CLOCK_PHASES):
+        add_weight(
+            distribution,
+            gaussian_weights(INITIAL_COMPACTNESS, INITIAL_SIGMA),
+            1.0 / CLOCK_PHASES,
+            "quiet",
+            theta,
+        )
     return dict(distribution)
 
 
@@ -426,6 +503,9 @@ def simulate_policy(policy: str) -> list[dict[str, float | int | str]]:
                 "singular_mass": metrics["singular_mass"],
                 "triggered_mass": metrics["triggered_mass"],
                 "geometry_record_mi_bits": metrics["geometry_record_mi_bits"],
+                "interior_clock_record_mi_bits": metrics[
+                    "interior_clock_record_mi_bits"
+                ],
                 "early_privacy_leakage_bits": metrics["early_privacy_leakage_bits"],
                 "late_decodable_bits": metrics["late_decodable_bits"],
                 "cumulative_late_decodable_bits": cumulative_decodable,
@@ -474,6 +554,28 @@ def summarize(rows: list[dict[str, float | int | str]]) -> list[dict[str, float 
                 "max_early_privacy_leakage_bits": max(
                     float(r["early_privacy_leakage_bits"]) for r in pr
                 ),
+                "max_interior_clock_record_mi_bits": max(
+                    float(r["interior_clock_record_mi_bits"]) for r in pr
+                ),
+                # First step with non-negligible late decodable output. The
+                # 1e-3 threshold removes the Gaussian-tail artifact of
+                # infinitesimal mass sitting above the trigger from step 1.
+                "clock_info_release_step": next(
+                    (
+                        int(r["step"])
+                        for r in pr
+                        if float(r["late_decodable_bits"]) > 1e-3
+                    ),
+                    -1,
+                ),
+                "clock_leak_onset_step": next(
+                    (
+                        int(r["step"])
+                        for r in pr
+                        if float(r["interior_clock_record_mi_bits"]) > 1e-3
+                    ),
+                    -1,
+                ),
                 "final_mean_compactness": float(pr[-1]["mean_compactness"]),
                 "final_cumulative_late_decodable_bits": float(
                     pr[-1]["cumulative_late_decodable_bits"]
@@ -507,12 +609,14 @@ def write_svg(rows: list[dict[str, float | int | str]]) -> None:
         "hard_exclusion": "#2364aa",
         "horizon_transfer": "#2d6a4f",
         "quantum_completion": "#6f4aa8",
+        "leaky_completion": "#c77700",
     }
     labels = {
         "naked_collapse": "naked collapse",
         "hard_exclusion": "hard exclusion",
         "horizon_transfer": "horizon transfer",
         "quantum_completion": "quantum completion",
+        "leaky_completion": "leaky completion",
     }
     entropy_max = max(
         float(r["future_entropy_bits"]) for r in rows + [{"future_entropy_bits": FLOOR_BITS}]
@@ -568,6 +672,7 @@ def main() -> None:
         "hard_exclusion",
         "horizon_transfer",
         "quantum_completion",
+        "leaky_completion",
     ):
         rows.extend(simulate_policy(policy))
     write_csv(TIMESERIES_CSV, rows)
@@ -586,6 +691,8 @@ def main() -> None:
             f"max_sing={float(row['max_singular_mass']):.3f}, "
             f"max_I_G_R={float(row['max_geometry_record_mi_bits']):.3f}, "
             f"max_priv={float(row['max_early_privacy_leakage_bits']):.3f}, "
+            f"max_I_clock_R={float(row['max_interior_clock_record_mi_bits']):.3f}, "
+            f"clock_release={int(row['clock_info_release_step'])}, "
             f"final_I_late={float(row['final_cumulative_late_decodable_bits']):.3f}, "
             f"first_floor={int(row['first_floor_violation_step'])}, "
             f"first_privacy={int(row['first_privacy_violation_step'])}"

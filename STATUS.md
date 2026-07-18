@@ -317,6 +317,29 @@ Canonical tracker: `OPEN_PROBLEMS.md`. Headline items:
 
 ## Changelog
 
+### 2026-07-18 — interior clock register in the macrocell collapse toy
+- Upgraded `simulations/cosmic_coordination_floor/` from a macrocell
+  distribution to a joint distribution over (macrocell, interior clock
+  phase \(\theta\in\mathbb Z_8\)), with \(\theta\) advancing one bin per
+  step from a uniform prior. The interior microstate of the late decode is
+  now literally the interior clock frozen at the transfer step.
+- Added the G1 audit \(I(\Theta;\mathrm{boundary\ record})\) per step and
+  a fifth control policy, `leaky_completion`, identical to the quantum
+  completion except that its transfer record carries the clock parity.
+- Results match `bridges/boundary_records_interior_time.md` exactly:
+  admissible policies hold clock-record information at `0.000` bits all
+  run while carrying `1.5`-`2.1` bits of geometry-record information
+  (G1, interior clock censorship); clock and interior information become
+  boundary-readable at the same transfer step (6 for quantum completion,
+  7 for horizon transfer; G2); the leaky control shows `0.210` bits of
+  clock-record information with onset exactly at its trigger step and is
+  flagged by the privacy audit. Naked collapse leaks through lost
+  singular mass with zero record-channel clock information — the two
+  failure routes are now visibly distinct.
+- Updated the bridge's checkable-prediction section to "tested," the
+  simulation README, and OP-20.
+- Session log: `sessions/2026-07-18_interior_clock_register.md`.
+
 ### 2026-07-18 — boundary records and interior time (gravitational lift)
 - Added `bridges/boundary_records_interior_time.md`, lifting the proved
   record-splitting propositions into the quantum-gravity derivation

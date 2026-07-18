@@ -135,13 +135,24 @@ finite level it is Proposition 6.1 read twice.
    note classifies them as the central channel, and predicts they are
    interior-blind — a checkable property of the mirror-room and
    wave-interference toys if an "interior" register is added to them.
-3. **A falsifiable-in-the-toy prediction.** In any macrocell completion
-   policy of `simulations/cosmic_coordination_floor/` that satisfies the
-   early-privacy diagnostic, an added interior-clock register must show
-   zero early boundary mutual information with its phase, and its clock
-   information must turn on at the same policy step where late decodable
-   information turns on. This is implementable with the existing
-   simulation vocabulary and is the natural next executable rung.
+3. **A falsifiable-in-the-toy prediction — now tested.** The interior
+   clock register is implemented in
+   `simulations/cosmic_coordination_floor/`: the interior microstate is a
+   phase \(\theta\in\mathbb Z_8\) with uniform prior, advancing one bin
+   per step, and the per-step diagnostic \(I(\Theta;R_{\partial})\) is
+   computed on the joint distribution. The results match G1/G2 exactly:
+   every admissible policy holds \(I(\Theta;R_{\partial})=0.000\) bits for
+   the whole run while carrying `1.5`-`2.1` bits of geometry-record
+   information; the clock first becomes boundary-readable through the
+   late decodable channel at the transfer step (step 6 for the quantum
+   completion, step 7 for horizon transfer), as the phase frozen at
+   absorption. A deliberately inadmissible `leaky_completion` control that
+   writes clock parity into its transfer record shows `0.210` bits of
+   clock-record information with onset at exactly its trigger step and is
+   flagged by the privacy audit — the censorship diagnostic has teeth.
+   The toy also separates the two failure routes: naked collapse leaks
+   the interior through lost singular mass with zero record-channel clock
+   information, while the leaky channel leaks through the record itself.
 
 ## 6. What this does not claim
 
