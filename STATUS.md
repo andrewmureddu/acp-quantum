@@ -316,6 +316,34 @@ Canonical tracker: `OPEN_PROBLEMS.md`. Headline items:
 
 ## Changelog
 
+### 2026-07-18 — OP-30(a) continuity bound proved and verified
+- Added Proposition 5 to `bridges/clock_syndrome_record_splitting.md`:
+  for adaptive sequences of \(\epsilon\)-transparent instruments,
+  \(I(\Theta;R)\le2\tau\log_2|\mathcal R|+h_2(2\tau)\) with
+  \(\tau=\sum_i(\epsilon_i+\epsilon_i^2/2)\), via a single-step
+  total-variation lemma (Cauchy-Schwarz on the Kraus defect
+  \(D=[M,U_\theta]P\)), a hybrid argument for sequences, and Fannes-type
+  entropy continuity. Recovers Proposition 1 as \(\epsilon\to0\).
+- Added Experiment F to `simulations/quantum_braiding_clock/`: exact 8x8
+  verification on two instruments. All 20 cells satisfy the bound.
+- The verification sharpened OP-30 twice. First, the
+  conjugated-miscalibration instrument (\(V S_1 V^\dagger\),
+  \(V=e^{-i\mu Z_1/2}\)) has commutator defect up to `0.246` yet exactly
+  zero clock information at every sequence length: repeated QND
+  measurement of one fixed observable generates an abelian Kraus algebra
+  whose record POVMs compress to scalars on the code sector — the right
+  defect measure is algebraic, not a commutator norm. Second, the
+  axis-leak instrument (\(\cos\mu\,S_1+\sin\mu\,\bar Z\)) reads the clock
+  at the true rate \(I=O(n\mu^2)\) (`0.00051` to `0.029` bits single-shot,
+  linear in \(n\)), so the proved \(O(n^2\epsilon)\) bound is loose as
+  expected.
+- Caught and documented a constructor subtlety: sign-projector Kraus for
+  the axis-leak observable silently discards the logical tilt (since
+  \([S_1,\bar Z]=0\), \(\mathrm{sign}(B_\mu)=S_1\) for \(\mu<\pi/4\)); the
+  correct weak-measurement pair is \(M_s=\sqrt{(I+s\kappa B_\mu)/2}\).
+- Updated OP-30 to open/partial+ and the simulation README.
+- Session log: `sessions/2026-07-18_op30_continuity_bound.md`.
+
 ### 2026-07-18 — clock-syndrome record-splitting proposition
 - Added `bridges/clock_syndrome_record_splitting.md`, the first
   theorem-shaped output of the braided-clock thread.

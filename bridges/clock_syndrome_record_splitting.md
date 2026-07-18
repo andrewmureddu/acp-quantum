@@ -253,16 +253,144 @@ The propositions are already instantiated by the seeded simulations in
   empirical solution of the tradeoff the lemma bounds: spend
   \(J_{\mathrm{clock}}\) up to, not past, the memory floor.
 
-## 7. Open problems
+## 7. Proposition 5: continuity bound for approximate transparency
+
+Proposition 1 is exact-sector. The first OP-30 extension is a continuity
+bound: nearly transparent instruments are nearly clock-blind, with an
+explicit dimension- and length-dependent rate.
+
+**Definition 3 (\(\epsilon\)-transparent instrument).** For an instrument
+with Kraus operators \(\{M_r\}\) (one Kraus per outcome for notational
+ease; the multi-Kraus case sums over \(k\) inside \(r\)) and a clock family
+\(U_\theta=\exp(-\tfrac{i\theta}{2}\bar G)\), define the defect operators
+and aggregate defect
+
+$$
+D_r(\theta)=[M_r,U_\theta]\,P,
+\qquad
+\epsilon^2
+  =\sum_r\ \sup_\theta\ \big\|D_r(\theta)P\big\|_\infty^2 .
+$$
+
+The instrument is \(\epsilon\)-transparent if \(\epsilon<\infty\) as
+defined. If \([M_r,P]=0\), then
+\(D_r(\theta)=-i\sin(\theta/2)[M_r,\bar G]P\), so
+\(\epsilon\le(\sum_r\|[M_r,\bar G]P\|_\infty^2)^{1/2}\): the defect is
+controlled by the commutator with the generator alone.
+
+**Lemma 5.1 (single-step total variation).** For any code state
+\(\rho_0=P\rho_0P\) and any \(\theta\),
+
+$$
+\mathrm{TV}\big(p(\cdot|\rho_\theta),\,p(\cdot|\rho_0)\big)
+=\tfrac12\sum_r\big|p(r|\rho_\theta)-p(r|\rho_0)\big|
+\ \le\ \epsilon+\tfrac{\epsilon^2}{2}.
+$$
+
+*Proof.* Write \(M_rU_\theta P=U_\theta M_rP+D_r\). Then
+
+$$
+p(r|\rho_\theta)
+=\operatorname{Tr}\!\big[(U_\theta M_rP+D_r)\rho_0(U_\theta M_rP+D_r)^\dagger\big]
+=p(r|\rho_0)+2\,\mathrm{Re}\operatorname{Tr}\!\big[U_\theta M_r\rho_0D_r^\dagger\big]
++\operatorname{Tr}\!\big[D_r\rho_0D_r^\dagger\big].
+$$
+
+Set \(d_r=\operatorname{Tr}[D_r\rho_0D_r^\dagger]\le\|D_rP\|_\infty^2\).
+By Cauchy-Schwarz the cross term is at most
+\(2\sqrt{p(r|\rho_0)\,d_r}\). Summing over \(r\) and applying
+Cauchy-Schwarz once more to \(\sum_r\sqrt{p_rd_r}\) with
+\(\sum_rp_r=1\) gives \(\sum_r|\Delta p_r|\le2\epsilon+\epsilon^2\).
+\(\square\)
+
+**Proposition 5 (continuity of clock-blindness).** Let \(n\)
+\(\epsilon_i\)-transparent instruments with outcome alphabets
+\(\mathcal R_i\) be applied in any adaptive, record-conditioned order to a
+code-sector clock state, and let \(R=(R_1,\dots,R_n)\) be the joint
+record, \(|\mathcal R|=\prod_i|\mathcal R_i|\). Set
+\(\tau=\sum_i(\epsilon_i+\epsilon_i^2/2)\) and assume \(2\tau\le1/2\).
+Then for \(\Theta\) with any prior,
+
+$$
+I(\Theta;R)\ \le\ 2\tau\,\log_2|\mathcal R|\ +\ h_2(2\tau),
+$$
+
+where \(h_2\) is the binary entropy. In particular
+\(I(\Theta;R)\to0\) as \(\epsilon_i\to0\), recovering Proposition 1.
+
+*Proof.* A hybrid argument extends Lemma 5.1 to sequences: replace, one
+step at a time, the true instrument acting on the \(\theta\)-rotated
+process by its transparent conjugated action; each replacement changes
+the joint record distribution by at most \(\epsilon_i+\epsilon_i^2/2\) in
+total variation (Lemma 5.1 applied to the step's normalized branch
+states, then averaged over branches with weights summing to one;
+adaptivity is harmless because conditioning variables in the hybrid are
+distributed identically up to the accumulated defect). Hence
+\(\mathrm{TV}(p(\cdot|\theta),p(\cdot|\theta'))\le2\tau\) for all
+\(\theta,\theta'\), so every conditional lies within total variation
+\(2\tau\) of the marginal \(\bar p\). The entropy-continuity
+(Fannes-type) bound
+\(|H(p)-H(q)|\le\mathrm{TV}\cdot\log_2(|\mathcal R|-1)+h_2(\mathrm{TV})\)
+applied inside \(I(\Theta;R)=H(R)-\mathbb E_\theta H(R|\theta)\) gives the
+claim. \(\square\)
+
+**Remarks.**
+1. The bound is linear in the per-step defect and, through
+   \(\log_2|\mathcal R|\), linear in \(n\) for fixed alphabets — so it
+   degrades as \(O(n\epsilon\cdot n)=O(n^2\epsilon)\) overall. ⚠ This
+   \(n^2\) growth is presumably not tight; a per-step
+   information-accumulation argument should give \(O(n\epsilon^2)\)-type
+   scaling in the gentle regime (cf. Lemma 3, where information is
+   quadratic in the coupling). Tightening this is left inside OP-30.
+2. The bound is dimension-free in the code but alphabet-dependent in the
+   record, which is the correct dependence for a data-processing
+   statement: a clock cannot be read out of records that are almost
+   product with it, no matter how the decoder processes them.
+3. Experiment F (`simulations/quantum_braiding_clock/`, exact 8x8
+   computation, no Monte Carlo) verifies the bound on two
+   \(\epsilon\)-transparent instruments with \(\epsilon=O(\mu)\) and
+   exposes both ways it can be loose:
+
+   - **Conjugated miscalibration** (measure \(V S_1 V^\dagger\),
+     \(V=e^{-i\mu Z_1/2}\)): the commutator defect is nonzero
+     (\(\epsilon\) up to `0.246`), yet the measured \(I(\Theta;R)\) is
+     *exactly zero* for every \(\mu\) and every sequence length. The
+     reason is algebraic, not perturbative: repeated QND measurement of
+     one fixed observable \(A\) generates an abelian Kraus algebra — all
+     operator products lie in \(\mathrm{span}\{I,A\}\) — and
+     \(PAP\propto P\), so every record POVM element compresses to a
+     scalar on the code sector. A single fixed observable can never read
+     a clock whose generator moves nothing in its compressed algebra.
+     Proposition 5 is satisfied but infinitely loose here; the right
+     defect measure is a property of the *algebra generated by* the Kraus
+     operators compressed to the code sector, not a commutator norm. This
+     refinement is folded into OP-30.
+   - **Axis leak** (measure \(B_\mu=\cos\mu\,S_1+\sin\mu\,\bar Z\), a
+     readout axis contaminated by a logical observable, with Kraus
+     \(M_s=\sqrt{(I+s\kappa B_\mu)/2}\)): this instrument genuinely reads
+     the clock. The exact values scale as \(I\propto\mu^2\) (`0.00051`,
+     `0.0020`, `0.0079`, `0.029` bits at \(\mu=0.05,0.1,0.2,0.4\),
+     \(n=1\)) and linearly in \(n\) (\(n=8\) gives \(\approx8\times\) the
+     single-shot value), confirming Remark 1: the true accumulation rate
+     is \(O(n\epsilon^2)\) while the proved bound grows like
+     \(O(n^2\epsilon)\). The bound holds in all cells with an order of
+     magnitude or more to spare.
+
+## 8. Open problems
 
 **OP-30 (approximate and covariant record splitting).** Extend
-Propositions 1-2 beyond the exact code sector: (a) approximate QEC —
-bound \(I(\Theta;R)\) for instruments that are \(\epsilon\)-transparent
-(commutators small in norm) on an \(\epsilon\)-approximate code, ideally
-with a continuity bound \(I(\Theta;R)\le f(\epsilon)\); (b) covariant
-codes — reconcile the record-splitting corollary with covariant-QEC
-tradeoffs when the clock generator is a symmetry the code partially
-respects; (c) the operational-time link (OP-29) — the clock channel
-defines the system's tempo \(\nu_S\), the syndrome channel cannot, so the
-proper productive interval of an encoded clock is measured by its central
+Propositions 1-2 beyond the exact code sector: (a) approximate
+transparency — a first continuity bound is now proved as Proposition 5,
+with two named refinements left open: tighten the \(O(n^2\epsilon)\)
+scaling to the empirically observed \(O(n\epsilon^2)\), and replace the
+commutator-norm defect by an algebraic defect (a distance of the
+code-compressed Kraus algebra from the scalars) that assigns zero to the
+exactly-blind conjugated-miscalibration instrument of Experiment F;
+still open is the companion case of \(\epsilon\)-approximate *codes*
+rather than \(\epsilon\)-approximate instruments; (b) covariant codes —
+reconcile the record-splitting corollary with covariant-QEC tradeoffs
+when the clock generator is a symmetry the code partially respects;
+(c) the operational-time link (OP-29) — the clock channel defines the
+system's tempo \(\nu_S\), the syndrome channel cannot, so the proper
+productive interval of an encoded clock is measured by its central
 channel alone; state this as a covariance-compatible definition.

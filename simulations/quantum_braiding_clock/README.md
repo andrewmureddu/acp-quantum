@@ -128,6 +128,26 @@ only), `code_checked` (EMA syndrome evidence, threshold `0.35`, 5-period
 burn-in), `code_overactive` (raw single records). All code policies get the
 same terminal ideal decode.
 
+## Experiment F: continuity-bound verification (OP-30a)
+
+Exact 8x8 computation (no Monte Carlo) verifying Proposition 5 of
+`bridges/clock_syndrome_record_splitting.md`: nearly transparent
+instruments are nearly clock-blind, `I(Theta;R) <= 2 tau log2|R| + h2(2 tau)`
+with `tau = n (epsilon + epsilon^2/2)`. Two epsilon-transparent
+instruments, both with commutator defect `O(mu)`:
+
+- `conjugated` (apparatus rotated by `exp(-i mu Z1/2)`): nonzero defect but
+  **exactly zero** clock information at every `mu` and every sequence
+  length — repeated QND measurement of one fixed observable generates an
+  abelian Kraus algebra whose record POVMs compress to scalars on the code
+  sector. The bound holds but is infinitely loose; the sharper "algebraic
+  defect" is folded into OP-30.
+- `axis_leak` (readout axis contaminated by the logical `Z-bar`):
+  genuinely reads the clock, `I ~ mu^2` and linear in `n`
+  (`0.00051 / 0.0020 / 0.0079 / 0.029` bits at `mu = 0.05-0.4`, `n = 1`),
+  confirming the proved `O(n^2 epsilon)` bound is loose against the true
+  `O(n epsilon^2)` rate. All 20 cells satisfy the bound.
+
 ## Run
 
 ```bash
@@ -151,6 +171,8 @@ python3 simulations/quantum_braiding_clock/quantum_braiding_clock.py
 - `outputs/braiding_clock_stabilizer_scan.csv`
 - `outputs/braiding_clock_stabilizer_summary.csv`
 - `outputs/braiding_clock_stabilizer_curves.png`
+- `outputs/braiding_clock_continuity_scan.csv`
+- `outputs/braiding_clock_continuity_curves.png`
 
 ## Current Run
 

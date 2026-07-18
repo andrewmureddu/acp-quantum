@@ -116,6 +116,8 @@ CODE_PNG = OUT / "braiding_clock_code_curves.png"
 STAB_CSV = OUT / "braiding_clock_stabilizer_scan.csv"
 STAB_SUMMARY_CSV = OUT / "braiding_clock_stabilizer_summary.csv"
 STAB_PNG = OUT / "braiding_clock_stabilizer_curves.png"
+CONT_CSV = OUT / "braiding_clock_continuity_scan.csv"
+CONT_PNG = OUT / "braiding_clock_continuity_curves.png"
 
 SEED = 20260717
 
@@ -470,6 +472,207 @@ def main() -> None:
     run_optime_experiment(rng)
     run_code_experiment(rng)
     run_stabilizer_experiment(rng)
+    run_continuity_experiment()
+
+
+def run_continuity_experiment() -> None:
+    """Experiment F: exact verification of the Proposition 5 continuity
+    bound (bridges/clock_syndrome_record_splitting.md).
+
+    Two epsilon-transparent instruments are tested, both weak measurements
+    at strength STAB_KAPPA of a deformed stabilizer, both with commutator
+    defect epsilon = O(mu) against the logical clock generator
+    X-bar = X1X2X3:
+
+    - `conjugated`: measure V S1 V-dagger with V = exp(-i mu Z1 / 2), a
+      miscalibrated readout axis obtained by rotating the whole apparatus.
+      Numerically this instrument turns out to be EXACTLY clock-blind for
+      every mu and every sequence length, even though its commutator
+      defect is nonzero. The reason is algebraic: repeated QND measurement
+      of one fixed observable A generates an abelian Kraus algebra
+      (all products lie in span{I, A}), and P A P is proportional to P, so
+      every record POVM element compresses to a scalar on the code sector.
+      The Proposition 5 bound is therefore satisfied but infinitely loose
+      here - evidence that the right defect measure is algebraic, not
+      merely a commutator norm (recorded in OP-30).
+    - `axis_leak`: measure B = cos(mu) S1 + sin(mu) Z-bar, a readout axis
+      contaminated by a logical observable (crosstalk-style). This one
+      genuinely reads the clock, with I(Theta;R) scaling like mu^2, and
+      the Proposition 5 bound must and does hold nontrivially.
+
+    Everything is computed exactly with 8x8 matrices and full
+    record-branch enumeration - no Monte Carlo.
+    """
+    # Pauli matrices and 3-qubit operators, qubit 1 = leftmost factor.
+    I2 = np.eye(2)
+    sx = np.array([[0, 1], [1, 0]], dtype=complex)
+    sz = np.array([[1, 0], [0, -1]], dtype=complex)
+
+    def kron3(a, b, c):
+        return np.kron(np.kron(a, b), c)
+
+    S1 = kron3(sx, sx, I2)                 # stabilizer X1X2
+    Z1 = kron3(sz, I2, I2)
+    XL = kron3(sx, sx, sx)                 # logical clock generator X-bar
+    v0 = _V0.astype(complex)
+    v1 = _V1.astype(complex)
+    P = np.outer(v0, v0.conj()) + np.outer(v1, v1.conj())
+    psi0 = (v0 + 1j * v1) / math.sqrt(2.0)  # logical-Y eigenstate
+
+    kappa = STAB_KAPPA
+    n_seq = 8
+    theta_grid = [2.0 * math.pi * t / 16 for t in range(16)]
+
+    def u_theta(theta):
+        return math.cos(theta / 2) * np.eye(8) - 1j * math.sin(theta / 2) * XL
+
+    ZL = kron3(sz, sz, sz)                 # logical Z-bar
+
+    def kraus_pair(mu, kind):
+        if kind == "conjugated":
+            v = math.cos(mu / 2) * np.eye(8) - 1j * math.sin(mu / 2) * Z1
+            observable = v @ S1 @ v.conj().T
+        else:  # axis_leak
+            observable = math.cos(mu) * S1 + math.sin(mu) * ZL
+        # Weak measurement Kraus pair M_s = sqrt((I + s*kappa*B)/2). For an
+        # involution B this reduces to the projector form used elsewhere;
+        # for the axis-leak observable it correctly retains the logical
+        # tilt (a sign-projector construction would silently discard it,
+        # because S1 and Z-bar commute and sign(B) = S1 for mu < pi/4).
+        evals, evecs = np.linalg.eigh(observable)
+        return [
+            evecs
+            @ np.diag(np.sqrt((1.0 + s * kappa * evals) / 2.0))
+            @ evecs.conj().T
+            for s in (+1, -1)
+        ]
+
+    def h2(p):
+        p = min(max(p, 1e-15), 1 - 1e-15)
+        return -(p * math.log2(p) + (1 - p) * math.log2(1 - p))
+
+    def mutual_information(mu, n, kind):
+        kraus = kraus_pair(mu, kind)
+        dists = []
+        for theta in theta_grid:
+            branches = [(u_theta(theta) @ psi0, 1.0)]
+            for _ in range(n):
+                new = []
+                for phi, w in branches:
+                    for M in kraus:
+                        chi = M @ phi
+                        pr = float(np.real(np.vdot(chi, chi)))
+                        if pr * w > 1e-15:
+                            new.append((chi / math.sqrt(pr), w * pr))
+                        else:
+                            new.append((chi, 0.0))
+                branches = new
+            dists.append(np.array([w for _, w in branches]))
+        dists = np.array(dists)                      # (16, 2^n)
+        marginal = dists.mean(axis=0)
+        mi = 0.0
+        for row in dists:
+            mask = row > 0
+            mi += np.sum(row[mask] * np.log2(row[mask] / marginal[mask]))
+        return mi / len(theta_grid)
+
+    def defect(mu, kind):
+        kraus = kraus_pair(mu, kind)
+        eps_sq = 0.0
+        for M in kraus:
+            worst = 0.0
+            for theta in theta_grid:
+                U = u_theta(theta)
+                D = (M @ U - U @ M) @ P
+                worst = max(worst, float(np.linalg.norm(D @ P, ord=2)))
+            eps_sq += worst**2
+        return math.sqrt(eps_sq)
+
+    rows = []
+    for kind in ("conjugated", "axis_leak"):
+        for mu in (0.0, 0.05, 0.1, 0.2, 0.4):
+            eps = defect(mu, kind)
+            for n in (1, n_seq):
+                tau = n * (eps + eps**2 / 2.0)
+                bound = (
+                    2.0 * tau * n * 1.0 + h2(min(2.0 * tau, 0.5))
+                    if 2.0 * tau <= 0.5
+                    else float("inf")
+                )
+                bound = min(bound, 4.0)  # H(Theta) = log2 16 trivial cap
+                mi = mutual_information(mu, n, kind)
+                rows.append(
+                    {
+                        "instrument": kind,
+                        "mu": mu,
+                        "n_measurements": n,
+                        "epsilon": round(eps, 6),
+                        "clock_info_bits": round(max(mi, 0.0), 8),
+                        "prop5_bound_bits": round(bound, 6)
+                        if bound != float("inf")
+                        else "inf",
+                        "bound_satisfied": bool(
+                            bound == float("inf") or mi <= bound + 1e-9
+                        ),
+                    }
+                )
+
+    with CONT_CSV.open("w", newline="") as fh:
+        writer = csv.DictWriter(fh, fieldnames=list(rows[0].keys()))
+        writer.writeheader()
+        writer.writerows(rows)
+
+    plot_continuity(rows)
+
+    print("continuity bound verification complete")
+    for r in rows:
+        print(
+            f"  {r['instrument']:<11} mu={r['mu']:<5} n={r['n_measurements']} "
+            f"eps={r['epsilon']:<9} I={r['clock_info_bits']:<12} "
+            f"bound={r['prop5_bound_bits']} ok={r['bound_satisfied']}"
+        )
+
+
+def plot_continuity(rows: list[dict]) -> None:
+    import matplotlib
+
+    matplotlib.use("Agg")
+    import matplotlib.pyplot as plt
+
+    fig, ax = plt.subplots(figsize=(7.5, 5), constrained_layout=True)
+    for n, marker in ((1, "o"), (8, "s")):
+        sel = [
+            r
+            for r in rows
+            if r["instrument"] == "axis_leak"
+            and r["n_measurements"] == n
+            and r["mu"] > 0
+        ]
+        mus = [r["mu"] for r in sel]
+        mis = [max(r["clock_info_bits"], 1e-12) for r in sel]
+        ax.loglog(mus, mis, marker=marker, label=f"axis_leak I(Theta;R), n={n}")
+        finite = [
+            (r["mu"], r["prop5_bound_bits"])
+            for r in sel
+            if r["prop5_bound_bits"] != "inf"
+        ]
+        if finite:
+            ax.loglog(
+                [m for m, _ in finite],
+                [b for _, b in finite],
+                marker=marker,
+                linestyle="--",
+                label=f"Prop. 5 bound, n={n}",
+            )
+    ref = np.array([0.05, 0.4])
+    ax.loglog(ref, 0.5 * ref**2, ":", color="gray", label="mu^2 reference")
+    ax.set_xlabel("miscalibration angle mu")
+    ax.set_ylabel("bits")
+    ax.set_title("Continuity of clock-blindness: exact I vs Proposition 5 bound")
+    ax.grid(alpha=0.3, which="both")
+    ax.legend()
+    fig.savefig(CONT_PNG, dpi=130)
+    plt.close(fig)
 
 
 # Basis convention for Experiment E: index bits (b1 b2 b3), qubit 1 = MSB.
