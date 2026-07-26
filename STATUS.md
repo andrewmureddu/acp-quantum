@@ -2,7 +2,7 @@
 
 **Last updated:** 2026-07-26
 **Active paper:** `paper/acp_main_v10.md` (internal masthead: "WORKING DRAFT — v0.9")
-**Active ACP Quantum focus:** deriving quantum gravity from ACP: `bridges/quantum_gravity_derivation_program.md` + `bridges/semiclassical_collapse_failure.md` + `bridges/relational_observable_macrostate_kernel.md` + `bridges/cosmic_coordination_floor.md` + `bridges/singularity_inadmissibility.md` + `bridges/dark_constraint_quantum_gravity.md` + `bridges/quantum_gravity_convergence_map.md`
+**Active ACP Quantum focus:** deriving quantum gravity from ACP: `bridges/quantum_gravity_derivation_program.md` + `bridges/semiclassical_collapse_failure.md` + `bridges/boundary_decodability.md` + `bridges/relational_observable_macrostate_kernel.md` + `bridges/cosmic_coordination_floor.md` + `bridges/singularity_inadmissibility.md` + `bridges/dark_constraint_quantum_gravity.md` + `bridges/quantum_gravity_convergence_map.md`
 **Active QEC technical engine:** hardware-level adaptive syndrome alignment: `bridges/hardware_adaptive_alignment.md` + `simulations/hardware_adaptive_decoder/` (H0 grid scan + H1 trace replay + H2 circuit-level syndrome extraction / Pauli-frame logical-channel audit / schedule-phase audit) + `bridges/adaptive_syndrome_alignment.md` + `bridges/sacr_contraction_calibration.md`
 **Active civil-systems bridge:** restraint ethics / conditional-leakage record channels: `bridges/restraint_ethics.md` + `simulations/restraint_ethics/`
 **Active cross-domain QEC bridge:** otherness-preserving recovery: `bridges/otherness_preserving_recovery.md` + `simulations/otherness_preserving_recovery/`
@@ -271,12 +271,13 @@ The full result inventory, as of v10:
 | 15 | A.20 Restraint-Power + Coordination Conservation; Heisenberg as special case | `bridges/restraint_power.md` + `bridges/syndrome_coordination.md` + `bridges/coordination_neutrality.md` |
 | 16 | Schur complement bridge — four identifications unifying thermodynamic (ACP) and algebraic (Schur) registers; Heisenberg connection reconciled with A.20 as a reduction for non-commutative two-MASA partitions | `bridges/schur_complement.md` |
 | 17 | Quantum noise-tailoring bridge — correlated dephasing as exploitable channel structure; DFS coherence invariant under collective noise | `bridges/quantum_noise_as_signal.md` + `simulations/noise_as_signal/` |
+| 20 | Boundary decodability — Stage 5 of the quantum-gravity ladder. Record complementarity makes decodable and permanently hidden information one conserved budget, so Criterion 3 is not an independent axiom, Conjecture 3 becomes a theorem, and the Page turnover is forced by finite-record admissibility | `bridges/boundary_decodability.md` + `simulations/boundary_decodability/` |
 | 19 | Semiclassical collapse failure theorem — Stage 2 of the quantum-gravity ladder. Classical collapse fails as an admissible relational kernel by the caustic deadline \(\tau_\times\leq3/\alpha\); the expansion scalar \(\theta\) is identified as the CDT crystallization drift rate in geometric variables | `bridges/semiclassical_collapse_failure.md` + `simulations/semiclassical_collapse_failure/` |
 | 18 | Hardware adaptive-alignment bridge — fixed-code adaptive decoder scaffold with noisy syndrome measurements, overhead, logical-channel output, contraction diagnostics, and H2 Pauli-frame logical-process / schedule-phase audits | `bridges/hardware_adaptive_alignment.md` + `simulations/hardware_adaptive_decoder/` |
 
 ## Active fronts
 
-**1. ACP quantum-gravity derivation program.** This is now the primary ACP Quantum front. The target is explicit: derive quantum gravity as the persistence-forced completion of classical spacetime. The roadmap is `bridges/quantum_gravity_derivation_program.md`, now supported by `bridges/semiclassical_collapse_failure.md`, `bridges/relational_observable_macrostate_kernel.md`, `bridges/cosmic_coordination_floor.md`, `bridges/singularity_inadmissibility.md`, `bridges/dark_constraint_quantum_gravity.md`, and `bridges/quantum_gravity_convergence_map.md`. Stage 2 (the semiclassical collapse failure theorem) is now proven and numerically verified. OP-30 is now also closed: Theorem E identifies frame resolution rank, not the entropy floor, as the boundary shear-dominated collapse generically reaches. The next serious steps are: (a) instantiate candidate completion kernels against the four acceptance conditions of the completion corollary, which now include both a rate condition (\(|\theta|\) nats per unit proper time) and an all-directions condition (\(s_i\geq\ell\) for every \(i\)); (b) Stage 5, boundary decodability, which is the next unproven rung. *(Priority: highest.)*
+**1. ACP quantum-gravity derivation program.** This is now the primary ACP Quantum front. The target is explicit: derive quantum gravity as the persistence-forced completion of classical spacetime. The roadmap is `bridges/quantum_gravity_derivation_program.md`, now supported by `bridges/semiclassical_collapse_failure.md`, `bridges/relational_observable_macrostate_kernel.md`, `bridges/cosmic_coordination_floor.md`, `bridges/singularity_inadmissibility.md`, `bridges/dark_constraint_quantum_gravity.md`, and `bridges/quantum_gravity_convergence_map.md`. Stage 2 (the semiclassical collapse failure theorem) is now proven and numerically verified. OP-30 is closed: Theorem E identifies frame resolution rank, not the entropy floor, as the boundary shear-dominated collapse generically reaches. **Stage 5 is now also proven** in `bridges/boundary_decodability.md`. The next serious steps are: (a) instantiate candidate completion kernels against the now-quantitative acceptance conditions — a rate condition (\(|\theta|\) nats per unit proper time), an all-directions condition (\(s_i\geq\ell\) for every \(i\)), and a hidden-capacity bound (\(\log\dim\mathcal H_S\leq\log\dim\mathcal H_\partial-S(X_R)\)); (b) bound the transfer time \(T_{\mathrm{dec}}\), the gravitational analogue of the scrambling time; (c) **OP-3**, which is now load-bearing for two rungs of the ladder rather than a Schur-bridge housekeeping item. *(Priority: highest.)*
 
 **2. Hardware-level adaptive syndrome alignment as QEC laboratory.** The QEC program remains the technical engine for the quantum-gravity derivation. The device-facing target is a fixed logical memory, noisy syndrome stream, online noise estimation, decoder/gauge/schedule updates, explicit overhead, and logical-channel audits. The current scaffold is `bridges/hardware_adaptive_alignment.md` plus `simulations/hardware_adaptive_decoder/`; H0, H1, and an H2 circuit-level syndrome-extraction scaffold with bit-flip logical-PTM, Pauli-frame logical-channel metrics, terminal phase-window metrics, and calibration schedule-phase replay are in place. The next step is measured backend-log replay or moving H2 from the repetition-code Pauli audit to a phase-protecting stabilizer/subsystem-code circuit with true steady-state per-cycle maps. *(Priority: high.)*
 
@@ -373,6 +374,56 @@ Canonical tracker: `OPEN_PROBLEMS.md`. Headline items:
 - **OP-29: Operational-time relativity and proper productive intervals.** Open/partial: first bridge note exists; next step is proving the operational-time covariance theorem for systems with different tempos, coarse-grainings, and record channels.
 
 ## Changelog
+
+### 2026-07-26 — Stage 5 proven: boundary decodability
+- Added `bridges/boundary_decodability.md`, deriving the Stage 5 rung that
+  Criterion 3, Conjecture 3, and Stage 5 all previously posited.
+- **Lemma 5 (record complementarity)**, exact and elementary: for a tripartite
+  pure state, \(I(X_R;Y_\partial)+I(X_R;S)=2S(X_R)\). Boundary-decodable and
+  permanently hidden information are a single conserved budget, not two
+  independently constrained quantities.
+- This dissolves an apparent tension in the ladder: Stage 6's early-privacy
+  condition and Stage 5's late-decodability condition are the two sides of one
+  identity, differing only in *when* the budget has moved. No reconciliation is
+  needed and no extra assumption holds them together.
+- **Theorem F**: Criterion 3 is not an independent axiom — it is equivalent to
+  requiring the hidden share to vanish. Conjecture 3 (no permanent undecodable
+  storage) is promoted to a theorem: a sector permanently retaining
+  \(I(X_R;S)\geq\delta\) leaves the interior information undecodable for all
+  time, however long \(T_{\mathrm{dec}}\) is taken.
+- **Corollary F1**: finite-record admissibility *forces* the Page turnover. The
+  boundary record entropy must rise, peak, and return to \(S(X_R)\). The Page
+  curve is a consequence of ACP admissibility rather than an assumption
+  imported from black-hole thermodynamics — the second known quantum-gravity
+  structure the program has found to be forced rather than posited.
+- **Corollary F2**: capacity bounds. Universally, the boundary record channel
+  must be at least as wide as the protected information. Under scrambling, the
+  permanently hidden capacity must fall below the boundary capacity by at least
+  \(S(X_R)\) — making remnant proposals quantitatively testable: a remnant is
+  inadmissible not because it is a remnant but when it is too large.
+- Added `simulations/boundary_decodability/`, computing exact reduced density
+  matrices and exact von Neumann entropies (Jacobi eigensolver on the real
+  symmetric embedding of the Hermitian RDM). No proxies.
+- Results: Lemma 5 holds to `2e-08` bits with the two mutual informations
+  computed independently; \(S(Y_\partial)\) peaks at `4.2742` bits at exactly
+  half the total and returns to `0.9984`, matching \(S(X_R)=0.9984\) to four
+  decimals; the remnant threshold falls exactly where Corollary F2(b) predicts,
+  the decodable fraction crossing one half between `r=4` (0.728) and `r=5`
+  (0.269).
+- Independent validation: the measured curve matches Page's analytic formula
+  \(\langle S_A\rangle\approx\ln d_A-d_A/2d_B\) to within 0.010 bits at
+  every point.
+- Recorded honestly that Corollary F2(b) is conditional on scrambling and not
+  universally necessary: a completion that deliberately swaps the protected
+  qubit out first beats Page. Haar scrambling is typical, not optimal.
+- Updated the candidate audit: several proposals that look different
+  geometrically are the same proposal informationally, since the criterion is
+  insensitive to curvature and sensitive only to whether hidden capacity
+  vanishes.
+- **OP-3** is now load-bearing for two rungs, since identifying coordination
+  capacity \(\Delta C_R\) with \(S(X_R)\) needs the same Schur regularity
+  conditions as Proposition E1.
+- Session log: `sessions/2026-07-26_boundary_decodability.md`.
 
 ### 2026-07-26 — OP-30 closed: two gravitational failure modes
 - Replaced hypothesis (R) rather than repairing it. **Lemma 4** proves the

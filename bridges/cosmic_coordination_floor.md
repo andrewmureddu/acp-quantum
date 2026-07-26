@@ -268,6 +268,14 @@ This is the sharp version of the visibility requirement: quantum gravity may
 hide interior details temporarily, but it may not make the coordination debt
 permanently undecodable.
 
+**Criterion 3 is now derived, not posited.** `bridges/boundary_decodability.md`
+proves the exact identity \(I(X_R;Y_\partial)+I(X_R;S)=2S(X_R)\), so
+decodable and permanently hidden information form one conserved budget.
+Criterion 3 is then equivalent to requiring the hidden share to vanish, and
+that is forced by finite-record admissibility (Corollary F1) — which also
+forces the Page-curve condition stated just above, rather than leaving it as a
+separate expectation imported from black-hole thermodynamics.
+
 ## 7. Path-Integral Form
 
 Start from a formal quantum-gravity amplitude
@@ -465,10 +473,14 @@ process satisfying the classical focusing assumptions, floor enforcement
 requires a mechanism-changing redistribution event before the classical
 singularity time.
 
-**Conjecture 3 (No permanent undecodable storage).** A repair that preserves
-finite curvature but stores unbounded information in a permanently hidden
-sector is ACP-inadmissible for finite collapse, because it fails visibility and
-decodability.
+**Conjecture 3 (No permanent undecodable storage).** *Proved* — Theorem F(2)
+of `bridges/boundary_decodability.md`. A repair that preserves finite curvature
+but stores information in a permanently hidden sector retaining
+\(I(X_R;S)\geq\delta>0\) leaves \(I(X_R;Y_\partial)\leq2S(X_R)-\delta\)
+for all time, so no boundary decoder recovers the interior information at any
+time, however long \(T_{\mathrm{dec}}\) is taken. Corollary F2 adds the
+quantitative form: a remnant is inadmissible not because it is a remnant but
+when it is too large, \(\log\dim\mathcal H_S>\log\dim\mathcal H_\partial-S(X_R)\).
 
 **Conjecture 4 (Gravity and quantum uncertainty are one cycle).** Classical
 gravity supplies the crystallizing tendency by concentrating geometry and

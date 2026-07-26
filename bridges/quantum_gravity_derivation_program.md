@@ -86,14 +86,21 @@ to date: under (R), the expansion scalar \(\theta\) *is* the crystallization
 drift rate of the CDT written in geometric variables, since
 \(d(\ln\delta V)/d\tau=\theta\) is already the rate of change of a log-measure.
 
-Two qualifications are load-bearing and are carried forward rather than
-smoothed over. First, hypothesis (R) fails under strong shear — filamented
-images retain high coarse entropy while their volume vanishes — so the entropy
-branch is not individually robust; the disjunction survives because shear
-accelerates the normalization branch by as much as it weakens the entropy
-branch (Proposition D). Second, the theorem uses geodesic incompleteness and
-reference-frame breakdown rather than curvature divergence, which is what the
-singularity theorems actually deliver. Both are tracked as OP-30.
+Hypothesis (R) fails under strong shear — filamented images retain high coarse
+entropy while their volume vanishes — so the entropy branch is not individually
+robust. This was OP-30, now closed: Lemma 4 replaces (R) with a provable
+deformation-spectrum bound, and **Theorem E** gives an exhaustive dichotomy
+needing no shape hypothesis. The refined conclusion is that gravitational
+collapse has *two* ACP failure modes. Near-isotropic collapse crystallizes;
+shear-dominated collapse — the astrophysically generic case — instead loses
+frame resolution rank, destroying the reference frame's capacity to carry its
+own macrostate label while its coarse entropy stays far above the floor. These
+correspond to the \(\mathrm{rank}(D)>0\) and \(\kappa(D)<\infty\) clauses of
+the admissibility condition the framework already had.
+
+One qualification is carried forward: the theorem uses geodesic incompleteness
+and reference-frame breakdown rather than curvature divergence, which is what
+the singularity theorems actually deliver.
 
 ### Stage 3: Required Completion
 
@@ -136,10 +143,10 @@ $$
 OP-20 construction: finite relational observables, macrocells, quantum/channel
 and classical-pushforward kernel forms, and diagnostics for future entropy,
 geometry-record information, protected interior leakage, and late boundary
-decodability. The first executable macrocell toy now lives in
-`simulations/cosmic_coordination_floor/`; the next step is to strengthen the
-semiclassical collapse failure theorem and then instantiate candidate
-quantum-gravity mechanisms.
+decodability. The first executable macrocell toy lives in
+`simulations/cosmic_coordination_floor/`. The semiclassical failure theorem is
+now proven (Stage 2), so the next step is to instantiate candidate
+quantum-gravity mechanisms against the acceptance conditions.
 
 ### Stage 5: Boundary Decodability
 
@@ -155,6 +162,24 @@ $$
 A remnant, baby universe, bounce, wormhole, horizon microstructure, or island
 mechanism is ACP-admissible only if it supplies a finite recoverable boundary
 channel for the relevant redistributed coordination.
+
+**Status: proven.** `bridges/boundary_decodability.md` derives this rather than
+positing it. The engine is the exact complementarity identity
+\(I(X_R;Y_\partial)+I(X_R;S)=2S(X_R)\) for a tripartite pure state (Lemma 5):
+boundary-decodable and permanently hidden information are a single conserved
+budget, not two independently constrained quantities. Theorem F then shows
+Criterion 3 is **not an independent axiom** — it is equivalent to requiring the
+hidden share to vanish — and promotes Conjecture 3 (no permanent undecodable
+storage) to a theorem. Corollary F1 shows that finite-record admissibility
+*forces* the Page turnover: the boundary record entropy must rise, peak, and
+return to \(S(X_R)\). Corollary F2 bounds the admissible hidden capacity.
+Verified numerically in `simulations/boundary_decodability/`, which reproduces
+Page's analytic formula to within 0.01 bits.
+
+Lemma 5 also dissolves an apparent tension in the ladder. Stage 6's
+early-privacy condition and Stage 5's late-decodability condition are not two
+separate demands to be reconciled; they are the two sides of one identity,
+differing only in *when* the conserved budget has moved.
 
 ### Stage 6: Protected Interior Information
 
@@ -213,6 +238,9 @@ The expected result is not "quantize the metric" as a starting axiom, but:
 
 - `bridges/singularity_inadmissibility.md`: singularities are inadmissible
   physical states; horizons are candidate finite boundary transfers.
+- `bridges/boundary_decodability.md`: the Stage 5 theorem. Record
+  complementarity makes decodable and hidden information one conserved budget;
+  the Page turnover is forced by finite-record admissibility.
 - `bridges/semiclassical_collapse_failure.md`: the Stage 2 theorem. Classical
   collapse fails as an admissible kernel by a caustic deadline
   \(\tau_\times\leq3/\alpha\), with the expansion scalar identified as the
@@ -239,10 +267,12 @@ The expected result is not "quantize the metric" as a starting axiom, but:
    filamented collapse breaches admissibility through reference-frame failure
    rather than through the entropy floor.
 2. Instantiate candidate completion kernels for that macrocell and compare them
-   against the floor, privacy, and decodability diagnostics. The completion
-   corollary now gives four concrete acceptance conditions, including a rate
-   condition: the mechanism must supply admissible support at no less than
-   \(|\theta|\) nats per unit proper time.
+   against the floor, privacy, and decodability diagnostics. The acceptance
+   conditions are now concrete and quantitative: supply admissible support at
+   no less than \(|\theta|\) nats per unit proper time; restore
+   \(s_i\geq\ell\) in *every* direction, not merely in volume (Theorem E);
+   and keep the permanently hidden capacity below
+   \(\log\dim\mathcal H_\partial-S(X_R)\) (Corollary F2).
 3. Upgrade the dark-constraint simulations from hidden optical phase bumps to
    weak metric/lensing perturbations.
 4. Connect the boundary-record privacy condition to decoupling/QEC
