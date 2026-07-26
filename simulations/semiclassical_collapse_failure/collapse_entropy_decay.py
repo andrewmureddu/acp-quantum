@@ -172,6 +172,41 @@ def mat_trace(a: Mat) -> float:
     return a[0][0] + a[1][1] + a[2][2]
 
 
+def sym3_eigenvalues(a: Mat) -> tuple[float, float, float]:
+    """Eigenvalues of a symmetric 3x3 matrix, descending (Smith's algorithm)."""
+    p1 = a[0][1] ** 2 + a[0][2] ** 2 + a[1][2] ** 2
+    q = mat_trace(a) / 3.0
+    if p1 <= 1e-300:
+        vals = sorted([a[0][0], a[1][1], a[2][2]], reverse=True)
+        return vals[0], vals[1], vals[2]
+    p2 = (
+        (a[0][0] - q) ** 2
+        + (a[1][1] - q) ** 2
+        + (a[2][2] - q) ** 2
+        + 2.0 * p1
+    )
+    p = math.sqrt(p2 / 6.0)
+    b = [[(a[i][j] - (q if i == j else 0.0)) / p for j in range(3)] for i in range(3)]
+    r = mat_det(b) / 2.0
+    r = max(-1.0, min(1.0, r))
+    phi = math.acos(r) / 3.0
+    e1 = q + 2.0 * p * math.cos(phi)
+    e3 = q + 2.0 * p * math.cos(phi + 2.0 * math.pi / 3.0)
+    e2 = 3.0 * q - e1 - e3
+    return e1, e2, e3
+
+
+def singular_values(j: Mat) -> tuple[float, float, float]:
+    """Singular values of J, descending: the semi-axes of the image ellipsoid."""
+    jt_j = mat_mul([[j[k][i] for k in range(3)] for i in range(3)], j)
+    e1, e2, e3 = sym3_eigenvalues(jt_j)
+    return (
+        math.sqrt(max(e1, 0.0)),
+        math.sqrt(max(e2, 0.0)),
+        math.sqrt(max(e3, 0.0)),
+    )
+
+
 def shear_sq(b: Mat) -> float:
     """sigma_ij sigma^ij for the symmetric traceless part of B."""
     th = mat_trace(b)
@@ -311,10 +346,14 @@ def run_scenario(sc: Scenario, pts, offsets) -> tuple[list[dict], dict]:
 
     h0 = None
     h_last = None
+    s_final = "n/a"
     tau_floor = None
     tau_caustic = None
     max_c = 0.0
+    max_c3 = 0.0
     c_initial = None
+    tau_rank = None
+    tau_rank0 = None
     alpha = abs(sc.theta0) if sc.theta0 < 0 else 0.0
 
     for _ in range(max_steps):
@@ -351,10 +390,29 @@ def run_scenario(sc: Scenario, pts, offsets) -> tuple[list[dict], dict]:
             if in_r_regime:
                 max_c = max(max_c, c_meas)
 
+            # Hypothesis (R') : the deformation-spectrum bound. The image of a
+            # ball under J is an ellipsoid with semi-axes equal to the singular
+            # values, and Steiner's formula gives
+            #     N <= c3 * prod_i (1 + s_i/ell),
+            # which is sensitive to the full spectrum rather than to det J
+            # alone. rank_ell counts directions still resolvable by the frame.
+            s1, s2, s3 = singular_values(j)
+            rprime = 1.0
+            for s in (s1, s2, s3):
+                rprime *= 1.0 + s / CELL_ELL
+            c3_meas = n_cells / rprime
+            max_c3 = max(max_c3, c3_meas)
+            rank_ell = sum(1 for s in (s1, s2, s3) if s >= CELL_ELL)
+            if rank_ell < 3 and tau_rank is None:
+                tau_rank = tau
+            if rank_ell == 0 and tau_rank0 is None:
+                tau_rank0 = tau
+
             if h0 is None:
                 h0 = h_bits
                 c_initial = c_meas
             h_last = h_bits
+            s_final = f"({s1:.3g},{s2:.3g},{s3:.3g})"
             if tau_floor is None and h_bits < FLOOR_BITS:
                 tau_floor = tau
 
@@ -383,6 +441,12 @@ def run_scenario(sc: Scenario, pts, offsets) -> tuple[list[dict], dict]:
                     "entropy_bits": round(h_bits, 6),
                     "shape_constant_c": round(c_meas, 6),
                     "in_R_regime": int(in_r_regime),
+                    "s1": f"{s1:.8g}",
+                    "s2": f"{s2:.8g}",
+                    "s3": f"{s3:.8g}",
+                    "rank_ell": rank_ell,
+                    "Rprime_bound_cells": f"{rprime:.8g}",
+                    "c3_meas": round(c3_meas, 6),
                 }
             )
             next_sample = tau + SAMPLE_EVERY
@@ -433,6 +497,10 @@ def run_scenario(sc: Scenario, pts, offsets) -> tuple[list[dict], dict]:
         else float("nan"),
         "c_initial": round(c_initial, 4) if c_initial is not None else float("nan"),
         "max_shape_constant_c_in_R_regime": round(max_c, 4),
+        "max_c3_Rprime": round(max_c3, 4),
+        "tau_rank_deficient": round(tau_rank, 4) if tau_rank is not None else "none",
+        "tau_rank_zero": round(tau_rank0, 4) if tau_rank0 is not None else "none",
+        "s_final": s_final,
     }
     return rows, summary
 
@@ -483,6 +551,10 @@ def main() -> None:
         "tau_caustic_bound_3_over_alpha",
         "c_initial",
         "max_shape_constant_c_in_R_regime",
+        "max_c3_Rprime",
+        "tau_rank_deficient",
+        "tau_rank_zero",
+        "s_final",
     ]
     for k in keys:
         print(k.ljust(width + 10), "  ".join(str(s[k]).rjust(14) for s in summaries))

@@ -29,21 +29,31 @@ futures into a single cell").
 This note removes that assumption. It derives the failure from explicit
 focusing hypotheses, makes the entropy branch quantitative with a rate and a
 breach time, and identifies precisely which further hypothesis the entropy
-branch needs — a hypothesis that turns out to be false in an interesting
-regime, which is reported rather than hidden.
+branch needs — a hypothesis that turns out to be false in the generic case.
+Section 11 then repairs that gap (OP-30), which changes the conclusion: the
+boundary gravitational collapse generically reaches is not the entropy floor
+at all.
 
-The headline identification is:
+Two headline results:
 
 > the expansion scalar \(\theta\) of the relational reference congruence *is*
-> the crystallization drift rate of the CDT, expressed in geometric variables.
+> the crystallization drift rate of the CDT, expressed in geometric variables;
+
+and
+
+> gravitational collapse has two distinct ACP failure modes. Near-isotropic
+> collapse crystallizes. Shear-dominated collapse — the astrophysically
+> generic case — instead destroys the reference frame's capacity to carry its
+> own macrostate label, while its coarse entropy stays far above the floor.
 
 ## 2. Honesty Boundary
 
-**Proven here.** Lemmas 1–3 and Theorems A–C, under the stated hypotheses
-(F1)–(F3), (R), and the global hypotheses of the Penrose theorem where invoked.
-These are statements about geodesic-congruence kinematics and coarse-graining,
-not new results in general relativity; the content is the translation into ACP
-kernel variables with explicit rates.
+**Proven here.** Lemmas 1–4 and Theorems A, A\('\), B, C, E, under the stated
+hypotheses (F1)–(F3) and the global hypotheses of the Penrose theorem where
+invoked. These are statements about geodesic-congruence kinematics and
+coarse-graining, not new results in general relativity; the content is the
+translation into ACP kernel variables with explicit rates, and the
+identification of which ACP admissibility boundary collapse actually reaches.
 
 **Numerically verified.** `simulations/semiclassical_collapse_failure/`
 integrates the exact Jacobi deviation equation with a self-consistent dust
@@ -51,9 +61,10 @@ source and measures the coarse-grained entropy directly. The integrator
 reproduces the analytic isotropic dust collapse time to five significant
 figures.
 
-**Assumed, not proven.** Hypothesis (R), shape regularity at scale \(\ell\).
-Section 8 shows it fails under strong shear, and Section 9 records the
-consequence.
+**Assumed, then eliminated.** Hypothesis (R), shape regularity at scale
+\(\ell\), underwrites Theorem A. Section 10 shows it fails under strong shear.
+Section 11 replaces it with the provable Lemma 4 and then removes the need for
+any shape hypothesis via Theorem E, which closes OP-30.
 
 **Conjectural.** That the completion forced by Theorem C and its corollary is
 quantum gravity. This note constrains the completion; it does not construct it.
@@ -212,7 +223,15 @@ volume to cell count. That link is a genuine extra hypothesis:
 (R) holds when the image has bounded eccentricity at scale \(\ell\) — when its
 diameter is comparable to \(\delta V^{1/3}\). It **fails** for images that are
 filamented or pancaked at scale \(\ell\), where a set of vanishing volume can
-still meet very many cells. Section 8 shows this failure is not hypothetical.
+still meet very many cells. Section 10 shows this failure is not hypothetical:
+the constant \(c\) rises to 251.8 under strong shear.
+
+**(R) is superseded.** Section 11 replaces it with a deformation-spectrum bound
+(R\('\)) that is provable rather than assumed, holds uniformly across all
+scenarios with \(c_3\approx3.6\), and yields an exhaustive dichotomy requiring
+no shape hypothesis at all. Hypothesis (R) is retained here because Theorem A
+is stated in terms of it and because the contrast between (R) and (R\('\)) is
+what identifies the real mechanism.
 
 **Why geodesic incompleteness rather than curvature blow-up.** The ACP
 admissibility conditions of `bridges/singularity_inadmissibility.md` §2 include
@@ -420,7 +439,180 @@ conclusion, all of which concern decay toward zero rather than absolute level.
 The model is congruence kinematics with a homogeneous dust source, not
 numerical relativity.
 
-## 11. Corollary (Forced Completion)
+## 11. Closing the Shear Loophole (OP-30)
+
+Section 10 leaves the entropy branch broken in the generic case. This section
+repairs it — not by rescuing (R), but by replacing it with a bound that is
+provable, and then observing that the repaired bound makes the shape hypothesis
+unnecessary altogether.
+
+### 11.1 Hypothesis (R\('\)): the deformation-spectrum bound
+
+The defect in (R) is that it tracks \(\det J\), a single number, when the
+object that determines cell count is the full deformation spectrum. Let
+\(s_1\geq s_2\geq s_3\) be the singular values of the Jacobi matrix \(J\) —
+the semi-axes of the image ellipsoid.
+
+**Lemma 4 (cell count from the deformation spectrum).** For the image of a
+convex body under \(J\),
+
+$$
+N_\Delta
+\ \leq\
+c_3\prod_{i=1}^{3}\left(1+\frac{s_i(\Delta)}{\ell}\right),
+$$
+
+with \(c_3\) a purely dimensional constant.
+
+**Proof.** Any \(\ell\)-cell meeting a set \(K\) is contained in the
+\(\ell\sqrt3\)-neighbourhood \(K\oplus B_r\), \(r=\ell\sqrt3\), so
+\(N_\Delta\,\ell^3\leq\mathrm{vol}(K\oplus B_r)\). For convex \(K\), Steiner's
+formula gives
+
+$$
+\mathrm{vol}(K\oplus B_r)=V(K)+A(K)\,r+M(K)\,r^{2}+\tfrac{4\pi}{3}r^{3},
+$$
+
+with \(V\), \(A\), \(M\) the volume, surface area, and integral mean curvature.
+For an ellipsoid with semi-axes \(s_i\) these are, up to dimensional constants,
+the elementary symmetric polynomials \(e_3=s_1s_2s_3\),
+\(e_2=\sum_{i<j}s_is_j\), and \(e_1=\sum_i s_i\). Hence
+
+$$
+N_\Delta
+\lesssim
+\frac{e_3+\ell e_2+\ell^{2}e_1+\ell^{3}}{\ell^{3}}
+=
+\prod_{i=1}^{3}\left(1+\frac{s_i}{\ell}\right),
+$$
+
+the last equality being the exact factorization of the elementary symmetric
+expansion. \(\square\)
+
+(R) is the special case in which all \(s_i\) are comparable. (R\('\)) reduces
+to it then, and departs from it exactly when the spectrum is anisotropic.
+
+**Theorem A\('\) (spectral entropy bound).** Under (F1)–(F3),
+
+$$
+H_{\ell,\Delta}(m)
+\ \leq\
+\ln c_3+\sum_{i=1}^{3}\ln\!\left(1+\frac{s_i(\Delta)}{\ell}\right).
+$$
+
+The bound is unconditional — no shape hypothesis is required.
+
+### 11.2 Why the entropy branch was failing
+
+Theorem A\('\) makes the mechanism transparent. The right-hand side vanishes
+only when **every** \(s_i\) falls below \(\ell\). But Lemma 2 guarantees only
+that the *product* \(\det J=s_1s_2s_3\to0\). Focusing constrains the volume; it
+does not constrain the individual axes.
+
+> The entropy floor is breached when the congruence contracts below the
+> resolution scale in *every* direction. Focusing only forces contraction *in
+> volume*. Shear is precisely the difference between the two.
+
+This is not a defect in the collapse argument. It is a statement about which
+ACP boundary gravitational collapse actually hits — and it points directly at
+the answer to OP-30's second question.
+
+### 11.3 Frame resolution rank
+
+**Definition (frame resolution rank).**
+
+$$
+\mathrm{rank}_\ell(J)=\#\{i:\ s_i\geq\ell\}.
+$$
+
+**Proposition E1 (frame degeneracy).** If \(\mathrm{rank}_\ell(J)<3\), the
+relational reference structure \(\mathcal F_\ell\) no longer supplies three
+independent directions resolvable at scale \(\ell\). The smearing functions
+\(f_i(X(y))\) then cannot resolve the degenerate direction, so the bin map
+\(b_i\) defining the macrocell is undefined there, and the description has
+lost a distinction it claimed to make.
+
+This is not a new axiom. It is the *nondegenerate interior* condition of
+`bridges/singularity_inadmissibility.md` §2 — \(0<\mathrm{rank}(D)\) and
+\(\kappa(D)<\infty\) — specialized to a congruence-realized frame. The two
+clauses of that condition correspond to the two ways the spectrum can fail:
+
+| spectrum failure | \(\mathrm{rank}_\ell\) | admissibility clause violated | ACP reading |
+|---|---:|---|---|
+| all \(s_i<\ell\) | 0 | \(\mathrm{rank}(D)>0\) | total crystallization |
+| some but not all \(s_i<\ell\) | 1 or 2 | \(\kappa(D)<\infty\) | partial rank failure |
+
+Proposition 1 of the singularity note already establishes that *partial* rank
+failure is inadmissible for the original description, because the effective
+boundary law requires \(D^{-1}\) in every retained internal direction. The
+framework therefore already contained the criterion that shear-dominated
+collapse violates; it had simply not been connected to the collapse kernel.
+
+### 11.4 Theorem E: the exhaustive dichotomy
+
+**Theorem E.** Assume (F1)–(F3). By the caustic deadline
+\(\tau_\times\leq3/\alpha\), the relational description fails in exactly one of
+two ways:
+
+- **(a) Entropy floor breach.** \(\mathrm{rank}_\ell(J)=0\): every axis has
+  contracted below the resolution scale, \(N_\Delta=1\), and
+  \(H_{\ell,\Delta}(m)=0\). This is crystallization.
+- **(b) Frame rank failure.** \(0<\mathrm{rank}_\ell(J)<3\): the congruence has
+  contracted below \(\ell\) in some directions while remaining resolvable in
+  others. The future entropy may remain far above the floor, but the frame can
+  no longer label its own macrocells, and \(\kappa(D)\to\infty\).
+
+**Proof.** By Lemma 2(3), \(\delta V\to0\) at \(\tau_\times\leq3/\alpha\), so
+\(s_1s_2s_3\to0\) and therefore \(s_3\to0<\ell\). Hence
+\(\mathrm{rank}_\ell(J)<3\) necessarily. The two cases are distinguished by
+whether \(\mathrm{rank}_\ell\) is zero, and they are exhaustive and mutually
+exclusive. \(\square\)
+
+**No shape hypothesis is used.** Theorem E follows from Lemma 2 alone. It is
+strictly stronger than the entropy branch of Theorem C, which required (R) and
+was false in the generic case.
+
+The upshot for the program: gravitational collapse has **two** distinct ACP
+failure modes, not one. Near-isotropic collapse crystallizes. Shear-dominated
+collapse — the astrophysically generic case — instead destroys the reference
+frame's ability to carry the macrostate label, while its coarse entropy stays
+high. Both are inadmissible, and both are covered by admissibility conditions
+the framework already had.
+
+### 11.5 Numerical verification of the repair
+
+Same runs as Section 10, with the deformation spectrum now tracked.
+
+| scenario | \(s_{\mathrm{final}}=(s_1,s_2,s_3)\) | \(\mathrm{rank}_\ell\) | \(\tau\) rank-deficient | \(\tau_\times\) | \(H_{\mathrm{final}}\) | Thm A\('\) ceiling | max \(c_3\) | max \(c\) (old) |
+|---|---|---:|---:|---:|---:|---:|---:|---:|
+| isotropic | (0.00118, 0.00118, 0.00118) | 0 | 1.843 | 1.8717 | 0.000 | 1.90 | 3.43 | 9.09 |
+| moderate shear | (0.234, 0.234, 1.8e−05) | 2 | 1.6485 | 1.7294 | 4.221 | 5.33 | 3.44 | 23.0 |
+| strong shear | (0.961, 0.961, 1.84e−05) | 2 | 0.900 | 0.9868 | 8.095 | 8.67 | 3.61 | 251.8 |
+| unbound expansion | (4.03, 4.03, 4.03) | 3 | none | none | 14.220 | 17.96 | 3.42 | 1.086 |
+
+Entropies in bits; \(\ell=0.10\); floor 1.50 bits.
+
+1. **(R\('\)) holds uniformly.** The measured constant \(c_3\) is
+   3.43, 3.44, 3.61, 3.42 — essentially scenario-independent — where the old
+   constant \(c\) ranged over 1.086 to 251.8. The deformation spectrum is the
+   right variable.
+2. **Theorem A\('\) is tight where it matters.** Predicted ceilings against
+   measured entropies: 8.67 vs 8.095 (strong shear), 5.33 vs 4.221 (moderate).
+   The bound is not merely valid, it is close.
+3. **Theorem E's dichotomy is confirmed.** \(\mathrm{rank}_\ell\) drops below 3
+   before the caustic in every focusing run
+   (1.843 < 1.8717, 1.6485 < 1.7294, 0.900 < 0.9868), and reaches 0 only in the
+   isotropic run — which is exactly the only run that breaches the entropy
+   floor. Rank predicts the branch with no exceptions.
+4. **The control stays admissible.** The unbound run keeps
+   \(\mathrm{rank}_\ell=3\) throughout, with all axes growing.
+
+The final spectra make the mechanism visible directly: under shear the
+collapsing congruence ends as a pancake with \(s_3\sim10^{-5}\ell\) and
+\(s_1=s_2\approx10\,\ell\). Its volume has vanished, its coarse entropy is 8
+bits, and it cannot resolve its own third direction.
+
+## 12. Corollary (Forced Completion)
 
 **Corollary.** Any completion of classical gravity that avoids all three
 branches of Theorem C for a collapsing region must:
@@ -439,47 +631,64 @@ branches of Theorem C for a collapsing region must:
    boundary record, per Criterion 3 of
    `bridges/cosmic_coordination_floor.md`; otherwise the completion has merely
    relabelled branch 2.
-4. **Survive shear.** Remain admissible in the shear-dominated regime, where
-   Proposition D shows the entropy branch is weak and the normalization branch
-   is what actually fires — and fires *sooner*.
+4. **Restore frame rank, not merely volume.** By Theorem E the generic failure
+   is \(\mathrm{rank}_\ell(J)<3\), not \(H\to0\). A completion that keeps the
+   future entropy above the floor while leaving the congruence degenerate in
+   one direction has not repaired the description — it has satisfied the wrong
+   diagnostic. The requirement is
+   $$s_i(\tau)\geq\ell\quad\text{for all }i,$$
+   i.e. the mechanism must arrest contraction *in every direction* before the
+   deadline, not just in volume.
 
-Requirement 2 is new and quantitative: it converts "quantum gravity must
-prevent crystallization" into a rate condition with a number in it, tied to an
-observable of the classical solution.
+Requirement 2 is quantitative: it converts "quantum gravity must prevent
+crystallization" into a rate condition with a number in it, tied to an
+observable of the classical solution. Requirement 4 is the sharper acceptance
+test that OP-30 produced, and it is the one that bites in the astrophysically
+generic case — the two are independent, since a mechanism can inject entropy
+at rate \(|\theta|\) while still permitting one axis to collapse.
 
-## 12. What Is Proven, Assumed, and Open
+## 13. What Is Proven, Assumed, and Open
 
-**Proven.** Lemmas 1–3; Theorems A, B1, B2, C; Proposition D. Theorem A is
-conditional on (R); Theorems B1 and C branch 1 are not.
+**Proven.** Lemmas 1–4; Theorems A, A\('\), B1, B2, C, E; Propositions D, E1.
+Theorem A is conditional on (R); Theorems A\('\), B1, C branch 1, and E are
+not.
 
 **Assumed.** (F1) strong energy condition, (F2) irrotational congruence, (F3)
-initial focusing, and (R) shape regularity. (F1)–(F3) are the standard focusing
-hypotheses and are stated at macrocell level in
-\(\mathcal B_{\mathrm{coll}}(\alpha,\beta)\). (R) is the weak point and is
-known to fail.
+initial focusing. These are the standard focusing hypotheses, stated at
+macrocell level in \(\mathcal B_{\mathrm{coll}}(\alpha,\beta)\). The former
+weak point, (R), is no longer load-bearing: Theorem A\('\) replaces it with the
+provable Lemma 4, and Theorem E dispenses with a shape hypothesis entirely.
 
-**Open — and now sharper.** Section 10 turns a suspicion into a measured
-failure: shear-dominated collapse focuses *faster* while keeping coarse entropy
-*high*. Two questions follow, tracked as **OP-30**:
+**OP-30 is closed.** Both questions are answered.
 
-1. Is there a shear-robust replacement for (R) — a bound on \(N_\Delta\) that
-   survives filamentation, perhaps in terms of the full deformation spectrum of
-   \(J\) rather than \(\det J\) alone? The natural candidate is a bound using
-   the singular values \(s_1\geq s_2\geq s_3\) of \(J\), with
-   \(N_\Delta\approx\prod_i\max(1,s_i/\ell)\) replacing \(\delta V/v_\ell\).
-2. Does a filamented high-entropy state actually satisfy the ACP productive
-   interval, or does it fail a *different* admissibility condition — record
-   decodability rather than future entropy? A congruence that is one cell thick
-   in one direction cannot support the relational observables that define the
-   macrocell, which suggests filamentation breaches admissibility through
-   \(\mathcal F_\ell\) rather than through \(H\).
+1. *A shear-robust replacement for (R)?* Yes — hypothesis (R\('\)), proven as
+   Lemma 4 via Steiner's formula, with the elementary-symmetric expansion
+   factorizing exactly into \(\prod_i(1+s_i/\ell)\). The measured constant is
+   \(c_3\approx3.6\) uniformly across all four scenarios, against an old
+   constant \(c\) ranging over two orders of magnitude.
+2. *Does filamented collapse fail a different admissibility condition?* Yes —
+   frame rank failure rather than the entropy floor. Theorem E makes the
+   dichotomy exhaustive: since \(\det J\to0\) forces \(s_3<\ell\), the
+   description always loses frame rank, and it breaches the entropy floor only
+   in the special case where *all* axes contract below \(\ell\). Numerically,
+   \(\mathrm{rank}_\ell\) predicts the branch with no exceptions.
 
-Question 2 is the more interesting one for the program, because an affirmative
-answer would mean the entropy floor is not the only ACP boundary that
-gravitational collapse can hit — and would connect this note to the operational
-frame conditions in `bridges/operational_time_relativity.md`.
+The affirmative answer to question 2 has the consequence anticipated for it:
+the entropy floor is **not** the only ACP boundary gravitational collapse can
+hit, and the one it generically hits is the other one. This connects the
+collapse kernel to the operational frame conditions of
+`bridges/operational_time_relativity.md`, where the reference frame's capacity
+to carry distinguishable verification steps is the primitive.
 
-**Still conjectural.** That the forced completion of Section 11 is quantum
+**Residual gap.** Proposition E1 identifies frame rank failure with
+\(\kappa(D)\to\infty\) in the Schur reading. The precise identification of
+\(D\) with the deformation spectrum requires the local Gaussian approximation
+of `bridges/relational_observable_macrostate_kernel.md` §8, whose regularity
+conditions are exactly the content of **OP-3**. The correspondence in §11.3
+should be read as structural until OP-3 is closed.
+
+**Still conjectural.** That the forced completion of Section 12 is quantum
 gravity. Theorem C establishes that classical spacetime is not a complete
-admissible kernel and Section 11 constrains what must replace it. Neither
-constructs the replacement.
+admissible kernel, Theorem E identifies which boundary it fails at, and
+Section 12 constrains what must replace it. None of them constructs the
+replacement.

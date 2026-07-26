@@ -55,14 +55,32 @@ plus a rate: any admissible completion must act before \(3/\alpha\) and supply
 admissible support at no less than \(|\theta|\) nats per unit proper time, a
 requirement that stiffens without bound as the caustic nears.
 
-Two qualifications are carried forward rather than smoothed over. First,
-hypothesis (R) is measurably false under strong shear — filamented images keep
-high coarse entropy while their volume vanishes — so the entropy branch is not
-individually robust. The disjunction survives because shear accelerates the
-normalization branch by as much as it weakens the entropy branch
-(Proposition D), but this is now **OP-30**, and it bites in the generic
-astrophysical case since realistic collapse is not shear-free. Second, the
-theorem uses geodesic incompleteness and reference-frame breakdown rather than
+**OP-30 is closed, and it changed the conclusion.** Hypothesis (R)
+underwriting the entropy branch was measurably false under shear. The repair
+was not to rescue (R) but to replace it: Lemma 4 proves a deformation-spectrum
+bound \(N_\Delta\leq c_3\prod_i(1+s_i/\ell)\) via Steiner's formula, where the
+\(s_i\) are the singular values of the Jacobi matrix and the elementary
+symmetric expansion factorizes exactly into that product. This makes the
+mechanism transparent — the entropy vanishes only when *every* axis falls below
+the resolution scale, whereas focusing forces only the *product*
+\(\det J=s_1s_2s_3\to0\). Theorem E then gives an exhaustive dichotomy
+requiring no shape hypothesis at all:
+
+> gravitational collapse has **two** distinct ACP failure modes. Near-isotropic
+> collapse crystallizes (\(\mathrm{rank}_\ell=0\), entropy floor breach).
+> Shear-dominated collapse — the astrophysically generic case — instead
+> destroys the reference frame's capacity to carry its own macrostate label
+> (\(0<\mathrm{rank}_\ell<3\)), while its coarse entropy stays far above the
+> floor.
+
+These map onto the two clauses of an admissibility condition the framework
+already had: \(\mathrm{rank}(D)>0\) and \(\kappa(D)<\infty\). The criterion
+that shear-dominated collapse violates was already stated in
+`bridges/singularity_inadmissibility.md` §2; it had simply never been connected
+to the collapse kernel.
+
+One qualification is carried forward rather than smoothed over: the theorem
+uses geodesic incompleteness and reference-frame breakdown rather than
 curvature divergence — which is what the singularity theorems actually deliver,
 and means ACP's *finite continuation* condition is the admissibility criterion
 gravity provably violates.
@@ -258,7 +276,7 @@ The full result inventory, as of v10:
 
 ## Active fronts
 
-**1. ACP quantum-gravity derivation program.** This is now the primary ACP Quantum front. The target is explicit: derive quantum gravity as the persistence-forced completion of classical spacetime. The roadmap is `bridges/quantum_gravity_derivation_program.md`, now supported by `bridges/semiclassical_collapse_failure.md`, `bridges/relational_observable_macrostate_kernel.md`, `bridges/cosmic_coordination_floor.md`, `bridges/singularity_inadmissibility.md`, `bridges/dark_constraint_quantum_gravity.md`, and `bridges/quantum_gravity_convergence_map.md`. Stage 2 (the semiclassical collapse failure theorem) is now proven and numerically verified. The next serious steps are: (a) close OP-30, the shear loophole in the entropy branch — most valuably by testing whether filamented collapse breaches admissibility through reference-frame failure rather than through the entropy floor; (b) instantiate candidate completion kernels against the four acceptance conditions of the completion corollary, which now include a rate condition. *(Priority: highest.)*
+**1. ACP quantum-gravity derivation program.** This is now the primary ACP Quantum front. The target is explicit: derive quantum gravity as the persistence-forced completion of classical spacetime. The roadmap is `bridges/quantum_gravity_derivation_program.md`, now supported by `bridges/semiclassical_collapse_failure.md`, `bridges/relational_observable_macrostate_kernel.md`, `bridges/cosmic_coordination_floor.md`, `bridges/singularity_inadmissibility.md`, `bridges/dark_constraint_quantum_gravity.md`, and `bridges/quantum_gravity_convergence_map.md`. Stage 2 (the semiclassical collapse failure theorem) is now proven and numerically verified. OP-30 is now also closed: Theorem E identifies frame resolution rank, not the entropy floor, as the boundary shear-dominated collapse generically reaches. The next serious steps are: (a) instantiate candidate completion kernels against the four acceptance conditions of the completion corollary, which now include both a rate condition (\(|\theta|\) nats per unit proper time) and an all-directions condition (\(s_i\geq\ell\) for every \(i\)); (b) Stage 5, boundary decodability, which is the next unproven rung. *(Priority: highest.)*
 
 **2. Hardware-level adaptive syndrome alignment as QEC laboratory.** The QEC program remains the technical engine for the quantum-gravity derivation. The device-facing target is a fixed logical memory, noisy syndrome stream, online noise estimation, decoder/gauge/schedule updates, explicit overhead, and logical-channel audits. The current scaffold is `bridges/hardware_adaptive_alignment.md` plus `simulations/hardware_adaptive_decoder/`; H0, H1, and an H2 circuit-level syndrome-extraction scaffold with bit-flip logical-PTM, Pauli-frame logical-channel metrics, terminal phase-window metrics, and calibration schedule-phase replay are in place. The next step is measured backend-log replay or moving H2 from the repetition-code Pauli audit to a phase-protecting stabilizer/subsystem-code circuit with true steady-state per-cycle maps. *(Priority: high.)*
 
@@ -343,7 +361,7 @@ Canonical tracker: `OPEN_PROBLEMS.md`. Headline items:
 - **OP-18: Singularity inadmissibility and horizon regularization.** Partial++: ACP/Schur criterion, gravitational bridge note, finite macrocell collapse toy, OP-20 kernel skeleton, and now the collapse failure theorem (`bridges/semiclassical_collapse_failure.md`, Theorems B1/B2). Next step is horizon regularization as the admissible repair.
 - **OP-19: ACP derivation of quantum gravity / cosmic coordination floor.** Partial+++: the classical failure theorem is proven (Theorem C) and numerically verified; the completion corollary gives a deadline \(3/\alpha\) and a rate \(|\theta|\). Next step is instantiating candidate-theory completion kernels.
 - **OP-20: Relational observable macrostate kernel.** Partial++: the kernel bridge defines the finite relational observable algebra, macrocell partition, quantum/channel kernel, classical pushforward kernel, Schur-block reading, and boundary-information diagnostics; its Proposition 2 is now superseded by Theorem C, which derives the hypothesis Proposition 2 assumed. The relational frame \(\mathcal F_\ell\) is now identified concretely as a timelike congruence, which is what lets the focusing theorems speak to the kernel. Next step is candidate-mechanism audit beyond the schematic toy.
-- **OP-30: Shear filamentation and the shape-regularity hypothesis.** Open, newly identified with the failure measured rather than suspected. Hypothesis (R) underwriting the entropy branch of Theorem A fails under shear: the shape constant rises from `1.086` to `251.8` and final entropy stays at `8.095` bits against a `1.50`-bit floor. Next step is a deformation-spectrum replacement for (R), or showing that filamented collapse fails admissibility through reference-frame breakdown instead.
+- **OP-30: Shear filamentation and the shape-regularity hypothesis.** **Resolved 2026-07-26.** Both questions answered: (R) is replaced by the provable deformation-spectrum bound (Lemma 4, via Steiner's formula, measured constant `c3 ~ 3.6` uniformly against an old constant spanning `1.086`–`251.8`), and filamented collapse is shown to fail through frame resolution rank rather than the entropy floor (Theorem E, an exhaustive dichotomy needing no shape hypothesis). Residual gap folded into OP-3.
 - **OP-21: First-principles Hilbert branch structure / quantum kinematics from ACP.** Partial+++: the conditional local package now includes branch weights, closed unitary flow, tensor-product independent composition, and POVM/projective measurement structure; the remaining task is to derive that kinematics from ACP alone.
 - **OP-22: Quantum braiding and collapse as internal timekeeping.** Partial: seed bridge note exists; next step is a monitored-qubit feedback simulation with record entropy, memory, leakage, and clock-regularity diagnostics.
 - **OP-23: Hardware implementation ladder for adaptive syndrome alignment.** Open/partial: roadmap, first fixed-code adaptive decoder scaffold, H1 trace replay interface, and H2 circuit-level syndrome-extraction interface with bit-flip logical-process, Pauli-frame logical-channel, and schedule-phase audits exist; next step is measured hardware-data replay, a phase-protecting stabilizer/subsystem patch, steady-state cycle maps, and live hardware loop.
@@ -355,6 +373,48 @@ Canonical tracker: `OPEN_PROBLEMS.md`. Headline items:
 - **OP-29: Operational-time relativity and proper productive intervals.** Open/partial: first bridge note exists; next step is proving the operational-time covariance theorem for systems with different tempos, coarse-grainings, and record channels.
 
 ## Changelog
+
+### 2026-07-26 — OP-30 closed: two gravitational failure modes
+- Replaced hypothesis (R) rather than repairing it. **Lemma 4** proves the
+  deformation-spectrum bound \(N_\Delta\leq c_3\prod_i(1+s_i/\ell)\) from
+  Steiner's formula: any \(\ell\)-cell meeting a convex body lies in its
+  \(\ell\sqrt3\)-neighbourhood, and the elementary symmetric expansion of the
+  ellipsoid's intrinsic volumes factorizes *exactly* into that product.
+- Added **Theorem A\('\)**, the unconditional spectral entropy bound
+  \(H_{\ell,\Delta}\leq\ln c_3+\sum_i\ln(1+s_i/\ell)\).
+- Diagnosed why the entropy branch was failing: the bound vanishes only when
+  *every* singular value drops below \(\ell\), whereas focusing forces only the
+  product \(\det J\to0\). Shear is exactly the difference.
+- Added the **frame resolution rank** \(\mathrm{rank}_\ell(J)=\#\{i:s_i\geq\ell\}\)
+  and **Proposition E1**: \(\mathrm{rank}_\ell<3\) is failure of the
+  nondegenerate-interior condition of `bridges/singularity_inadmissibility.md`
+  §2, specialized to a congruence-realized frame.
+- Added **Theorem E**, an exhaustive dichotomy needing no shape hypothesis:
+  since \(\det J\to0\) forces \(s_3<\ell\), the description always loses frame
+  rank, and breaches the entropy floor only when all axes contract below
+  \(\ell\). Strictly stronger than the entropy branch of Theorem C.
+- Headline: gravitational collapse has **two** distinct ACP failure modes,
+  mapping onto \(\mathrm{rank}(D)>0\) (near-isotropic, crystallization) and
+  \(\kappa(D)<\infty\) (shear-dominated, frame degeneracy). The generic
+  astrophysical case is the second.
+- Added a fourth acceptance condition to the completion corollary: restore
+  \(s_i\geq\ell\) in every direction, not merely arrest volume contraction —
+  independent of the \(|\theta|\) rate condition.
+- Extended `simulations/semiclassical_collapse_failure/` with singular-value,
+  `rank_ell`, (R\('\))-bound, and \(c_3\) diagnostics via a closed-form
+  symmetric 3x3 eigensolver.
+- Results: \(c_3 = 3.43, 3.44, 3.61, 3.42\) — essentially scenario-independent,
+  against an old constant spanning `1.086`–`251.8`. Theorem A\('\) is tight
+  (ceiling `8.67` vs measured `8.095` bits under strong shear). `rank_ell`
+  predicts the branch with no exceptions: below 3 before the caustic in every
+  focusing run (`1.843 < 1.8717`, `1.6485 < 1.7294`, `0.900 < 0.9868`), and 0
+  only in the isotropic run, the only run that breaches the floor. Final
+  shear spectrum `(0.961, 0.961, 1.84e-05)`: vanishing volume, 8 bits of
+  entropy, third direction unresolvable.
+- Residual gap folded into **OP-3**, which is now load-bearing for the
+  quantum-gravity front: the \(\kappa(D)\to\infty\) identification rests on the
+  local Gaussian approximation whose regularity conditions are that problem.
+- Session log: `sessions/2026-07-26_op30_frame_rank_dichotomy.md`.
 
 ### 2026-07-26 — semiclassical collapse failure theorem (Stage 2 closed)
 - Added `bridges/semiclassical_collapse_failure.md`, proving the classical

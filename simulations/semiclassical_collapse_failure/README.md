@@ -64,6 +64,32 @@ bound is `tau_caustic <= 3/alpha = 5.0`. The floor is `1.50` bits, matching the
 
 Initial entropy is 11.963 bits in every run.
 
+## Deformation spectrum (OP-30)
+
+The run also tracks the singular values `s1 >= s2 >= s3` of `J` — the semi-axes
+of the image ellipsoid — which are what hypothesis (R') and Theorem E depend
+on. `rank_ell` counts directions still resolvable by the frame,
+`#{i : s_i >= ell}`.
+
+| scenario | s_final | rank_ell | tau rank-deficient | tau caustic | H_final | Thm A' ceiling | max c3 |
+|---|---|---:|---:|---:|---:|---:|---:|
+| `isotropic` | (0.00118, 0.00118, 0.00118) | 0 | 1.843 | 1.8717 | 0.000 | 1.90 | 3.43 |
+| `moderate_shear` | (0.234, 0.234, 1.8e−05) | 2 | 1.6485 | 1.7294 | 4.221 | 5.33 | 3.44 |
+| `strong_shear` | (0.961, 0.961, 1.84e−05) | 2 | 0.900 | 0.9868 | 8.095 | 8.67 | 3.61 |
+| `unbound_expansion` | (4.03, 4.03, 4.03) | 3 | none | none | 14.220 | 17.96 | 3.42 |
+
+- **(R') holds uniformly** where (R) failed. The measured constant `c3` is
+  `3.43, 3.44, 3.61, 3.42` — essentially scenario-independent — against an old
+  constant `c` ranging `1.086` to `251.8`.
+- **Theorem A' is tight**: predicted ceilings `8.67` vs measured `8.095`
+  (strong shear), `5.33` vs `4.221` (moderate).
+- **Theorem E's dichotomy is confirmed**: `rank_ell` drops below 3 before the
+  caustic in every focusing run, and reaches 0 only in the isotropic run —
+  exactly the only run that breaches the entropy floor.
+- Under shear the congruence ends as a pancake with `s3 ~ 1e-5 * ell` and
+  `s1 = s2 ~ 10 * ell`: vanishing volume, 8 bits of coarse entropy, and no
+  ability to resolve its own third direction.
+
 ## Validation
 
 For the isotropic case the model reduces to `addot = -kappa/(3 a^2)`, whose
@@ -88,8 +114,11 @@ the simulation gives `1.8717`.
    (`0.000 -> 4.221 -> 8.095`).
 5. **Hypothesis (R) fails under shear.** The shape constant starts at `1.086`
    and stays there for the isotropic control, but reaches `251.8` under strong
-   shear while the image still has more than one cell of volume. This is
-   tracked as OP-30.
+   shear while the image still has more than one cell of volume. This was
+   OP-30, now closed: see the deformation-spectrum section above. Focusing
+   forces the *volume* below the resolution scale but not the individual axes,
+   so the generic failure is frame rank deficiency rather than an entropy
+   floor breach.
 6. **The control behaves.** The unbound run has no focusing, constant
    `c = 1.086`, and monotonically growing entropy, confirming that focusing —
    not coarse-graining as such — drives the decay.
