@@ -129,3 +129,93 @@ full-throughput channel holds `chi = 1.000000` at every contraction rate; a
 one-slot channel holds `chi = 0` at every rate; and sector-resolution channels
 sit at exactly `chi = 0.500000` once contraction completes, matching the
 Corollary 4.2 ceiling `log2(3)/log2(9)`.
+
+---
+
+# Quantum Sorting Ledger
+
+`quantum_sorting_ledger.py` is the coherent-information form of the same ledger,
+the executable companion to Section 14 of the bridge.
+
+The classical model above calls the residual column *destroyed*. Quantum
+mechanically the global evolution is an isometry, nothing is destroyed, and the
+ledger becomes a conservation law.
+
+## Model
+
+A reference `R` (two qubits) is maximally entangled with the interior `A` (two
+qubits), so the budget is `I(R;A) = 2 H(R) = 4` bits — twice the classical
+maximum, with the extra half existing only as coherence. Each step acts by a
+unitary on the interior together with one fresh boundary record qubit and one
+fresh environment qubit. The global state on `R A B E` stays pure and every
+von Neumann entropy is computed exactly from the 16-qubit state vector.
+
+```text
+E_k = I(R; B)        exported to the boundary record
+J_k = I(R; A | B)    retained interior backlog
+T_k = I(R; A B)      total still reachable without the environment
+L_k = I(R; E)        leaked to the unrecorded environment
+
+I(R;B) + I(R;A|B) + I(R;E) = 2 H(R)     exactly, at every step
+gamma = sigma + delta,   delta = L_{k+1} - L_k
+```
+
+Coherent information differs from quantum mutual information by the constant
+`H(R)`, so `gamma`, `sigma`, `delta`, and `chi` are identical in either
+language. Sorting efficiency was already a coherent-information quantity.
+
+## Run
+
+```bash
+python3 simulations/crystallization_sorting_engine/quantum_sorting_ledger.py
+```
+
+Unlike `sorting_engine.py`, this one needs `numpy` for the state-vector
+linear algebra. There is still no sampling: every entropy is exact.
+
+## Outputs
+
+- `outputs/quantum_sorting_ledger.csv`
+- `outputs/quantum_sorting_summary.csv`
+- `outputs/quantum_sorting_dephasing_scan.csv`
+
+## Current Result
+
+| Policy | gamma | sigma | delta | chi | I(R;B) | I(R;E) | Ic(R>B) | early protected |
+|---|---:|---:|---:|---:|---:|---:|---:|---:|
+| coherent_sort | 4.0000 | 4.0000 | 0.0000 | 1.00000 | 4.0000 | 0.0000 | +2.0000 | 2.0000 |
+| classical_sort | 4.0000 | 2.0000 | 2.0000 | 0.50000 | 2.0000 | 2.0000 | 0.0000 | 1.0000 |
+| leaky_sort | 4.0000 | 2.7982 | 1.2018 | 0.69956 | 2.7982 | 1.2018 | +0.7982 | 1.3991 |
+| crush | 4.0000 | 0.0000 | 4.0000 | 0.00000 | 0.0000 | 4.0000 | -2.0000 | 0.0000 |
+| sector_then_protected | 4.0000 | 4.0000 | 0.0000 | 1.00000 | 4.0000 | 0.0000 | +2.0000 | 0.0000 |
+| centralizing_sort | 4.0000 | 4.0000 | 0.0000 | 1.00000 | 4.0000 | 0.0000 | +2.0000 | 2.0000 |
+
+Validation across all six policies and all steps: the conservation law holds to
+`0.000e+00`; the backlog never goes negative, so strong subadditivity is
+saturated but never violated; `sigma <= gamma` and `sigma <= 2 log2 d_B` are
+never violated; and `|delta - (L_next - L)| = 0.000e+00`, confirming that
+destruction *is* leakage exactly rather than merely bounded by it.
+
+- **`classical_sort` lands on `chi = 0.5` and `Ic(R>B) = 0.0000` together.** A
+  decohered boundary record caps sorting efficiency at one half, which is the
+  same statement as its coherent information being non-positive. Classicality
+  of the record is a slot-resolution limit.
+- **`crush` reaches `Ic = -2.0000 = -H(R)`,** the floor.
+- **`sector_then_protected` and `centralizing_sort` have identical ledgers** and
+  differ only in early protected export (`0.0000` against `2.0000`), the same
+  efficiency-is-not-legitimacy separation as the classical model.
+
+## Dephasing Scan
+
+Sweeping the record-environment coupling angle from 0 to pi turns the
+classicality of the record into a continuous knob, moving chi from `1.000000`
+to `0.500000` along the closed form
+
+```text
+chi(theta) = 1 - h2((1 + cos(theta/2)) / 2) / 2
+```
+
+which the simulation matches to `0.00e+00` at all thirteen sample points. There
+is no sharp classical/quantum transition in sorting efficiency: partial
+decoherence of the record costs partial efficiency, and the classical limit is
+the endpoint of a smooth curve rather than a separate regime.

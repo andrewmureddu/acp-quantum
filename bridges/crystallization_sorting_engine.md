@@ -1,9 +1,10 @@
 # The Crystallization Sorting Engine
 
-*Status: new component of the ACP quantum-gravity derivation program. Theorems
-1-5 are proven inside the finite information-theoretic model. The gravitational
-identification of the contraction rate and the boundary capacity is imported,
-not derived, and is marked ⚠ throughout.*
+*Status: active component of the ACP quantum-gravity derivation program.
+Theorems 1-5 are proven for classical record-retaining dynamics and Theorems
+1-Q, 3-Q, 4-Q, 6, and 7 for quantum ones. The gravitational identification of
+the contraction rate and the boundary capacity is imported, not derived, and is
+marked ⚠ throughout.*
 
 Companion notes:
 
@@ -14,7 +15,10 @@ Companion notes:
 - `bridges/otherness_preserving_recovery.md`
 - `bridges/schur_complement.md`
 
-Executable companion: `simulations/crystallization_sorting_engine/`.
+Executable companions: `simulations/crystallization_sorting_engine/`
+(classical ledger and quantum ledger) and
+`simulations/hardware_adaptive_decoder/sorting_ledger_audit.py` (measurement on
+the H2 QEC scaffold).
 
 ## 1. Thesis
 
@@ -56,8 +60,11 @@ condition on the protected label.
 **Proven in this note.** Sections 3-6 are theorems about any finite
 record-retaining Markov dynamics. They are elementary consequences of the chain
 rule and the data processing inequality; the content is the identification of
-the terms, not the difficulty of the proofs. All are verified numerically to
-machine precision in the simulation.
+the terms, not the difficulty of the proofs. Section 14 restates the same
+ledger for a quantum record channel, where it becomes an exact three-way
+conservation law and where the classical residual column is identified as
+leakage to the unrecorded environment. All are verified numerically to machine
+precision in the simulations.
 
 **Derived as an ACP requirement.** Section 7 converts the bounds into a design
 rule for admissible completions and a quantitative trigger-time statement. This
@@ -681,7 +688,216 @@ the steady-state efficiency of the memory." And the [[3,1]] repetition scaffold
 remains, as the existing H2 Pauli-frame audit already records, a diagnostic
 rung rather than a full logical-qubit memory.
 
-## 14. What This Does Not Claim
+## 14. Coherent-Information Restatement
+
+Sections 3-7 use a classical reference and a classical record, and call the
+residual column *destroyed*. That word is an artifact of the classical setting.
+Quantum mechanically the global evolution is an isometry, nothing is destroyed,
+and the ledger becomes a conservation law rather than a chain of inequalities.
+
+**Setup.** Let \(R\) be a reference system, initially maximally entangled with
+the interior \(A_0\). Let each step act by a Stinespring isometry
+
+$$
+V_k:\ A_k\ \longrightarrow\ A_{k+1}\otimes B_{k+1}\otimes E_{k+1},
+$$
+
+where \(B\) accumulates the boundary record and \(E\) accumulates the
+unrecorded environment. The global state on \(RABE\) stays pure. Define the
+columns exactly as before, now with quantum mutual information:
+
+$$
+T_k=I(R;A_kB_{\leq k}),
+\qquad
+E_k=I(R;B_{\leq k}),
+\qquad
+J_k=I(R;A_k\mid B_{\leq k}),
+$$
+
+and additionally the leakage column
+
+$$
+L_k=I(R;E_{\leq k}).
+$$
+
+**Theorem 1-Q.** Theorem 1 holds verbatim. \(T_k=J_k+E_k\) is the quantum chain
+rule for mutual information, an identity for von Neumann entropies.
+\(\delta_k\geq0\) is the data processing inequality for quantum channels.
+\(\sigma_k\geq0\) is monotonicity under partial trace. And \(J_k\geq 0\), which
+was trivial classically, is now exactly **strong subadditivity**.
+
+**The two languages are the same ledger.** For a purification,
+
+$$
+I_c(R\rangle X)=I(R;X)-H(R),
+$$
+
+and \(H(R)\) is constant in \(k\). The increments therefore do not care which
+language is used:
+
+$$
+\gamma_k,\ \sigma_k,\ \delta_k,\ \chi
+\quad\text{are identical whether computed from } I \text{ or from } I_c .
+$$
+
+Only the absolute columns shift, and the identity survives the shift as
+\(T^c_k=E^c_k+J_k\), with \(J\) unshifted because it is a *conditional* mutual
+information. Sorting efficiency was already a coherent-information quantity;
+the classical presentation merely hid it.
+
+**Theorem 6 (three-way conservation).** For the pure global state,
+
+$$
+\boxed{\ I(R;B_{\leq k})+I(R;A_k\mid B_{\leq k})+I(R;E_{\leq k})=2H(R)\ }
+$$
+
+at every step, and consequently
+
+$$
+\delta_k=L_{k+1}-L_k .
+$$
+
+**Proof.** For pure \(RABE\), \(H(AB)=H(RE)\) and \(H(RAB)=H(E)\), so
+\(I(R;AB)=H(R)+H(RE)-H(E)\) and \(I(R;E)=H(R)+H(E)-H(RE)\); adding gives
+\(I(R;AB)+I(R;E)=2H(R)\). Apply the chain rule
+\(I(R;AB)=I(R;B)+I(R;A\mid B)\). The increment statement follows by
+differencing, since \(T_k=2H(R)-L_k\). \(\square\)
+
+This is the sharpest form of the whole framework. The classical ledger had two
+columns and a leak to nowhere; the quantum ledger has three columns and no
+leak. Contraction is a **routing decision**: every bit leaving the interior
+arrives either in the boundary record or in the environment, and
+
+$$
+\gamma_k
+=
+\underbrace{\sigma_k}_{\text{filed in a slot}}
++
+\underbrace{\delta_k}_{\text{on the floor}} .
+$$
+
+"Destruction" in Sections 3-7 is not annihilation. It is leakage to a party
+whose records nobody reads. Whether that distinction matters operationally
+depends entirely on whether \(E\) is ever recoverable — which is precisely the
+black-hole information question, now stated as a bookkeeping question about
+which column the contraction was routed into.
+
+Two immediate consequences.
+
+**Corollary 6.1 (the budget doubles).** \(J_0=I(R;A_0)=2H(R)\), twice the
+classical maximum. The extra \(H(R)\) is the coherence of the interior with its
+reference. A quantum interior carries twice the distinguishability budget of a
+classical one of the same dimension, and the second half exists only as
+correlation.
+
+**Corollary 6.2 (the sorter and the floor compete).** Because the three columns
+sum to a constant, any increase in \(I(R;B)\) is exactly an decrease in
+\(I(R;A\mid B)+I(R;E)\). Making the record more informative necessarily makes
+the environment less so. Monogamy is not an extra principle here; it is the
+conservation law read sideways.
+
+**Theorem 7 (classical-record cap).** If the boundary record is classical —
+that is, if \(B\) is decohered, so that \(\rho_{RB}=\sum_b p_b\,\rho_R^b\otimes
+|b\rangle\langle b|\) — then
+
+$$
+I(R;B_{\leq k})=H(R)-\sum_b p_b H(\rho_R^b)\leq H(R),
+$$
+
+so a fully drained interior gives
+
+$$
+\chi\leq\tfrac12 .
+$$
+
+Equivalently, in coherent-information form, a classical record satisfies
+\(I_c(R\rangle B)\leq 0\): it sits at or below the threshold beneath which no
+quantum information is recoverable at all.
+
+**Proof.** For a cq state, \(H(RB)=H(\{p_b\})+\sum_bp_bH(\rho^b_R)\) and
+\(H(B)=H(\{p_b\})\), so \(I(R;B)=H(R)-\sum_bp_bH(\rho_R^b)\), which is the
+Holevo quantity and is bounded by \(H(R)\). With \(J_0-J_\infty=2H(R)\),
+\(\chi=\sigma_{\mathrm{tot}}/\gamma_{\mathrm{tot}}\leq H(R)/2H(R)\).
+\(\square\)
+
+This is Corollary 4.2's resolution ceiling reappearing in quantum form.
+Classicality of the record *is* a slot-resolution limit: a machine that files
+coins by reading a classical label can capture at most half of what a quantum
+interior distinguishes, no matter how many slots it has or how fast it runs.
+
+**Theorem 3-Q (lossless rule as decoupling).** \(\delta_k=0\) if and only if
+\(L_{k+1}=L_k\), i.e. the environment learns nothing new about the reference.
+This is the decoupling condition, and it is equivalent to correctability: there
+exists a recovery channel on \(A_{k+1}B_{\leq k+1}\) restoring the reference
+correlations, which in Kraus form is the Knill-Laflamme condition
+\(PE_a^\dagger E_bP=c_{ab}P\) for the discarded part. Section 5's "never merge
+a distinction you have not already exported" becomes **never let the
+environment learn something the record has not already learned**, which is the
+same rule stated from the other side of the ledger.
+
+**Theorem 4-Q (quantum bandwidth).** \(\sigma_k=I(R;B_{k+1}\mid B_{\leq k})
+\leq 2\log_2 d_{B_{k+1}}\), so \(\delta_k\geq\gamma_k-2\log_2 d_{B_{k+1}}\).
+The factor of two relative to the classical alphabet bound is the same factor
+of two as in Corollary 6.1 and Theorem 7, and coherent transfer of one record
+qubit saturates it exactly.
+
+### Consequence for the derivation program
+
+Stage 7 of `bridges/quantum_gravity_derivation_program.md` currently treats
+holographic QEC as *evidence* for the structure ACP expects. Theorem 7 upgrades
+that. If an admissible completion must achieve \(\chi\to1\) — which it must,
+because \(\delta>0\) is exactly information routed to a party the exterior
+cannot read — then the boundary record channel **cannot be classical**. A
+horizon that emits only decohered outcomes caps sorting at one half and
+necessarily strands half the interior budget in the environment. The boundary
+channel has to carry quantum correlation with the interior, which is the
+code-like structure Stage 7 was arguing toward. ⚠ The step from "the record
+must be quantum" to "the boundary theory is a specific holographic code"
+remains unbridged; what is now forced is only the classicality exclusion.
+
+### Simulation
+
+`simulations/crystallization_sorting_engine/quantum_sorting_ledger.py`
+propagates the exact pure state on \(RABE\) — two reference qubits maximally
+entangled with a two-qubit interior, plus one record and one environment qubit
+per step, sixteen qubits total — and computes every von Neumann entropy from
+the state vector. Budget \(2H(R)=4\) bits.
+
+| Policy | \(\gamma\) | \(\sigma\) | \(\delta\) | \(\chi\) | \(I(R;B)\) | \(I(R;E)\) | \(I_c(R\rangle B)\) | early protected |
+|---|---:|---:|---:|---:|---:|---:|---:|---:|
+| coherent_sort | 4.0000 | 4.0000 | 0.0000 | 1.00000 | 4.0000 | 0.0000 | +2.0000 | 2.0000 |
+| classical_sort | 4.0000 | 2.0000 | 2.0000 | 0.50000 | 2.0000 | 2.0000 | 0.0000 | 1.0000 |
+| leaky_sort | 4.0000 | 2.7982 | 1.2018 | 0.69956 | 2.7982 | 1.2018 | +0.7982 | 1.3991 |
+| crush | 4.0000 | 0.0000 | 4.0000 | 0.00000 | 0.0000 | 4.0000 | −2.0000 | 0.0000 |
+| sector_then_protected | 4.0000 | 4.0000 | 0.0000 | 1.00000 | 4.0000 | 0.0000 | +2.0000 | 0.0000 |
+| centralizing_sort | 4.0000 | 4.0000 | 0.0000 | 1.00000 | 4.0000 | 0.0000 | +2.0000 | 2.0000 |
+
+Validation, all six policies, all steps: the conservation law of Theorem 6
+holds to `0.000e+00`; the backlog never goes negative, so strong subadditivity
+is saturated but never violated; \(\sigma\leq\gamma\) and
+\(\sigma\leq2\log_2d_B\) are never violated; and
+\(|\delta_k-(L_{k+1}-L_k)|=\) `0.000e+00`, confirming that destruction is
+leakage exactly and not merely in bound.
+
+`classical_sort` lands on \(\chi=0.5\) and \(I_c(R\rangle B)=0.0000\)
+simultaneously, which is Theorem 7 with both of its equivalent statements
+visible at once. `crush` reaches \(I_c=-2.0000=-H(R)\), the floor.
+
+The dephasing scan turns the classicality of the record into a continuous knob.
+Sweeping the record-environment coupling angle \(\theta\) from 0 to \(\pi\)
+moves \(\chi\) from `1.000000` to `0.500000` along
+
+$$
+\chi(\theta)=1-\tfrac12 h_2\!\left(\tfrac{1+\cos(\theta/2)}{2}\right),
+$$
+
+and the simulated values match that closed form to `0.00e+00` at all thirteen
+sample points. There is no sharp classical/quantum transition in sorting
+efficiency: partial decoherence of the record costs partial efficiency, and the
+classical limit is the endpoint of a smooth curve rather than a different
+regime.
+
+## 15. What This Does Not Claim
 
 This note does not prove that gravitational focusing merges relational
 macrocells at the rate assumed in Section 10, does not derive the boundary
@@ -702,15 +918,17 @@ $$
 I(L;R^{\mathrm{early}}\mid G)\leq\epsilon_L .
 $$
 
-## 15. Next Targets
+## 16. Next Targets
 
 1. Compute \(\gamma_k\) for the macrocell kernel of
    `simulations/cosmic_coordination_floor/` and compare it against an
    area-derived \(C_k\), turning Conjecture SE-1 into a number inside the
    existing collapse toy.
-2. Replace the classical record channel with a quantum one and re-derive
-   Theorems 1-4 with coherent information in place of \(I(S_0;\cdot)\); the
-   ledger identity should survive, the sign conventions will not.
+2. *(Done — Section 14.)* The remaining quantum work is approximate rather
+   than exact: replace the sharp decoupling condition of Theorem 3-Q with an
+   \(\epsilon\)-approximate version and carry the error through Theorem 5, so
+   the trigger-time bound survives when the completion is only approximately
+   correctable.
 3. *(Done — Section 13.)* Extend the H2 audit beyond the eight-round exact
    window to a steady-state per-cycle \(\chi\), and to a phase-protecting
    stabilizer or subsystem code where the sector/protected split is not just

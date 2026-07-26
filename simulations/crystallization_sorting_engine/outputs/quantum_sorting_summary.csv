@@ -1,0 +1,7 @@
+policy,contraction_bits,sorted_bits,destroyed_bits,chi,final_exported_bits,final_retained_bits,final_leaked_bits,final_coherent_exported_bits,early_protected_exported_bits,max_conservation_residual,max_negative_backlog,max_sigma_minus_gamma,max_sigma_minus_capacity,max_delta_minus_leak_increment,note
+coherent_sort,4.0,4.0,0.0,1.0,4.0,0.0,0.0,2.0,2.0,0.000e+00,0.000e+00,0.000e+00,0.000e+00,0.000e+00,lossless quantum transfer to the record
+classical_sort,4.0,2.0,2.0,0.5,2.0,0.0,2.0,0.0,1.0,0.000e+00,0.000e+00,0.000e+00,0.000e+00,0.000e+00,record decohered by the environment
+leaky_sort,4.0,2.798247927,1.201752073,0.699561982,2.798247927,0.0,1.201752073,0.798247927,1.399123963,0.000e+00,0.000e+00,0.000e+00,0.000e+00,0.000e+00,environment gets a partial look first
+crush,4.0,0.0,4.0,0.0,0.0,0.0,4.0,-2.0,0.0,0.000e+00,0.000e+00,0.000e+00,0.000e+00,0.000e+00,contraction routed entirely to the environment
+sector_then_protected,4.0,4.0,0.0,1.0,4.0,0.0,0.0,2.0,0.0,0.000e+00,0.000e+00,0.000e+00,0.000e+00,0.000e+00,"sector early, protected late"
+centralizing_sort,4.0,4.0,0.0,1.0,4.0,0.0,0.0,2.0,2.0,0.000e+00,0.000e+00,0.000e+00,0.000e+00,0.000e+00,lossless but reads the protected qubit
