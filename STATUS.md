@@ -247,7 +247,7 @@ The full result inventory, as of v10:
 
 **1. ACP quantum-gravity derivation program.** This is now the primary ACP Quantum front. The target is explicit: derive quantum gravity as the persistence-forced completion of classical spacetime. The roadmap is `bridges/quantum_gravity_derivation_program.md`, now supported by `bridges/relational_observable_macrostate_kernel.md`, `bridges/crystallization_sorting_engine.md`, `bridges/cosmic_coordination_floor.md`, `bridges/singularity_inadmissibility.md`, `bridges/dark_constraint_quantum_gravity.md`, and `bridges/quantum_gravity_convergence_map.md`. OP-20 now has a formal skeleton plus a first finite macrocell toy in `simulations/cosmic_coordination_floor/`; the next serious step is strengthening the semiclassical collapse failure theorem and showing what boundary-decodable quantum completion is forced. *(Priority: highest.)*
 
-**1a. Crystallization sorting engine.** `bridges/crystallization_sorting_engine.md` plus `simulations/crystallization_sorting_engine/` supply the positive half of the singularity criterion: not only "do not reach a singular endpoint" but "never merge a distinction you have not already exported, and never contract faster than the boundary can file the results." The immediate next steps are computing the contraction rate for the macrocell kernel against an area-derived capacity, restating the ledger with coherent information for a quantum record channel, and measuring the sorting efficiency \(\chi\) of the existing H2 circuit-level QEC scaffold. *(Priority: high, OP-30.)*
+**1a. Crystallization sorting engine.** `bridges/crystallization_sorting_engine.md` plus `simulations/crystallization_sorting_engine/` supply the positive half of the singularity criterion: not only "do not reach a singular endpoint" but "never merge a distinction you have not already exported, and never contract faster than the boundary can file the results." The diagnostic \(\chi\) has now been measured on the H2 QEC scaffold (`simulations/hardware_adaptive_decoder/sorting_ledger_audit.py`), where it runs from `0.963442` in a clean window to `0.562009` at the drift peak and turns out to be set by the extraction circuit rather than the decoder. The immediate next steps are computing the contraction rate for the macrocell kernel against an area-derived capacity, restating the ledger with coherent information for a quantum record channel, and testing whether gauge or check-schedule adaptation — which changes the slot partition — can move \(\chi\) where likelihood adaptation cannot. *(Priority: high, OP-30.)*
 
 **2. Hardware-level adaptive syndrome alignment as QEC laboratory.** The QEC program remains the technical engine for the quantum-gravity derivation. The device-facing target is a fixed logical memory, noisy syndrome stream, online noise estimation, decoder/gauge/schedule updates, explicit overhead, and logical-channel audits. The current scaffold is `bridges/hardware_adaptive_alignment.md` plus `simulations/hardware_adaptive_decoder/`; H0, H1, and an H2 circuit-level syndrome-extraction scaffold with bit-flip logical-PTM, Pauli-frame logical-channel metrics, terminal phase-window metrics, and calibration schedule-phase replay are in place. The next step is measured backend-log replay or moving H2 from the repetition-code Pauli audit to a phase-protecting stabilizer/subsystem-code circuit with true steady-state per-cycle maps. *(Priority: high.)*
 
@@ -341,9 +341,47 @@ Canonical tracker: `OPEN_PROBLEMS.md`. Headline items:
 - **OP-27: Turbulence productive interval and admissible closure.** Open/partial: first bridge note exists and now includes scale-local Reynolds / Kolmogorov-cascade uncertainty allocation plus spectral-allocation Conjecture T-2; next step is a DNS or shell-model scale diagnostic for inertial-range productive scores, spectra, and closure failure modes.
 - **OP-28: Self-limiting universality and protected forgetting.** Open/partial+: first bridge note and first finite record-channel toy simulation exist; next step is formalizing protected forgetting as a bounded-leakage morphism and deriving a downstream semantic-field bound for final-scope theories.
 - **OP-29: Operational-time relativity and proper productive intervals.** Open/partial: first bridge note exists; next step is proving the operational-time covariance theorem for systems with different tempos, coarse-grainings, and record channels.
-- **OP-30: Sorting efficiency, record bandwidth, and the completion trigger scale.** Open/partial+: `bridges/crystallization_sorting_engine.md` proves the ledger identity, the contraction bound on export, the lossless sorting rule, the bandwidth and resolution bounds, and the trigger-time theorem; `simulations/crystallization_sorting_engine/` validates them exactly and separates six policies into destructive, permanent-backlog, centralizing, and admissible outcomes. Next steps are an area-derived capacity inside the macrocell toy, a coherent-information restatement, and a \(\chi\) measurement on the H2 QEC scaffold.
+- **OP-30: Sorting efficiency, record bandwidth, and the completion trigger scale.** Open/partial++: `bridges/crystallization_sorting_engine.md` proves the ledger identity, the contraction bound on export, the lossless sorting rule, the bandwidth and resolution bounds, and the trigger-time theorem; `simulations/crystallization_sorting_engine/` validates them exactly and separates six policies into destructive, permanent-backlog, centralizing, and admissible outcomes. The H2 \(\chi\) measurement is done: `simulations/hardware_adaptive_decoder/sorting_ledger_audit.py` propagates all \(4^8\) syndrome histories exactly and reports \(\chi\) from `0.963442` to `0.562009` across windows, zero conditional protected leakage, and a decoder-policy spread of only `0.0048` against an extraction-quality spread of `0.142`. Next steps are an area-derived capacity inside the macrocell toy, a coherent-information restatement, a steady-state rather than probe-window \(\chi\), and slot-partition adaptation.
 
 ## Changelog
+
+### 2026-07-26 — chi measured on the H2 QEC scaffold
+- Added `simulations/hardware_adaptive_decoder/sorting_ledger_audit.py`, which
+  measures the OP-30 sorting efficiency on the existing H2 circuit-level
+  scaffold by importing its primitives unchanged: same fault model, extraction
+  circuit, decoder policies, and drift/calibration schedule.
+- The joint over \((S_0,D_k,R_{\leq k})\) is propagated exactly over 8-round
+  windows, retaining all \(4^8\) syndrome histories with no sampling, no
+  pruning, and no branch merging. The probe places the data register in an
+  unknown error configuration uniform over the eight three-qubit states.
+- The stabilizer group is identified as the sorter's slot partition: for the
+  [[3,1]] repetition memory it resolves `2` bits against a `3`-bit error space,
+  giving the Corollary 4.2 ceiling \((n-k)/n=2/3\) asymptotically and
+  \(2/(J_0-J_\infty)\) over a finite window.
+- Default seeded result, uniform decoder: \(\chi\) `0.963442` at window 0,
+  `0.664199` at 44, `0.562009` at 52, `0.602184` at 60, `0.835116` at 72, and
+  `0.959833` at 88, against window ceilings `0.99903` down to `0.83396`.
+  Sector efficiency \(\chi_G\) falls to `0.67390` against a ceiling of 1.
+- Across all thirty protocol-window pairs the ledger identity holds to
+  `0.000e+00`, \(\sigma\leq\gamma\) and \(\sigma\leq H(R\mid R)\) are
+  never violated, and there are zero bandwidth-limited steps.
+- Main finding: \(\chi\) is a property of the extraction circuit, not of the
+  decoder. Decoder-policy spread is `0.00479` at window 0; scaling only the
+  ancilla/readout fault rates with data noise fixed moves \(\chi\) by `0.142`;
+  the drift schedule moves it by `0.401` across windows. This gives an upstream
+  explanation for the persistently modest adaptive-decoding gains in OP-16.
+- Secondary findings: overactive recalibration measurably lowers \(\chi\)
+  (`0.95939` against `0.96418`); conditional protected leakage is exactly zero
+  everywhere, so the extraction is a perfectly selective sorter; after eight
+  rounds the retained column equals the protected column to five decimals, so
+  real syndrome extraction exhibits the `sort_then_contract` structure; and the
+  binding limit is record noise rather than alphabet capacity, with peak
+  \(\gamma/C\) at `0.876`-`0.951` and up to `0.740` bits per round of the
+  syndrome register's entropy being readout noise rather than error information.
+- Added Section 13 to `bridges/crystallization_sorting_engine.md` and a
+  sorting-ledger section to `simulations/hardware_adaptive_decoder/README.md`;
+  updated OP-16, OP-23, and OP-30.
+- Session log: `sessions/2026-07-26_h2_sorting_efficiency_audit.md`.
 
 ### 2026-07-26 — crystallization sorting engine
 - Added `bridges/crystallization_sorting_engine.md`, formalizing Andrew's

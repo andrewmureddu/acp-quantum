@@ -248,3 +248,87 @@ full logical Pauli channel is badly phase-damaged. That does not invalidate the
 adaptive-alignment scaffold; it says the next serious H2 step is a code or
 gauge with phase protection, not a stronger claim about the current repetition
 memory.
+
+## Sorting-Efficiency Ledger Audit
+
+`sorting_ledger_audit.py` measures the sorting efficiency \(\chi\) of
+`bridges/crystallization_sorting_engine.md` on this scaffold. It imports the H2
+circuit primitives unchanged, so the fault model, extraction circuit, decoder
+policies, and drift/calibration schedule are exactly those audited above.
+
+```bash
+python3 simulations/hardware_adaptive_decoder/sorting_ledger_audit.py
+```
+
+**Probe.** At the start of a measurement window the data register is placed in
+an unknown error configuration `S0`, uniform over the eight three-qubit states.
+The window then runs ordinary H2 rounds with the protocol's real decoder state,
+carried forward from round 0 of the full trace. The joint over
+`(S0, D_k, R_{<=k})` is propagated exactly: all `4**8` syndrome histories are
+retained, with no sampling, no pruning, and no branch merging.
+
+**Ledger.** `T = I(S0; D, R)`, `E = I(S0; R)`, `J = I(S0; D | R)`, with
+`gamma = -dJ`, `sigma = dE`, `delta = -dT`, and `chi = sum(sigma)/sum(gamma)`.
+`S0` factors bijectively as the syndrome class `G0` (two bits, the error
+sector) and the logical component `L0` (one bit). The stabilizer group is the
+sorter's slot partition: it resolves `n - k = 2` bits against `n = 3` bits of
+error space, so the asymptotic ceiling is `2/3` and the finite-window ceiling
+`2/(J_0 - J_end)` is reported alongside.
+
+**Outputs**
+
+- `outputs/sorting_ledger_timeseries.csv`
+- `outputs/sorting_ledger_summary.csv`
+- `outputs/sorting_ledger_extraction_scan.csv`
+
+**Default result** (uniform decoder, 8-round windows in the 96-round trace):
+
+| Window | gamma | sigma | delta | chi | window ceiling | chi_G | protected leakage |
+|---:|---:|---:|---:|---:|---:|---:|---:|
+| 0 | 2.00195 | 1.92876 | 0.07319 | 0.963442 | 0.99903 | 0.96438 | 0 |
+| 44 | 2.29867 | 1.52677 | 0.77189 | 0.664199 | 0.87007 | 0.76339 | 0 |
+| 52 | 2.39818 | 1.34780 | 1.05038 | 0.562009 | 0.83396 | 0.67390 | 0 |
+| 60 | 2.28404 | 1.37541 | 0.90863 | 0.602184 | 0.87564 | 0.68771 | 0 |
+| 72 | 2.04528 | 1.70805 | 0.33723 | 0.835116 | 0.97786 | 0.85402 | 0 |
+| 88 | 2.00277 | 1.92233 | 0.08045 | 0.959833 | 0.99862 | 0.96117 | 0 |
+
+Across all thirty protocol-window pairs the ledger identity holds to
+`0.000e+00`, `sigma <= gamma` is never violated, `sigma <= H(R|R_prev)` is
+never violated, and there are zero bandwidth-limited steps.
+
+**Interpretation**
+
+- **chi is set by the extraction circuit, not the decoder.** The spread across
+  the five decoder policies is `0.00479` at window 0 and `0.00215` at window 52.
+  The spread across windows of the same trace is `0.401`. Scaling only the
+  ancilla/readout fault rates, with data-qubit noise held fixed, moves it by
+  `0.142` at window 44 (`0.70558` at quarter rates, `0.56349` at quadruple
+  rates). A decoder can only spend what was already sorted. This is consistent
+  with, and gives an upstream explanation for, the modest adaptive gains above.
+- **Adaptation overhead is a measurable charge.** `overactive_decoder` scores
+  `0.95939` against `0.96418` at window 0 and `0.95486` against `0.96100` at
+  window 88. Characterization faults are contraction that produces no record.
+- **The extraction is perfectly selective.** The conditional protected leakage
+  is `0` exactly, in every window and for every policy: the parity checks
+  resolve the error sector and are exactly degenerate on the logical label.
+  Knill-Laflamme holding numerically rather than by assertion.
+- **What stays inside is exactly the protected label.** After eight rounds the
+  retained column equals the protected column to five decimals (`0.99805` at
+  window 0, `0.60182` at window 52). The sector column drains to the boundary;
+  the logical component remains in the register.
+- **Bandwidth is not the binding constraint; noise is.** Peak `gamma/C` runs
+  `0.876` to `0.951` and never exceeds 1, so the alphabet bound is close but
+  never active. The informative gap is `sigma` against the realized record
+  entropy: up to `0.278` bits at window 0 and `0.740` bits at window 52. The
+  syndrome register carries about two bits per extraction round, of which up to
+  three quarters of a bit is readout noise rather than error information.
+- **Drift degrades the record channel, not only the estimate.** chi tracks the
+  noise schedule, falling to `0.562` at the drift peak near round 52 where
+  `chi_G = 0.674` against a ceiling of 1 — a third of the error-sector
+  information never reaches the decoder at all.
+
+**Caveats.** The eight-round window is forced by exact enumeration of `4**8`
+histories. The probe is an injected uniform error, not the memory's stationary
+state, so chi answers "how much of a fresh unknown error gets sorted" rather
+than "what is the steady-state efficiency of the memory." The [[3,1]]
+repetition scaffold remains a diagnostic rung, not a full logical-qubit memory.

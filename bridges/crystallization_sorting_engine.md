@@ -582,7 +582,106 @@ shows the frontier the theorems predict:
   channel scores 0.585 only because the 24-step window ends with 0.463 bits of
   backlog still unspent, so the denominator is not yet the full budget.
 
-## 13. What This Does Not Claim
+## 13. Measurement on the H2 QEC Scaffold
+
+The ledger has now been measured on real project hardware-facing code rather
+than only on its own toy. `simulations/hardware_adaptive_decoder/sorting_ledger_audit.py`
+imports the H2 circuit-level primitives unchanged — same fault model, same
+parity-extraction circuit, same decoder policies, same drift and calibration
+schedule already audited for logical error in
+`bridges/hardware_adaptive_alignment.md`.
+
+**Probe.** At the start of a measurement window the data register is placed in
+an unknown error configuration \(S_0\), uniform over the eight three-qubit
+states, and the window then runs ordinary H2 rounds with the protocol's real
+decoder state carried forward from round 0. The joint over
+\((S_0,D_k,R_{\leq k})\) is propagated exactly: all \(4^8\) syndrome histories
+are retained, with no sampling, no pruning, and no branch merging.
+
+**The stabilizer group is the slot partition.** This is not an analogy. For the
+[[3,1]] repetition memory the syndrome map resolves \(\log_24=2\) bits against
+a \(\log_28=3\)-bit error space, so Corollary 4.2's ceiling is
+\((n-k)/n=2/3\) asymptotically, and the missing third is the logical label the
+code is *designed* to be blind to. Over a finite window the correct ceiling is
+\(2/(J_0-J_\infty)\), which is reported alongside \(\chi\).
+
+**Results** (uniform decoder; windows of 8 rounds inside the 96-round default
+trace):
+
+| Window start | \(\gamma\) | \(\sigma\) | \(\delta\) | \(\chi\) | window ceiling | \(\chi_G\) | \(I(L_0;R\mid G_0)\) |
+|---:|---:|---:|---:|---:|---:|---:|---:|
+| 0 | 2.00195 | 1.92876 | 0.07319 | 0.963442 | 0.99903 | 0.96438 | 0 |
+| 44 | 2.29867 | 1.52677 | 0.77189 | 0.664199 | 0.87007 | 0.76339 | 0 |
+| 52 | 2.39818 | 1.34780 | 1.05038 | 0.562009 | 0.83396 | 0.67390 | 0 |
+| 60 | 2.28404 | 1.37541 | 0.90863 | 0.602184 | 0.87564 | 0.68771 | 0 |
+| 72 | 2.04528 | 1.70805 | 0.33723 | 0.835116 | 0.97786 | 0.85402 | 0 |
+| 88 | 2.00277 | 1.92233 | 0.08045 | 0.959833 | 0.99862 | 0.96117 | 0 |
+
+Validation across all thirty protocol-window pairs: the ledger identity holds
+to `0.000e+00`, \(\sigma\leq\gamma\) is never violated, \(\sigma\leq
+H(R_{k+1}\mid R_{\leq k})\) is never violated, and there are zero
+bandwidth-limited steps.
+
+Six findings.
+
+**1. \(\chi\) is a property of the extraction circuit, not of the decoder.**
+Across the five decoder policies the spread in \(\chi\) is `0.00479` at
+window 0 and `0.00215` at window 52. Across windows of the same trace it is
+`0.401`. Holding the data-qubit noise fixed and scaling only the
+ancilla/readout fault rates moves it by `0.142` at window 44 (`0.70558` at
+quarter rates, `0.56349` at quadruple rates). The decoder cannot raise the
+sorting efficiency; it can only spend what was already sorted. This is a
+concrete hardware directive and it sits well with the H2 headline that adaptive
+decoding buys only marginal logical-error improvement: the bottleneck is
+upstream of the thing being adapted.
+
+**2. Adaptation overhead is a measurable charge against \(\chi\).**
+`overactive_decoder` recalibrates every round and pays for it in sorting
+efficiency: `0.95939` against `0.96418` at window 0, and `0.95486` against
+`0.96100` at window 88. Small, consistently signed, and in the predicted
+direction — characterization faults are contraction that produces no record.
+
+**3. The H2 sorter is perfectly selective.** \(I(L_0;R\mid G_0)=0\) exactly, in
+every window and for every policy. The parity checks resolve the error sector
+and are exactly degenerate on the logical label, which is Knill-Laflamme
+holding numerically rather than by assertion. In the vocabulary of Section 8,
+the scaffold is nothing like `centralizing_sorter`; the only open question
+about it was ever efficiency.
+
+**4. What stays inside is exactly the protected label.** After eight rounds the
+retained column equals the protected column to five decimals — `0.99805` and
+`0.99805` at window 0, `0.60182` and `0.60182` at window 52. The sector column
+has been fully drained to the boundary and the logical component is all that
+remains in the register. Real syndrome extraction exhibits the
+`sort_then_contract` structure of Section 12 without being designed to.
+
+**5. Bandwidth is not the binding constraint here; noise is.** Peak
+\(\gamma_k/C_k\) runs `0.876` to `0.951` across windows and never exceeds 1, so
+Theorem 4's alphabet bound is close but never active. The tighter bound is the
+informative one: \(\sigma_k\) falls short of the realized record entropy
+\(H(R_{k+1}\mid R_{\leq k})\) by up to `0.278` bits at window 0 and `0.740`
+bits at window 52. The syndrome register carries roughly two bits per
+extraction round, of which up to three quarters of a bit is readout noise
+rather than error information. That gap is the sorter misfiling coins, and it
+is where the losses live.
+
+**6. Drift costs sorting efficiency, not just decoder accuracy.** \(\chi\)
+tracks the trace's noise schedule, falling from `0.963` in the clean early
+window to `0.562` at the drift peak near round 52, where \(\chi_G=0.674\)
+against a ceiling of 1 — a third of the error-sector information never reaches
+the decoder at all. The adaptive-alignment program has so far measured drift's
+effect on the decoder's estimate; this says drift also degrades the record
+channel that the estimate is computed from.
+
+**Caveats.** The eight-round window is forced by exact enumeration of \(4^8\)
+histories; longer windows would need pruning and are not reported. The probe is
+an injected uniform error, not the memory's stationary state, so \(\chi\) here
+answers "how much of a fresh unknown error gets sorted" rather than "what is
+the steady-state efficiency of the memory." And the [[3,1]] repetition scaffold
+remains, as the existing H2 Pauli-frame audit already records, a diagnostic
+rung rather than a full logical-qubit memory.
+
+## 14. What This Does Not Claim
 
 This note does not prove that gravitational focusing merges relational
 macrocells at the rate assumed in Section 10, does not derive the boundary
@@ -603,7 +702,7 @@ $$
 I(L;R^{\mathrm{early}}\mid G)\leq\epsilon_L .
 $$
 
-## 14. Next Targets
+## 15. Next Targets
 
 1. Compute \(\gamma_k\) for the macrocell kernel of
    `simulations/cosmic_coordination_floor/` and compare it against an
@@ -612,13 +711,18 @@ $$
 2. Replace the classical record channel with a quantum one and re-derive
    Theorems 1-4 with coherent information in place of \(I(S_0;\cdot)\); the
    ledger identity should survive, the sign conventions will not.
-3. Audit the H2 circuit-level QEC scaffold in
-   `simulations/hardware_adaptive_decoder/` for \(\chi\): the fraction of
-   physical decoherence that reaches the decoder as syndrome is exactly this
-   quantity and has not been measured.
-4. Score the candidate completions of
+3. *(Done — Section 13.)* Extend the H2 audit beyond the eight-round exact
+   window to a steady-state per-cycle \(\chi\), and to a phase-protecting
+   stabilizer or subsystem code where the sector/protected split is not just
+   the repetition code's coset structure.
+4. Test finding 1 of Section 13 — that \(\chi\) is set by the extraction
+   circuit rather than the decoder — on a code where the decoder can change the
+   *slot partition* rather than only the likelihoods. Corollary 4.2 predicts
+   that gauge or check-schedule adaptation should move \(\chi\) where
+   likelihood adaptation cannot.
+5. Score the candidate completions of
    `bridges/relational_observable_macrostate_kernel.md` §10 by which of the
    three strategies of Section 7 they use.
-5. Test whether Corollary 5.1's throttle requirement can be strengthened into a
+6. Test whether Corollary 5.1's throttle requirement can be strengthened into a
    bound on the effective stress-energy correction needed near the completion
    scale.
