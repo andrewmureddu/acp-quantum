@@ -1,0 +1,5 @@
+scenario,theta0,shear0,weyl,alpha,H0_bits,H_final_bits,entropy_slope_bits_per_tau,predicted_slope_bound,slope_within_bound,tau_floor_breach,tau_caustic_measured,tau_caustic_bound_3_over_alpha,c_initial,max_shape_constant_c_in_R_regime
+isotropic,-0.6,0.0,0.0,0.6,11.963039,0.0,-5.562576,-0.865617,True,1.8621,1.8717,5.0,1.0855,9.0929
+moderate_shear,-0.6,0.12,0.05,0.6,11.963039,4.220678,-4.476839,-0.865617,True,none,1.7294,5.0,1.0855,22.9999
+strong_shear,-0.6,0.45,0.25,0.6,11.963039,8.094731,-3.920025,-0.865617,True,none,0.9868,5.0,1.0855,251.8124
+unbound_expansion,2.0,0.0,0.0,0.0,11.963039,14.219521,0.37608,nan,n/a,none,none,nan,1.0855,1.0855

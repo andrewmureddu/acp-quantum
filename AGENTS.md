@@ -36,7 +36,7 @@ $$ I(\mathrm{logical\ state};\mathrm{environment}) \approx 0 $$
 
 and the logical channel retains nonzero memory of its own past. In the gravitational lift, error sectors become geometry sectors, syndromes become boundary records, and logical states become protected interior degrees of freedom.
 
-The first derivation anchor is `bridges/quantum_gravity_derivation_program.md`, supported by `bridges/relational_observable_macrostate_kernel.md`, `bridges/cosmic_coordination_floor.md`, `bridges/singularity_inadmissibility.md`, `bridges/dark_constraint_quantum_gravity.md`, and `bridges/quantum_gravity_convergence_map.md`. The QEC anchor remains `bridges/quantum_noise_as_signal.md`; hardware-facing tests live under `simulations/hardware_adaptive_decoder/`, and gravitational toy tests under `simulations/cosmic_coordination_floor/`, `simulations/dark_constraint_inference/`, and `simulations/dark_constraint_wave_interference/`.
+The first derivation anchor is `bridges/quantum_gravity_derivation_program.md`, supported by `bridges/semiclassical_collapse_failure.md` (Stage 2, proven), `bridges/relational_observable_macrostate_kernel.md`, `bridges/cosmic_coordination_floor.md`, `bridges/singularity_inadmissibility.md`, `bridges/dark_constraint_quantum_gravity.md`, and `bridges/quantum_gravity_convergence_map.md`. The QEC anchor remains `bridges/quantum_noise_as_signal.md`; hardware-facing tests live under `simulations/hardware_adaptive_decoder/`, and gravitational toy tests under `simulations/semiclassical_collapse_failure/`, `simulations/cosmic_coordination_floor/`, `simulations/dark_constraint_inference/`, and `simulations/dark_constraint_wave_interference/`.
 
 ## Parent framework
 
@@ -54,7 +54,7 @@ The older universal ACP paper remains the parent theory and reference base. In t
 | `proofs/` | Core theorems and their standalone proof documents. These are the load-bearing formal objects. |
 | `reductions/` | Domain-specific reductions: Prigogine, Kauffman, Friston, Zurek, Bergstrom–Lachmann, Price/Fisher, multiscale RG. Each is one document, each shows a classical result is a special case of the ACP. |
 | `bridges/` | Structural bridges (quantum-gravity derivation, Schur complement, syndrome coordination, coordination neutrality), Restraint-Power / Heisenberg (A.20), non-Gaussian bounds, empirical predictions. |
-| `simulations/` | Quantum and gravitational toy simulations. Current primary suites: `hardware_adaptive_decoder/`, `cosmic_coordination_floor/`; supporting suites include `noise_as_signal/`, `qec_productive_interval/`, `quantum_productive_interval/`, `dark_constraint_inference/`, and `dark_constraint_wave_interference/`. |
+| `simulations/` | Quantum and gravitational toy simulations. Current primary suites: `hardware_adaptive_decoder/`, `semiclassical_collapse_failure/`, `cosmic_coordination_floor/`; supporting suites include `noise_as_signal/`, `qec_productive_interval/`, `quantum_productive_interval/`, `dark_constraint_inference/`, and `dark_constraint_wave_interference/`. |
 | `special_cases/` | Extended 22-domain catalog (`acp_special_cases_v03.md`). Lighter-weight reductions that extend beyond the core six. |
 | `essays/` | Philosophical / foundational companion pieces. Not part of the formal paper but sibling work. |
 | `audits/` | Integrity audits. Latest: `integrity_audit_v10.md`. |

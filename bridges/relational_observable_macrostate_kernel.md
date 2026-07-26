@@ -329,6 +329,24 @@ quantum-gravity mechanism. It proves that the classical pushforward is the
 wrong kind of object once collapse drives positive mass outside the admissible
 state space.
 
+**Superseded by Theorem C.** Proposition 2 *assumes* that a positive-measure
+subset of \(C_m\) reaches an inadmissible singular set before \(\Delta\), which
+is most of its content, and leaves the entropy branch qualitative.
+`bridges/semiclassical_collapse_failure.md` now derives that hypothesis from
+explicit focusing assumptions (strong energy condition, irrotational
+congruence, \(\theta(0)\leq-\alpha<0\)), supplies a caustic deadline
+\(\tau_\times\leq3/\alpha\), and makes the entropy branch quantitative with
+decay rate \(\alpha\) nats per unit proper time. Read Proposition 2 as the
+kernel-level statement and Theorem C as its proof.
+
+One qualification carries back here. The entropy branch requires a shape
+regularity hypothesis (R) relating occupied cell count to volume, and (R) is
+measurably false under strong shear: filamented images keep high coarse entropy
+while their volume vanishes. The disjunction survives because shear accelerates
+the normalization branch by as much as it weakens the entropy branch, but
+branch 3 of Proposition 2 should not be relied on alone. This is tracked as
+OP-30.
+
 ## 7. Diagnostics
 
 The kernel supplies the ACP quantum-gravity diagnostics.

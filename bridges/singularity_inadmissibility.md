@@ -299,7 +299,24 @@ records.
 
 ## 9. Next Formal Target
 
-The broader formalization program is now laid out in
+**The first hard rung is now proven.**
+`bridges/semiclassical_collapse_failure.md` derives, rather than assumes, that
+classical collapse leaves the admissible state space: under the strong energy
+condition, an irrotational congruence, and initial focusing
+\(\theta(0)\leq-\alpha<0\), a caustic forms by \(\tau_\times\leq3/\alpha\) and
+the relational frame ceases to define the macrocell label.
+
+That note also sharpens the reading of this document in one respect worth
+recording. The theorem is stated in terms of geodesic incompleteness and
+reference-frame breakdown, not curvature divergence — because that is what the
+singularity theorems actually deliver. Section 2's *finite continuation*
+condition is therefore the admissibility criterion that gravity genuinely
+violates, and the *finite observables* condition (curvature blow-up) is the
+weaker and less securely established one. The framework's admissibility ladder
+happens to be better matched to provable GR than a curvature-based criterion
+would be.
+
+The broader formalization program is laid out in
 `bridges/cosmic_coordination_floor.md`. The first executable toy model exists
 in `simulations/cosmic_coordination_floor/` and implements three competing
 descriptions:

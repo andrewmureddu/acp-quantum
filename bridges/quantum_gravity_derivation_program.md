@@ -72,6 +72,29 @@ The target theorem is:
 > becomes undefined on admissible future macrostates or violates the positive
 > future-entropy floor.
 
+**Status: proven.** `bridges/semiclassical_collapse_failure.md` establishes
+this as Theorem C, under the explicit hypotheses (F1) strong energy condition,
+(F2) irrotational congruence, and (F3) \(\theta(0)\leq-\alpha<0\). The two
+branches are separately quantitative: the kernel fails normalization by the
+caustic deadline \(\tau_\times\leq3/\alpha\), and, under a shape regularity
+hypothesis (R), the future entropy decays at rate at least \(\alpha\) nats per
+unit proper time. The result is verified numerically in
+`simulations/semiclassical_collapse_failure/`.
+
+The theorem also yields the program's sharpest contact with general relativity
+to date: under (R), the expansion scalar \(\theta\) *is* the crystallization
+drift rate of the CDT written in geometric variables, since
+\(d(\ln\delta V)/d\tau=\theta\) is already the rate of change of a log-measure.
+
+Two qualifications are load-bearing and are carried forward rather than
+smoothed over. First, hypothesis (R) fails under strong shear — filamented
+images retain high coarse entropy while their volume vanishes — so the entropy
+branch is not individually robust; the disjunction survives because shear
+accelerates the normalization branch by as much as it weakens the entropy
+branch (Proposition D). Second, the theorem uses geodesic incompleteness and
+reference-frame breakdown rather than curvature divergence, which is what the
+singularity theorems actually deliver. Both are tracked as OP-30.
+
 ### Stage 3: Required Completion
 
 ACP requires that the gravitational channel avoid both endpoints:
@@ -190,6 +213,10 @@ The expected result is not "quantize the metric" as a starting axiom, but:
 
 - `bridges/singularity_inadmissibility.md`: singularities are inadmissible
   physical states; horizons are candidate finite boundary transfers.
+- `bridges/semiclassical_collapse_failure.md`: the Stage 2 theorem. Classical
+  collapse fails as an admissible kernel by a caustic deadline
+  \(\tau_\times\leq3/\alpha\), with the expansion scalar identified as the
+  crystallization drift rate.
 - `bridges/relational_observable_macrostate_kernel.md`: finite relational
   observables to macrocells, transition kernels, Schur-block diagnostics, and
   the first classical-collapse failure proposition.
@@ -205,11 +232,17 @@ The expected result is not "quantize the metric" as a starting axiom, but:
 
 ## 5. Near-Term Work
 
-1. Strengthen the classical failure theorem for the finite semiclassical
-   collapse macrocell using compactness, expansion, curvature, boundary area,
-   null records, and outgoing radiation bins.
+1. ~~Strengthen the classical failure theorem for the finite semiclassical
+   collapse macrocell.~~ **Done** —
+   `bridges/semiclassical_collapse_failure.md`, Theorem C. The successor task
+   is OP-30: find a shear-robust replacement for hypothesis (R), or show that
+   filamented collapse breaches admissibility through reference-frame failure
+   rather than through the entropy floor.
 2. Instantiate candidate completion kernels for that macrocell and compare them
-   against the floor, privacy, and decodability diagnostics.
+   against the floor, privacy, and decodability diagnostics. The completion
+   corollary now gives four concrete acceptance conditions, including a rate
+   condition: the mechanism must supply admissible support at no less than
+   \(|\theta|\) nats per unit proper time.
 3. Upgrade the dark-constraint simulations from hidden optical phase bumps to
    weak metric/lensing perturbations.
 4. Connect the boundary-record privacy condition to decoupling/QEC

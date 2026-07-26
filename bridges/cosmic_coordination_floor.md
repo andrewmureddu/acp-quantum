@@ -129,11 +129,12 @@ energy, angular momentum, charge, coarse-graining scale, and the verification
 time. What matters is that it is strictly positive for a nontrivial collapsing
 region.
 
-Classical GR fails this criterion in the following precise sense: under the
-standard focusing assumptions, the classical continuation of the collapse
-channel concentrates on a geodesically incomplete endpoint. The admissible
-future channel either collapses to a delta-like classical continuation or
-becomes undefined. Both are ACP failures:
+Classical GR fails this criterion in a precise sense, now proven as Theorem C
+of `bridges/semiclassical_collapse_failure.md`: under the standard focusing
+assumptions, the classical continuation of the collapse channel concentrates on
+a geodesically incomplete endpoint. The admissible future channel either
+collapses to a delta-like classical continuation or becomes undefined. Both are
+ACP failures:
 
 $$
 P_{\ell,\Delta}(m'|m)\to\delta(m'-m_{\mathrm{sing}})
@@ -345,10 +346,19 @@ relational observable algebra for compact regions and define
 \(\mathcal M_\ell\) as constraint-satisfying initial-data cells modulo
 diffeomorphism and coarse-graining.
 
-**Stage B: Classical failure theorem.** Under the assumptions of the
-singularity theorems, show that the induced classical transition kernel either
-concentrates on an inadmissible endpoint or fails to define a normalized kernel
-over admissible macrostates.
+**Stage B: Classical failure theorem.** *Complete* —
+`bridges/semiclassical_collapse_failure.md`, Theorem C. Under (F1) the strong
+energy condition, (F2) an irrotational congruence, and (F3)
+\(\theta(0)\leq-\alpha<0\), the classical relational kernel fails
+normalization by the caustic deadline \(\tau_\times\leq3/\alpha\), and — under a
+shape regularity hypothesis (R) — its future entropy decays at rate at least
+\(\alpha\) nats per unit proper time. Verified numerically in
+`simulations/semiclassical_collapse_failure/`, whose integrator reproduces the
+analytic isotropic dust collapse time to five significant figures. Hypothesis
+(R) is measurably false under strong shear, so the entropy branch is not
+individually robust; the disjunction survives because shear accelerates the
+normalization branch by as much as it weakens the entropy branch. Tracked as
+OP-30.
 
 **Stage C: Floor axiom.** State the cosmic coordination floor as an
 admissibility axiom for quantum-gravity transition kernels:
@@ -480,7 +490,15 @@ the composite system.
 this transfer through a bounce, horizon microstructure, holographic unitary
 evolution, topology change, or some other finite mechanism.
 
+**Now proven (Stage B).** `bridges/semiclassical_collapse_failure.md` proves
+that classical collapse is not a complete admissible kernel, deriving rather
+than assuming the failure from explicit focusing hypotheses, with a caustic
+deadline \(\tau_\times\leq3/\alpha\) and an entropy decay rate of \(\alpha\)
+nats per unit proper time. Criterion 2's redistribution trigger acquires a
+deadline and a rate: any completion must act before \(3/\alpha\) and supply
+admissible support at no less than \(|\theta|\) nats per unit proper time.
+
 **Open technical problem:** instantiate the relational macrostate kernel in a
-semiclassical collapse model and then in a concrete candidate theory, proving
-the floor, trigger, and visibility criteria rather than stating them as
-selection rules.
+concrete candidate theory, proving the floor, trigger, and visibility criteria
+rather than stating them as selection rules — and close OP-30, the shear
+loophole in the entropy branch.

@@ -12,11 +12,13 @@ Noise-tailored QEC remains the technical engine: error/syndrome/logical-state se
 
 - **`STATUS.md`** — current state of the paper, active fronts, what's next.
 - **`bridges/quantum_gravity_derivation_program.md`** — explicit derivation roadmap.
+- **`bridges/semiclassical_collapse_failure.md`** — Stage 2 theorem: classical collapse fails as an admissible relational kernel by the caustic deadline 3/alpha; the expansion scalar is the CDT crystallization drift rate in geometric variables.
 - **`bridges/relational_observable_macrostate_kernel.md`** — OP-20 kernel: relational observables to macrocells, transition channels, and diagnostics.
 - **`bridges/cosmic_coordination_floor.md`** — core quantum-gravity formalization program.
 - **`bridges/quantum_gravity_convergence_map.md`** — map to holographic QEC, islands, relational algebras, and regular black holes.
 - **`bridges/quantum_noise_as_signal.md`** — current focal technical note.
 - **`simulations/hardware_adaptive_decoder/`** — current QEC/hardware scaffold.
+- **`simulations/semiclassical_collapse_failure/`** — exact geodesic-congruence check of the Stage 2 theorem.
 - **`simulations/cosmic_coordination_floor/`** — current gravitational toy collapse model.
 - **`AGENTS.md` / `CLAUDE.md`** — operating charter and research focus.
 - **`paper/acp_main_v10.md`** — parent ACP paper.
