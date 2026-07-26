@@ -1,0 +1,7 @@
+policy,contraction_total_bits,sorted_total_bits,destroyed_total_bits,sorting_efficiency,final_exported_bits,final_retained_bits,final_sector_exported_bits,max_early_protected_leakage_bits,final_protected_leakage_bits,max_identity_residual,max_bandwidth_violation_bits,bandwidth_limited_steps,verdict
+classical_collapse,3.169925,0.0,3.169925,0.0,0.0,0.0,0.0,0.0,0.0,2.220e-15,0.000e+00,0,destructive: contraction annihilates unexported distinctions
+over_driven_sorter,3.169925,1.405225,1.7647,0.443299,1.405225,0.0,1.405225,0.0,0.0,8.882e-16,0.000e+00,0,destructive: contraction annihilates unexported distinctions
+sort_then_contract,3.169925,3.169925,0.0,1.0,3.169925,0.0,1.584963,0.0,1.584963,2.220e-16,0.000e+00,0,"admissible sorting: lossless, sector-first, fully released"
+centralizing_sorter,3.169925,3.169925,0.0,1.0,3.169925,0.0,1.584963,1.540191,1.584963,0.000e+00,0.000e+00,0,lossless but centralizing: protected label read before release scale
+late_completion,3.169925,1.584972,1.584953,0.500003,1.584972,0.0,1.584963,0.0,1e-05,1.110e-15,0.000e+00,1,destructive: contraction outran the record capacity
+stalled_remnant,1.584963,1.584963,0.0,1.0,1.584963,1.584963,1.584963,0.0,0.0,2.220e-16,0.000e+00,0,lossless but incomplete: permanent unexported backlog

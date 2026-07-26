@@ -36,7 +36,7 @@ $$ I(\mathrm{logical\ state};\mathrm{environment}) \approx 0 $$
 
 and the logical channel retains nonzero memory of its own past. In the gravitational lift, error sectors become geometry sectors, syndromes become boundary records, and logical states become protected interior degrees of freedom.
 
-The first derivation anchor is `bridges/quantum_gravity_derivation_program.md`, supported by `bridges/relational_observable_macrostate_kernel.md`, `bridges/cosmic_coordination_floor.md`, `bridges/singularity_inadmissibility.md`, `bridges/dark_constraint_quantum_gravity.md`, and `bridges/quantum_gravity_convergence_map.md`. The QEC anchor remains `bridges/quantum_noise_as_signal.md`; hardware-facing tests live under `simulations/hardware_adaptive_decoder/`, and gravitational toy tests under `simulations/cosmic_coordination_floor/`, `simulations/dark_constraint_inference/`, and `simulations/dark_constraint_wave_interference/`.
+The first derivation anchor is `bridges/quantum_gravity_derivation_program.md`, supported by `bridges/relational_observable_macrostate_kernel.md`, `bridges/crystallization_sorting_engine.md`, `bridges/cosmic_coordination_floor.md`, `bridges/singularity_inadmissibility.md`, `bridges/dark_constraint_quantum_gravity.md`, and `bridges/quantum_gravity_convergence_map.md`. The QEC anchor remains `bridges/quantum_noise_as_signal.md`; hardware-facing tests live under `simulations/hardware_adaptive_decoder/`, and gravitational toy tests under `simulations/cosmic_coordination_floor/`, `simulations/crystallization_sorting_engine/`, `simulations/dark_constraint_inference/`, and `simulations/dark_constraint_wave_interference/`.
 
 ## Parent framework
 

@@ -1,8 +1,8 @@
 # STATUS
 
-**Last updated:** 2026-05-15
+**Last updated:** 2026-07-26
 **Active paper:** `paper/acp_main_v10.md` (internal masthead: "WORKING DRAFT — v0.9")
-**Active ACP Quantum focus:** deriving quantum gravity from ACP: `bridges/quantum_gravity_derivation_program.md` + `bridges/relational_observable_macrostate_kernel.md` + `bridges/cosmic_coordination_floor.md` + `bridges/singularity_inadmissibility.md` + `bridges/dark_constraint_quantum_gravity.md` + `bridges/quantum_gravity_convergence_map.md`
+**Active ACP Quantum focus:** deriving quantum gravity from ACP: `bridges/quantum_gravity_derivation_program.md` + `bridges/relational_observable_macrostate_kernel.md` + `bridges/crystallization_sorting_engine.md` + `bridges/cosmic_coordination_floor.md` + `bridges/singularity_inadmissibility.md` + `bridges/dark_constraint_quantum_gravity.md` + `bridges/quantum_gravity_convergence_map.md`
 **Active QEC technical engine:** hardware-level adaptive syndrome alignment: `bridges/hardware_adaptive_alignment.md` + `simulations/hardware_adaptive_decoder/` (H0 grid scan + H1 trace replay + H2 circuit-level syndrome extraction / Pauli-frame logical-channel audit / schedule-phase audit) + `bridges/adaptive_syndrome_alignment.md` + `bridges/sacr_contraction_calibration.md`
 **Active civil-systems bridge:** restraint ethics / conditional-leakage record channels: `bridges/restraint_ethics.md` + `simulations/restraint_ethics/`
 **Active cross-domain QEC bridge:** otherness-preserving recovery: `bridges/otherness_preserving_recovery.md` + `simulations/otherness_preserving_recovery/`
@@ -42,6 +42,32 @@ compares naked collapse, hard exclusion, horizon transfer, and a schematic
 quantum-completion policy. The next hard step is to strengthen the
 semiclassical collapse failure theorem and then test candidate completion
 kernels beyond the toy.
+
+The newest structural result is the **crystallization sorting engine**,
+`bridges/crystallization_sorting_engine.md`. It formalizes the reading that
+contraction toward the crystallization boundary is not only a hazard but the
+sole power source for boundary record formation. With
+
+$$ T_k=I(S_0;M_k,R_{\leq k}),\quad E_k=I(S_0;R_{\leq k}),\quad J_k=I(S_0;M_k\mid R_{\leq k}), $$
+
+every record-retaining Markov dynamics satisfies the exact ledger identity
+
+$$ \gamma_k=\sigma_k+\delta_k, $$
+
+where \(\gamma\) is interior contraction, \(\sigma\) is exported record
+information, and \(\delta\) is destroyed distinguishability. Five theorems
+follow: contraction bounds export (\(\sigma_k\leq\gamma_k\), so a region with
+frozen interior distinguishability emits nothing about itself); merging only
+record-determined distinctions is exactly lossless; capacity bounds export
+(\(\delta_k\geq\gamma_k-C_k\)); resolution imposes a separate ceiling
+\(\chi\leq H(\Pi(S_0))/(J_0-J_\infty)\); and delaying a completion past the
+first step with \(\gamma_k>C_k\) creates an information debt no later mechanism
+can repay. The design rule is *never merge a distinction you have not already
+exported*, and the three ways to satisfy \(\gamma_k\leq C_k\) — throttle,
+widen, buffer — classify bounces, horizon growth, and remnants/islands as terms
+in one inequality. The gravitational identifications of \(\gamma\) with
+focusing and \(C\) with boundary area are imported, not derived, and are marked
+⚠ in the bridge. Tracked as OP-30.
 
 The working gravitational targets are:
 
@@ -219,7 +245,9 @@ The full result inventory, as of v10:
 
 ## Active fronts
 
-**1. ACP quantum-gravity derivation program.** This is now the primary ACP Quantum front. The target is explicit: derive quantum gravity as the persistence-forced completion of classical spacetime. The roadmap is `bridges/quantum_gravity_derivation_program.md`, now supported by `bridges/relational_observable_macrostate_kernel.md`, `bridges/cosmic_coordination_floor.md`, `bridges/singularity_inadmissibility.md`, `bridges/dark_constraint_quantum_gravity.md`, and `bridges/quantum_gravity_convergence_map.md`. OP-20 now has a formal skeleton plus a first finite macrocell toy in `simulations/cosmic_coordination_floor/`; the next serious step is strengthening the semiclassical collapse failure theorem and showing what boundary-decodable quantum completion is forced. *(Priority: highest.)*
+**1. ACP quantum-gravity derivation program.** This is now the primary ACP Quantum front. The target is explicit: derive quantum gravity as the persistence-forced completion of classical spacetime. The roadmap is `bridges/quantum_gravity_derivation_program.md`, now supported by `bridges/relational_observable_macrostate_kernel.md`, `bridges/crystallization_sorting_engine.md`, `bridges/cosmic_coordination_floor.md`, `bridges/singularity_inadmissibility.md`, `bridges/dark_constraint_quantum_gravity.md`, and `bridges/quantum_gravity_convergence_map.md`. OP-20 now has a formal skeleton plus a first finite macrocell toy in `simulations/cosmic_coordination_floor/`; the next serious step is strengthening the semiclassical collapse failure theorem and showing what boundary-decodable quantum completion is forced. *(Priority: highest.)*
+
+**1a. Crystallization sorting engine.** `bridges/crystallization_sorting_engine.md` plus `simulations/crystallization_sorting_engine/` supply the positive half of the singularity criterion: not only "do not reach a singular endpoint" but "never merge a distinction you have not already exported, and never contract faster than the boundary can file the results." The immediate next steps are computing the contraction rate for the macrocell kernel against an area-derived capacity, restating the ledger with coherent information for a quantum record channel, and measuring the sorting efficiency \(\chi\) of the existing H2 circuit-level QEC scaffold. *(Priority: high, OP-30.)*
 
 **2. Hardware-level adaptive syndrome alignment as QEC laboratory.** The QEC program remains the technical engine for the quantum-gravity derivation. The device-facing target is a fixed logical memory, noisy syndrome stream, online noise estimation, decoder/gauge/schedule updates, explicit overhead, and logical-channel audits. The current scaffold is `bridges/hardware_adaptive_alignment.md` plus `simulations/hardware_adaptive_decoder/`; H0, H1, and an H2 circuit-level syndrome-extraction scaffold with bit-flip logical-PTM, Pauli-frame logical-channel metrics, terminal phase-window metrics, and calibration schedule-phase replay are in place. The next step is measured backend-log replay or moving H2 from the repetition-code Pauli audit to a phase-protecting stabilizer/subsystem-code circuit with true steady-state per-cycle maps. *(Priority: high.)*
 
@@ -313,8 +341,48 @@ Canonical tracker: `OPEN_PROBLEMS.md`. Headline items:
 - **OP-27: Turbulence productive interval and admissible closure.** Open/partial: first bridge note exists and now includes scale-local Reynolds / Kolmogorov-cascade uncertainty allocation plus spectral-allocation Conjecture T-2; next step is a DNS or shell-model scale diagnostic for inertial-range productive scores, spectra, and closure failure modes.
 - **OP-28: Self-limiting universality and protected forgetting.** Open/partial+: first bridge note and first finite record-channel toy simulation exist; next step is formalizing protected forgetting as a bounded-leakage morphism and deriving a downstream semantic-field bound for final-scope theories.
 - **OP-29: Operational-time relativity and proper productive intervals.** Open/partial: first bridge note exists; next step is proving the operational-time covariance theorem for systems with different tempos, coarse-grainings, and record channels.
+- **OP-30: Sorting efficiency, record bandwidth, and the completion trigger scale.** Open/partial+: `bridges/crystallization_sorting_engine.md` proves the ledger identity, the contraction bound on export, the lossless sorting rule, the bandwidth and resolution bounds, and the trigger-time theorem; `simulations/crystallization_sorting_engine/` validates them exactly and separates six policies into destructive, permanent-backlog, centralizing, and admissible outcomes. Next steps are an area-derived capacity inside the macrocell toy, a coherent-information restatement, and a \(\chi\) measurement on the H2 QEC scaffold.
 
 ## Changelog
+
+### 2026-07-26 — crystallization sorting engine
+- Added `bridges/crystallization_sorting_engine.md`, formalizing Andrew's
+  "the singularity is where reality's sorting machine resides; the pressure
+  from crystallization is put to work" as a distinguishability ledger.
+- Defined the three ledger columns \(T_k\), \(E_k\), \(J_k\) and the per-step
+  increments \(\gamma_k\), \(\sigma_k\), \(\delta_k\), and proved the identity
+  \(\gamma_k=\sigma_k+\delta_k\) with a finite budget
+  \(\sum\gamma_k\leq H(S_0)\).
+- Proved Theorem 2 (\(\sigma_k\leq\gamma_k\): no boundary record without
+  interior contraction), Theorem 3 (merging only record-determined distinctions
+  gives \(\delta_k=0\), with a Petz-recoverability converse), Theorem 4
+  (\(\delta_k\geq\gamma_k-C_k\)) with the resolution ceiling
+  \(\chi\leq H(\Pi(S_0))/(J_0-J_\infty)\), and Theorem 5 (trigger time:
+  destruction is bounded below by \(\sum_{k<\tau}\max(0,\gamma_k-C_k)\)).
+- Recast the ACP boundaries in engine variables and stated the three-strategy
+  decomposition of \(\gamma_k\leq C_k\) — throttle, widen, buffer — plus
+  Conjectures SE-1 (the completion scale is a bandwidth scale) and SE-2.
+- Separated efficiency from legitimacy: \(\chi\approx1\) and bounded early
+  protected leakage are independent acceptance criteria, and a perfect engine
+  can still be a centralizing one.
+- Added `simulations/crystallization_sorting_engine/`, an exact dependency-free
+  finite model over nine interior microstates, \(H(S_0)=3.169925\) bits. Record
+  branches with equal posteriors are merged, so no sampling is used.
+- Default seeded run: `classical_collapse` \(\chi=0.000000\) with the whole
+  budget destroyed; `over_driven_sorter` \(\chi=0.443299\); `late_completion`
+  \(\chi=0.500003\) with one bandwidth-limited step; `stalled_remnant`
+  \(\chi=1\) with a permanent `1.584963`-bit backlog; `centralizing_sorter`
+  \(\chi=1\) with `1.540191` bits of early protected leakage;
+  `sort_then_contract` \(\chi=1\), full `3.169925`-bit export, zero early
+  leakage.
+- Numerical validation: maximum ledger-identity residual `2.2e-15` bits, no
+  violation of \(\sigma\leq\gamma\) beyond `1.1e-15` bits, no violation of
+  \(\delta\geq\gamma-C\).
+- 108-configuration throughput scan reproduces the predicted frontier,
+  including the exact `0.500000` sector-resolution ceiling
+  \(\log_23/\log_29\) once contraction completes.
+- Added OP-30 and updated OP-18 and OP-19.
+- Session log: `sessions/2026-07-26_crystallization_sorting_engine.md`.
 
 ### 2026-05-15 — CC0 license added
 - Added root `LICENSE` with the CC0 1.0 Universal legal code.

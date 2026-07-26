@@ -13,11 +13,13 @@ Noise-tailored QEC remains the technical engine: error/syndrome/logical-state se
 - **`STATUS.md`** — current state of the paper, active fronts, what's next.
 - **`bridges/quantum_gravity_derivation_program.md`** — explicit derivation roadmap.
 - **`bridges/relational_observable_macrostate_kernel.md`** — OP-20 kernel: relational observables to macrocells, transition channels, and diagnostics.
+- **`bridges/crystallization_sorting_engine.md`** — the distinguishability ledger: contraction as the power source for boundary records, with the lossless-sorting rule and the bandwidth bound.
 - **`bridges/cosmic_coordination_floor.md`** — core quantum-gravity formalization program.
 - **`bridges/quantum_gravity_convergence_map.md`** — map to holographic QEC, islands, relational algebras, and regular black holes.
 - **`bridges/quantum_noise_as_signal.md`** — current focal technical note.
 - **`simulations/hardware_adaptive_decoder/`** — current QEC/hardware scaffold.
 - **`simulations/cosmic_coordination_floor/`** — current gravitational toy collapse model.
+- **`simulations/crystallization_sorting_engine/`** — exact sorting-ledger model behind the bridge above.
 - **`AGENTS.md` / `CLAUDE.md`** — operating charter and research focus.
 - **`paper/acp_main_v10.md`** — parent ACP paper.
 - **`OPEN_PROBLEMS.md`** — canonical tracker of unsolved problems.
