@@ -247,7 +247,7 @@ The full result inventory, as of v10:
 
 **1. ACP quantum-gravity derivation program.** This is now the primary ACP Quantum front. The target is explicit: derive quantum gravity as the persistence-forced completion of classical spacetime. The roadmap is `bridges/quantum_gravity_derivation_program.md`, now supported by `bridges/relational_observable_macrostate_kernel.md`, `bridges/crystallization_sorting_engine.md`, `bridges/cosmic_coordination_floor.md`, `bridges/singularity_inadmissibility.md`, `bridges/dark_constraint_quantum_gravity.md`, and `bridges/quantum_gravity_convergence_map.md`. OP-20 now has a formal skeleton plus a first finite macrocell toy in `simulations/cosmic_coordination_floor/`; the next serious step is strengthening the semiclassical collapse failure theorem and showing what boundary-decodable quantum completion is forced. *(Priority: highest.)*
 
-**1a. Crystallization sorting engine.** `bridges/crystallization_sorting_engine.md` plus `simulations/crystallization_sorting_engine/` supply the positive half of the singularity criterion: not only "do not reach a singular endpoint" but "never merge a distinction you have not already exported, and never contract faster than the boundary can file the results." The diagnostic \(\chi\) has now been measured on the H2 QEC scaffold (`simulations/hardware_adaptive_decoder/sorting_ledger_audit.py`), where it runs from `0.963442` in a clean window to `0.562009` at the drift peak and turns out to be set by the extraction circuit rather than the decoder. The coherent-information restatement is now also done: for a quantum record channel the ledger becomes the exact conservation law \(I(R;B)+I(R;A\mid B)+I(R;E)=2H(R)\), so the classical "destroyed" column is leakage to the unrecorded environment, and a decohered boundary record is capped at \(\chi\leq1/2\). The immediate next steps are computing the contraction rate for the macrocell kernel against an area-derived capacity, an \(\epsilon\)-approximate decoupling version of the trigger-time bound, and testing whether gauge or check-schedule adaptation — which changes the slot partition — can move \(\chi\) where likelihood adaptation cannot. *(Priority: high, OP-30.)*
+**1a. Crystallization sorting engine.** `bridges/crystallization_sorting_engine.md` plus `simulations/crystallization_sorting_engine/` supply the positive half of the singularity criterion: not only "do not reach a singular endpoint" but "never merge a distinction you have not already exported, and never contract faster than the boundary can file the results." The diagnostic \(\chi\) has now been measured on the H2 QEC scaffold (`simulations/hardware_adaptive_decoder/sorting_ledger_audit.py`), where it runs from `0.963442` in a clean window to `0.562009` at the drift peak and turns out to be set by the extraction circuit rather than the decoder. The coherent-information restatement is now also done: for a quantum record channel the ledger becomes the exact conservation law \(I(R;B)+I(R;A\mid B)+I(R;E)=2H(R)\), so the classical "destroyed" column is leakage to the unrecorded environment, and a decohered boundary record is capped at \(\chi\leq1/2\). The area-derived capacity is now computed too: the macrocell collapse toy turns out to be over-driven by its own boundary record map rather than by the area law, and the honest verdict is that it cannot test Conjecture SE-1 until its record partition scales with area. The calibration does deliver a sharp positive: for a horizon the quantum interior budget \(2S_{\mathrm{BH}}\) exactly equals the quantum record capacity, with zero margin. The immediate next steps are an area-scaling boundary record map for the macrocell toy, an \(\epsilon\)-approximate decoupling version of the trigger-time bound, and testing whether gauge or check-schedule adaptation — which changes the slot partition — can move \(\chi\) where likelihood adaptation cannot. *(Priority: high, OP-30.)*
 
 **2. Hardware-level adaptive syndrome alignment as QEC laboratory.** The QEC program remains the technical engine for the quantum-gravity derivation. The device-facing target is a fixed logical memory, noisy syndrome stream, online noise estimation, decoder/gauge/schedule updates, explicit overhead, and logical-channel audits. The current scaffold is `bridges/hardware_adaptive_alignment.md` plus `simulations/hardware_adaptive_decoder/`; H0, H1, and an H2 circuit-level syndrome-extraction scaffold with bit-flip logical-PTM, Pauli-frame logical-channel metrics, terminal phase-window metrics, and calibration schedule-phase replay are in place. The next step is measured backend-log replay or moving H2 from the repetition-code Pauli audit to a phase-protecting stabilizer/subsystem-code circuit with true steady-state per-cycle maps. *(Priority: high.)*
 
@@ -341,9 +341,48 @@ Canonical tracker: `OPEN_PROBLEMS.md`. Headline items:
 - **OP-27: Turbulence productive interval and admissible closure.** Open/partial: first bridge note exists and now includes scale-local Reynolds / Kolmogorov-cascade uncertainty allocation plus spectral-allocation Conjecture T-2; next step is a DNS or shell-model scale diagnostic for inertial-range productive scores, spectra, and closure failure modes.
 - **OP-28: Self-limiting universality and protected forgetting.** Open/partial+: first bridge note and first finite record-channel toy simulation exist; next step is formalizing protected forgetting as a bounded-leakage morphism and deriving a downstream semantic-field bound for final-scope theories.
 - **OP-29: Operational-time relativity and proper productive intervals.** Open/partial: first bridge note exists; next step is proving the operational-time covariance theorem for systems with different tempos, coarse-grainings, and record channels.
-- **OP-30: Sorting efficiency, record bandwidth, and the completion trigger scale.** Open/partial++: `bridges/crystallization_sorting_engine.md` proves the ledger identity, the contraction bound on export, the lossless sorting rule, the bandwidth and resolution bounds, and the trigger-time theorem; `simulations/crystallization_sorting_engine/` validates them exactly and separates six policies into destructive, permanent-backlog, centralizing, and admissible outcomes. The H2 \(\chi\) measurement is done: `simulations/hardware_adaptive_decoder/sorting_ledger_audit.py` propagates all \(4^8\) syndrome histories exactly and reports \(\chi\) from `0.963442` to `0.562009` across windows, zero conditional protected leakage, and a decoder-policy spread of only `0.0048` against an extraction-quality spread of `0.142`. The coherent-information restatement is done: three-way conservation, destruction identified as environmental leakage, the lossless rule as decoupling, and the \(\chi\leq1/2\) classical-record cap, all verified exactly on a 16-qubit pure state. Next steps are an area-derived capacity inside the macrocell toy, an approximate-decoupling trigger-time bound, a steady-state rather than probe-window \(\chi\), and slot-partition adaptation.
+- **OP-30: Sorting efficiency, record bandwidth, and the completion trigger scale.** Open/partial+++: `bridges/crystallization_sorting_engine.md` proves the ledger identity, the contraction bound on export, the lossless sorting rule, the bandwidth and resolution bounds, and the trigger-time theorem; `simulations/crystallization_sorting_engine/` validates them exactly and separates six policies into destructive, permanent-backlog, centralizing, and admissible outcomes. The H2 \(\chi\) measurement is done: `simulations/hardware_adaptive_decoder/sorting_ledger_audit.py` propagates all \(4^8\) syndrome histories exactly and reports \(\chi\) from `0.963442` to `0.562009` across windows, zero conditional protected leakage, and a decoder-policy spread of only `0.0048` against an extraction-quality spread of `0.142`. The coherent-information restatement is done: three-way conservation, destruction identified as environmental leakage, the lossless rule as decoupling, and the \(\chi\leq1/2\) classical-record cap, all verified exactly on a 16-qubit pure state. The area-derived capacity is done: the macrocell toy is over-driven by its own 15-slot record map (`3.907` bits against `5.75`-`6.37` bits of per-step contraction, \(\chi=0.277\)-`0.381`), the area law would permit `18.13` bits at \(M=1,C_R=1\), and the SE-1 crossing would need sub-Planckian mass, so the toy cannot test SE-1 until its record partition scales as \(A/4\). The calibration's positive result is horizon marginality: \(2S_{\mathrm{BH}}\) budget against \(2S_{\mathrm{BH}}\) quantum record capacity, zero margin, at every mass. Next steps are an area-scaling boundary record map, an approximate-decoupling trigger-time bound, a steady-state rather than probe-window \(\chi\), and slot-partition adaptation.
 
 ## Changelog
+
+### 2026-07-26 — area-derived capacity in the macrocell toy
+- Added `simulations/cosmic_coordination_floor/area_capacity_ledger.py`, which
+  measures the sorting-engine ledger on the existing macrocell collapse kernel
+  and calibrates the boundary capacity against the Bekenstein-Hawking area law.
+  Closes OP-30 task (a).
+- Because the toy's boundary record is a deterministic function of the
+  macrocell, the one-step ledger is exact:
+  \(\delta_k=H(M_k)-I(M_k;M_{k+1})\), \(\sigma_k=I(M_k;R_{k+1})\),
+  \(\gamma_k=\sigma_k+\delta_k\). Identity residual at most `8.9e-16` bits
+  and the bound \(\delta\geq\gamma-C\) is never violated, minimum slack
+  `0.0961` bits.
+- Default seeded result: \(\chi\) is `0.27676` for naked collapse, `0.37661`
+  for hard exclusion, `0.38134` for horizon transfer, and `0.33735` for the
+  quantum completion. Peak per-step contraction is `5.75`-`6.37` bits against a
+  slot capacity of `3.906891` bits, so 35 of 36 steps are bandwidth-limited for
+  three of the four policies.
+- Main negative finding: the toy is over-driven by *its own record partition*,
+  not by the area law. Its boundary map has 15 distinct tuples while the area
+  law permits `18.13` bits at \(M=1,C_R=1\), `1813` bits at \(M=10\), and
+  \(\sim10^{77}\) bits for a solar-mass hole. The SE-1 area crossing would
+  require \(M<0.4006\) Planck masses, which is where the semiclassical area
+  law stops meaning anything. Honest verdict: this toy cannot test SE-1, and its
+  boundary record map must be rebuilt with resolution of order \(A/4\) bits.
+- Main positive finding, horizon marginality: granting the standard
+  identifications, the quantum interior budget \(2S_{\mathrm{BH}}\) exactly
+  equals the quantum record capacity of an \(S_{\mathrm{BH}}\)-qubit horizon
+  record at every mass, with zero margin, while a decohered record halves it to
+  \(\chi_{\max}=1/2\). A horizon sits *at* the sorting frontier rather than
+  crossing it, which revises how SE-1 should be stated for the gravitational
+  case.
+- Recorded a methodological caution: \(\chi\) does not rank policies on its
+  own. `hard_exclusion` posts a competitive `0.37661` with the lowest
+  contraction and is nonetheless the policy the parent toy rejects for violating
+  the future-entropy floor.
+- Added Section 15 to `bridges/crystallization_sorting_engine.md`, renumbering
+  the closing sections, and a corresponding section to the simulation README.
+  Updated OP-19, OP-20, and OP-30.
+- Session log: `sessions/2026-07-26_area_capacity_macrocell.md`.
 
 ### 2026-07-26 — coherent-information restatement of the ledger
 - Added Section 14 to `bridges/crystallization_sorting_engine.md`, restating the

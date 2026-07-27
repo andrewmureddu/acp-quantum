@@ -1,0 +1,5 @@
+policy,steps,mean_contraction_bits,mean_sorted_bits,mean_destroyed_bits,chi,peak_contraction_bits,peak_record_entropy_bits,slot_capacity_bits,peak_contraction_over_slot_capacity,bandwidth_limited_steps,min_bandwidth_slack_bits,interior_stock_bound_bits,max_identity_residual
+naked_collapse,36,5.544495,1.534507,4.009988,0.276762,5.752526,2.509528,3.906891,1.472405,35,2.194361,2.909592,8.882e-16
+hard_exclusion,36,2.670694,1.00581,1.664884,0.37661,5.750953,2.975627,3.906891,1.472003,13,0.096098,2.909592,4.441e-16
+horizon_transfer,36,5.827529,2.222268,3.605261,0.38134,6.215442,3.143932,3.906891,1.590892,35,1.328331,2.909592,4.441e-16
+quantum_completion,36,6.015739,2.029419,3.98632,0.337352,6.365705,3.074586,3.906891,1.629353,35,1.591261,2.909592,8.882e-16

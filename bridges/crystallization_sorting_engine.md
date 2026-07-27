@@ -2,9 +2,10 @@
 
 *Status: active component of the ACP quantum-gravity derivation program.
 Theorems 1-5 are proven for classical record-retaining dynamics and Theorems
-1-Q, 3-Q, 4-Q, 6, and 7 for quantum ones. The gravitational identification of
-the contraction rate and the boundary capacity is imported, not derived, and is
-marked ⚠ throughout.*
+1-Q, 3-Q, 4-Q, 6, and 7 for quantum ones. Sections 13 and 15 measure the
+diagnostic on the project's existing QEC and gravitational toys. The
+gravitational identification of the contraction rate and the boundary capacity
+is imported, not derived, and is marked ⚠ throughout.*
 
 Companion notes:
 
@@ -16,9 +17,11 @@ Companion notes:
 - `bridges/schur_complement.md`
 
 Executable companions: `simulations/crystallization_sorting_engine/`
-(classical ledger and quantum ledger) and
+(classical ledger and quantum ledger),
 `simulations/hardware_adaptive_decoder/sorting_ledger_audit.py` (measurement on
-the H2 QEC scaffold).
+the H2 QEC scaffold), and
+`simulations/cosmic_coordination_floor/area_capacity_ledger.py` (area-derived
+capacity in the macrocell collapse toy).
 
 ## 1. Thesis
 
@@ -487,7 +490,10 @@ term they use and when.
 Conjecture SE-1 is the more interesting of the two because it is
 differential: it predicts a *relationship* between completion onset and
 boundary capacity rather than a single number, and it is in principle
-falsifiable inside any candidate theory that supplies both quantities.
+falsifiable inside any candidate theory that supplies both quantities. Section
+15 attempts exactly that inside the macrocell collapse toy, finds that the toy
+cannot carry the test, and reports what it finds instead: for a horizon the
+contraction budget and the record capacity are not crossing but *equal*.
 
 ## 11. QEC Reading
 
@@ -897,7 +903,122 @@ efficiency: partial decoherence of the record costs partial efficiency, and the
 classical limit is the endpoint of a smooth curve rather than a different
 regime.
 
-## 15. What This Does Not Claim
+## 15. Area-Derived Capacity in the Macrocell Toy
+
+Conjecture SE-1 says the completion scale is set by where contraction first
+exceeds the boundary export capacity. Turning that into a number needs a
+capacity in bits, which needs the area law and a mass calibration.
+`simulations/cosmic_coordination_floor/area_capacity_ledger.py` does this on
+the existing relational macrocell collapse toy, importing its kernel unchanged.
+
+**What is measured and what is imported.** The contraction \(\gamma_k\), the
+exported record \(\sigma_k\), and the slot resolution come from the toy. The
+capacity in bits does not: it is
+\(C_{\mathrm{area}}=A/(4\ln 2)=4\pi M^2/(C_R^2\ln 2)\) bits in Planck units,
+using the toy's own compactness \(C_R=2M/R_{\mathrm{areal}}\). That is the
+Bekenstein-Hawking area law, imported.
+
+**Rate ledger.** Because the toy's boundary record is a deterministic function
+of the macrocell, taking the current macrocell as the reference gives the exact
+one-step ledger \(\delta_k=H(M_k)-I(M_k;M_{k+1})\),
+\(\sigma_k=I(M_k;R_{k+1})\), \(\gamma_k=\sigma_k+\delta_k\). Over the default
+36-step run:
+
+| Policy | mean \(\gamma\) | mean \(\sigma\) | mean \(\delta\) | \(\chi\) | peak \(\gamma\) | \(\gamma/C_{\mathrm{slots}}\) | BW-limited steps |
+|---|---:|---:|---:|---:|---:|---:|---:|
+| naked_collapse | 5.5445 | 1.5345 | 4.0100 | 0.27676 | 5.7525 | 1.4724 | 35/36 |
+| hard_exclusion | 2.6707 | 1.0058 | 1.6649 | 0.37661 | 5.7510 | 1.4720 | 13/36 |
+| horizon_transfer | 5.8275 | 2.2223 | 3.6053 | 0.38134 | 6.2154 | 1.5909 | 35/36 |
+| quantum_completion | 6.0157 | 2.0294 | 3.9863 | 0.33735 | 6.3657 | 1.6294 | 35/36 |
+
+Ledger identity residual at most \(8.9\times10^{-16}\) bits; the Theorem 4
+bound \(\delta_k\geq\gamma_k-C_k\) is never violated, with minimum slack
+`0.0961` bits.
+
+Four findings.
+
+**1. The toy is over-driven — by its own record partition, not by the area
+law.** Its boundary record map has 15 distinct tuples, so
+\(C_{\mathrm{slots}}=\log_215=3.9069\) bits, while the kernel contracts
+5.75-6.37 bits in a step. Corollary 4.1 therefore forces \(\delta>0\), and it
+does: \(\chi\) is 0.28-0.38 for every policy. **Even the quantum-completion
+policy destroys about two thirds of what it contracts**, not because its
+mechanism is wrong but because the toy's boundary bins cannot resolve what its
+kernel merges.
+
+**2. The area law would permit far more.** At the smallest super-Planckian
+configuration in the scan, \(M=1\), \(C_R=1\), the area capacity is `18.13`
+bits — 4.6 times the toy's slot capacity. At \(M=10\) it is `1813` bits, 464
+times. For a solar-mass hole it is of order \(10^{77}\) bits. The toy's record
+channel is impoverished relative to what gravity allows by between one and
+seventy-seven orders of magnitude.
+
+**3. The SE-1 area crossing does not occur in this toy at any super-Planckian
+mass.** For the area capacity to fall below the toy's own interior stock bound
+\(H(M_0)=2.9096\) bits requires \(M<0.4006\) Planck masses at \(C_R=1\), and
+less at lower compactness. That is precisely the regime where the semiclassical
+area law stops meaning anything. The honest verdict is that **the macrocell toy
+cannot test SE-1**: the bandwidth limit it does exhibit is an artifact of coarse
+boundary bins, not a gravitational bandwidth limit.
+
+**4. The fix is specific.** Before SE-1 can be tested, the macrocell toy's
+boundary record map must have resolution that scales with the boundary area —
+of order \(A/4\) bits — rather than 15 fixed slots. That is now the concrete
+next step for OP-19/OP-20 rather than a vague call for "more realism."
+
+A fifth observation is worth recording because it cuts against the diagnostic.
+`hard_exclusion` posts a competitive \(\chi=0.3766\) with the lowest mean
+contraction and only 13 bandwidth-limited steps, and it is nonetheless the
+policy the parent toy rejects for violating the future-entropy floor. Sorting
+efficiency does not rank policies on its own; it is a third independent axis
+alongside the floor and the selectivity condition of Section 8. A policy can
+contract little, waste little, and still crystallize.
+
+### Horizon marginality
+
+The toy cannot test SE-1, but the calibration exposes something the toy was
+never needed for. Take the standard identifications: a horizon of area \(A\)
+has \(S_{\mathrm{BH}}=A/4\) and about \(e^{S_{\mathrm{BH}}}\) interior
+microstates. Then by Corollary 6.1 the quantum interior budget is
+
+$$
+J_0=2H(R)=2S_{\mathrm{BH}},
+$$
+
+while a horizon record of \(S_{\mathrm{BH}}\) qubits carries at most
+\(2S_{\mathrm{BH}}\) bits of quantum mutual information by Theorem 4-Q, and at
+most \(S_{\mathrm{BH}}\) bits once decohered by Theorem 7:
+
+| \(M\) (Planck) | \(S_{\mathrm{BH}}\) bits | budget \(2S\) | quantum capacity | classical capacity | \(\chi_{\max}\) classical |
+|---:|---:|---:|---:|---:|---:|
+| 1 | 18.13 | 36.26 | 36.26 | 18.13 | 0.50 |
+| 10 | 1813 | 3626 | 3626 | 1813 | 0.50 |
+| \(10^3\) | \(1.813\times10^7\) | \(3.626\times10^7\) | \(3.626\times10^7\) | \(1.813\times10^7\) | 0.50 |
+| \(10^{38}\) | \(1.813\times10^{77}\) | \(3.626\times10^{77}\) | \(3.626\times10^{77}\) | \(1.813\times10^{77}\) | 0.50 |
+
+**The interior budget and the quantum record capacity are equal at every mass,
+with zero margin.** ⚠ This is an observation about the standard identifications
+rather than a derivation of them: the microstate count and the area law are
+both imported. But granting them, a black hole is exactly the object whose
+boundary can losslessly sort its own interior and not one bit more. The
+Bekenstein-Hawking entropy is neither generous nor insufficient for the sorting
+task; it is precisely sufficient, and only if the record is quantum.
+
+This reframes SE-1. The conjecture supposed the crossing \(\gamma=C\) would be
+somewhere, and asked where. The marginality table says that for a horizon the
+system sits *at* the crossing identically, at every scale. Gravity is the
+domain where the sorting engine runs permanently at capacity, which is why
+Section 7's three strategies — throttle, widen, buffer — are not optional
+refinements there but the entire available response.
+
+**Revised Conjecture SE-1.** The original statement stands as written for
+generic collapse, but the gravitational case should be stated separately: for a
+horizon, contraction and capacity are equal rather than crossing, so the
+completion scale is set not by where \(\gamma\) first exceeds \(C\) but by
+where the *margin* — already zero — would be driven negative by any
+inefficiency in the record channel. ⚠ Open.
+
+## 16. What This Does Not Claim
 
 This note does not prove that gravitational focusing merges relational
 macrocells at the rate assumed in Section 10, does not derive the boundary
@@ -918,12 +1039,12 @@ $$
 I(L;R^{\mathrm{early}}\mid G)\leq\epsilon_L .
 $$
 
-## 16. Next Targets
+## 17. Next Targets
 
-1. Compute \(\gamma_k\) for the macrocell kernel of
-   `simulations/cosmic_coordination_floor/` and compare it against an
-   area-derived \(C_k\), turning Conjecture SE-1 into a number inside the
-   existing collapse toy.
+1. *(Done — Section 15.)* The successor is specific: give the macrocell toy a
+   boundary record map whose resolution scales with the boundary area, of order
+   \(A/4\) bits rather than 15 fixed slots, so that the SE-1 crossing test is
+   about gravity rather than about the toy's binning. Then re-run the ledger.
 2. *(Done — Section 14.)* The remaining quantum work is approximate rather
    than exact: replace the sharp decoupling condition of Theorem 3-Q with an
    \(\epsilon\)-approximate version and carry the error through Theorem 5, so
